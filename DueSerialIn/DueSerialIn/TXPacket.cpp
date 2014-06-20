@@ -99,14 +99,16 @@ int8_t TXPacket::spare() {
 }
 
 void TXPacket::sendPacket() {
-    int16_t txPacket[6];
-    txPacket[0] = _header;
-    txPacket[1] = (int16_t)((_accX << 8) + _accY);
-    txPacket[2] = (int16_t)((_accZ << 8) + _magX);
-    txPacket[3] = (int16_t)((_magY << 8) + _magZ);
-    txPacket[4] = (int16_t)((_pressure << 8) + _spare);
-    txPacket[5] = computeChecksum();
-    Serial1.write(txPacket, 12);
+    Serial1.write(_header);
+    Serial1.write(_accX);
+    Serial1.write(_accY);
+    Serial1.write(_accZ);
+    Serial1.write(_magX);
+    Serial1.write(_magY);
+    Serial1.write(_magZ);
+    Serial1.write(_pressure);
+    Serial1.write(_spare);
+    Serial1.write(computeChecksum());
 }
 
 int16_t TXPacket::computeChecksum() {
