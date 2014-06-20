@@ -75,7 +75,6 @@ public:
     int8_t spare();
     int16_t checksum();
     
-    
     bool readPacket();
     
 private:

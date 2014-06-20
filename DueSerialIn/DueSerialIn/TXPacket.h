@@ -50,12 +50,40 @@ class TXPacket {
   
 public:
     TXPacket();
-    void begin();
-    String WhoAmI();
-    void set(uint8_t data);
-    uint8_t get();
+    
+    void setAccX(int8_t accX);
+    void setAccY(int8_t accY);
+    void setAccZ(int8_t accZ);
+    void setMagX(int8_t magX);
+    void setMagY(int8_t magY);
+    void setMagZ(int8_t magZ);
+    void setPressure(int8_t pressure);
+    void setSpare(int8_t spare);
+    
+    int8_t accX();
+    int8_t accY();
+    int8_t accZ();
+    int8_t magX();
+    int8_t magY();
+    int8_t magZ();
+    int8_t pressure();
+    int8_t spare();
+    
+    void sendPacket();
   
 private:
+    uint16_t _header;
+    int8_t _accX;
+    int8_t _accY;
+    int8_t _accZ;
+    int8_t _magX;
+    int8_t _magY;
+    int8_t _magZ;
+    int8_t _pressure;
+    int8_t _spare;
+    int16_t _checksum;
+    
+    int16_t computeChecksum();
     
 };
 

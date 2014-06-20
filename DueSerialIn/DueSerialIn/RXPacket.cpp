@@ -22,7 +22,18 @@
 
 // Code
 RXPacket::RXPacket() {
-    
+    _header = 0;
+    _velX = 0;
+    _velY = 0;
+    _velZ = 0;
+    _rotX = 0;
+    _rotY = 0;
+    _rotZ = 0;
+    _posZ = 0;
+    _torpedoControl = 0;
+    _servoControl[6] = 0;
+    _spare = 0;
+    _checksum = 0;
 }
 
 void RXPacket::setVelX(int8_t velX) {
@@ -115,7 +126,48 @@ int16_t RXPacket::checksum() {
 }
 
 bool RXPacket::readPacket() {
-    
+    if (Serial1.available() > 19) {
+        _header = (Serial1.read() << 8) + Serial1.read();
+        if (_header = 0xBDFA) {
+            setVelX(Serial1.read());
+            setVelY(Serial1.read());
+            setVelZ(Serial1.read());
+            setRotX(Serial1.read());
+            setRotY(Serial1.read());
+            setRotZ(Serial1.read());
+            setPosZ((Serial1.read() << 8) + Serial1.read());
+            setTorpedoControl(Serial1.read());
+            int8_t servoControl[6];
+            for (int i = 0; i < 6; i++) {
+                servoControl[i] = Serial1;
+            }
+            setServoControl(servoControl);
+            setSpare(Serial1.read());
+            setChecksum((Serial1.read() << 8) + Serial1.read());
+            return isChecksumValid();
+        }
+    }
 }
 
-//0xBDFA
+bool RXPacket::isChecksumValid() {
+    int16_t checksum =
+        velX() +
+        velY() +
+        velZ() +
+        rotX() +
+        rotY() +
+        rotZ() +
+        posZ() +
+        torpedoControl() +
+        spare() +
+        0xBDFA;
+    for (int i = 0; i < 6; i++) {
+        checksum += _servoControl[i];
+    }
+    if (checksum == _checksum) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
