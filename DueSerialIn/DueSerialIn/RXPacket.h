@@ -49,14 +49,50 @@
 class RXPacket {
   
 public:
-  RXPacket();
-  void begin();
-  String WhoAmI();
-  void set(uint8_t data);
-  uint8_t get();
-  
+    RXPacket();
+    
+    void setVelX(int8_t velX);
+    void setVelY(int8_t velY);
+    void setVelZ(int8_t velZ);
+    void setRotX(int8_t rotX);
+    void setRotY(int8_t rotY);
+    void setRotZ(int8_t rotZ);
+    void setPosZ(uint16_t posZ);
+    void setTorpedoControl(int8_t torpedoControl);
+    void setServoControl(int8_t servoControl[6]);
+    void setSpare(int8_t spare);
+    void setChecksum(int16_t checksum);
+    
+    int8_t velX();
+    int8_t velY();
+    int8_t velZ();
+    int8_t rotX();
+    int8_t rotY();
+    int8_t rotZ();
+    uint16_t posZ();
+    int8_t torpedoControl();
+    int8_t* servoControl();
+    int8_t spare();
+    int16_t checksum();
+    
+    
+    bool readPacket();
+    
 private:
-  uint8_t _data;
+    uint16_t _header;
+    int8_t _velX;
+    int8_t _velY;
+    int8_t _velZ;
+    int8_t _rotX;
+    int8_t _rotY;
+    int8_t _rotZ;
+    uint16_t _posZ;
+    int8_t _torpedoControl;
+    int8_t _servoControl[6];
+    int8_t _spare;
+    int16_t _checksum;
+    
+    bool isChecksumValid();
 };
 
 #endif

@@ -49,14 +49,14 @@
 class TXPacket {
   
 public:
-  TXPacket();
-  void begin();
-  String WhoAmI();
-  void set(uint8_t data);
-  uint8_t get();
+    TXPacket();
+    void begin();
+    String WhoAmI();
+    void set(uint8_t data);
+    uint8_t get();
   
 private:
-  uint8_t _data;
+    
 };
 
 #endif

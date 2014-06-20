@@ -1078,7 +1078,6 @@
 		DF3851631954043200A7DC39 /* DueSerialIn */ = {
 			isa = PBXGroup;
 			children = (
-				DF3851C7195404F100A7DC39 /* Packets */,
 				DF3851641954043200A7DC39 /* main.cpp */,
 				DF3851661954043200A7DC39 /* LocalLibrary.cpp */,
 				DF3851681954043200A7DC39 /* LocalLibrary.h */,
@@ -1086,6 +1085,7 @@
 				DF3851A21954043200A7DC39 /* ReadMe.txt */,
 				DF3851AC1954043200A7DC39 /* CoolTermScript.scpt */,
 				DF3851AD1954043200A7DC39 /* DueSerialIn.ino */,
+				DF3851C7195404F100A7DC39 /* Packets */,
 				DF38516B1954043200A7DC39 /* Sketchbook */,
 				AAAA140619225510AA000000 /* Resources */,
 				DF38516D1954043200A7DC39 /* Configurations */,
