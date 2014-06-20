@@ -37,11 +37,32 @@
 #error Platform not defined
 #endif
 
+#include "TXPacket.h"
+#include "RXPacket.h"
+
+RXPacket rxPacket;
+TXPacket txPacket;
 
 void setup() {
-
+    Serial1.begin(115200);
 }
 
 void loop() {
-       
+    if (rxPacket.readPacket()) {
+        //run actuators with inputs
+    } else {
+        //run actuators to hold position
+    }
+    
+    txPacket.setAccX(0);
+    txPacket.setAccY(1);
+    txPacket.setAccZ(2);
+    txPacket.setMagX(3);
+    txPacket.setMagY(4);
+    txPacket.setMagZ(5);
+    txPacket.setPressure(6);
+    txPacket.setSpare(7);
+    
+    txPacket.sendPacket();
+    
 }
