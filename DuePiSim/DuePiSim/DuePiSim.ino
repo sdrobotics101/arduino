@@ -51,14 +51,14 @@ void setup() {
 }
 
 void loop() {
-#if defined(TESTMODE == 1)
+#if defined(TESTMODE)
     if (rxPacket.readPacket()) {
-        Serial.Print(rxPacket.velX());
-        Serial.Print(rxPacket.velY());
-        Serial.Print(rxPacket.velZ());
-        Serial.Print(rxPacket.rotX());
-        Serial.Print(rxPacket.rotY());
-        Serial.Print(rxPacket.rotZ());
+        Serial.print(rxPacket.velX());
+        Serial.print(rxPacket.velY());
+        Serial.print(rxPacket.velZ());
+        Serial.print(rxPacket.rotX());
+        Serial.print(rxPacket.rotY());
+        Serial.print(rxPacket.rotZ());
     } else {
         //run actuators to hold position
     }
@@ -85,9 +85,9 @@ void loop() {
     rxPacket.sendPacket();
     
     if (txPacket.readPacket()) {
-        Serial.Print(txPacket.accX());
-        Serial.Print(txPacket.accY());
-        Serial.Print(txPacket.accZ());
+        Serial.print(txPacket.accX());
+        Serial.print(txPacket.accY());
+        Serial.print(txPacket.accZ());
     }
     
 #endif

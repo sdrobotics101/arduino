@@ -98,6 +98,10 @@ int8_t TXPacket::spare() {
     return _spare;
 }
 
+void TXPacket::setChecksum(int16_t checksum) {
+    _checksum = checksum;
+}
+
 void TXPacket::sendPacket() {
     Serial1.write(_header);
     Serial1.write(_accX);

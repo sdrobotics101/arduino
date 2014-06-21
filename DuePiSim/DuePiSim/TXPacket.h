@@ -59,6 +59,7 @@ public:
     void setMagZ(int8_t magZ);
     void setPressure(int8_t pressure);
     void setSpare(int8_t spare);
+    void setChecksum(int16_t checksum);
     
     int8_t accX();
     int8_t accY();
