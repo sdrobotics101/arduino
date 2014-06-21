@@ -63,24 +63,24 @@ void loop() {
         //run actuators to hold position
     }
     
-    txPacket.setAccX(0);
-    txPacket.setAccY(1);
-    txPacket.setAccZ(2);
-    txPacket.setMagX(3);
-    txPacket.setMagY(4);
-    txPacket.setMagZ(5);
-    txPacket.setPressure(6);
-    txPacket.setSpare(7);
+    txPacket.setAccX(7);
+    txPacket.setAccY(6);
+    txPacket.setAccZ(5);
+    txPacket.setMagX(4);
+    txPacket.setMagY(3);
+    txPacket.setMagZ(2);
+    txPacket.setPressure(1);
+    txPacket.setSpare(0);
     txPacket.sendPacket();
     
     delay(100);
 #else
-    rxPacket.setRotX(0);
-    rxPacket.setRotY(1);
-    rxPacket.setRotZ(2);
-    rxPacket.setVelX(3);
-    rxPacket.setVelY(4);
-    rxPacket.setVelZ(5);
+    rxPacket.setRotX(5);
+    rxPacket.setRotY(4);
+    rxPacket.setRotZ(3);
+    rxPacket.setVelX(2);
+    rxPacket.setVelY(1);
+    rxPacket.setVelZ(0);
     
     rxPacket.sendPacket();
     
