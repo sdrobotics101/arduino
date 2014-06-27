@@ -955,6 +955,8 @@ else
 		osascript CoolTermScript.scpt $(BOARD_TAG)
 endif
 
+osascript LibrariesScript.scpt
+
 #		echo "$@"
 #		echo "-- "
 #		export TERM="vt100"

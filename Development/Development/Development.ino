@@ -37,7 +37,6 @@
 #error Platform not defined
 #endif
 
-
 void setup() {
 
 }
