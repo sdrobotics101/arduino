@@ -954,7 +954,7 @@ ifeq ($(AVRDUDE_NO_SERIAL_PORT),1)
 else
 		osascript CoolTermScript.scpt $(BOARD_TAG)
 endif
-
+	osascript LibrariesScript.scpt
 #		echo "$@"
 #		echo "-- "
 #		export TERM="vt100"
