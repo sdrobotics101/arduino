@@ -205,6 +205,9 @@
 		AA2A140626184544AA0000FB /* GSM3MobileServerProvider.h in Sources */ = {isa = PBXBuildFile; fileRef = AAAA140626184544AA0000FB /* GSM3MobileServerProvider.h */; };
 		AA2A140626184544AA0000FC /* GSM3MobileServerService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAAA140626184544AA0000FC /* GSM3MobileServerService.cpp */; };
 		AA2A140626184544AA0000FD /* GSM3MobileServerService.h in Sources */ = {isa = PBXBuildFile; fileRef = AAAA140626184544AA0000FD /* GSM3MobileServerService.h */; };
+		DF10D8E0195F8B170062BE5D /* RXPacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF10D8DE195F8B170062BE5D /* RXPacket.cpp */; };
+		DF10D8E4195F8B220062BE5D /* TXPacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF10D8E2195F8B220062BE5D /* TXPacket.cpp */; };
+		DF10D8E8195F8B2A0062BE5D /* PacketController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF10D8E6195F8B2A0062BE5D /* PacketController.cpp */; };
 		DF17EF7D195D043E002ECABA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF17EF7C195D043E002ECABA /* main.cpp */; };
 		DF17EF7F195D043E002ECABA /* LocalLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF17EF7E195D043E002ECABA /* LocalLibrary.cpp */; };
 		DF27EF80195D043E002ECABA /* LocalLibrary.h in Sources */ = {isa = PBXBuildFile; fileRef = DF17EF80195D043E002ECABA /* LocalLibrary.h */; };
@@ -410,6 +413,12 @@
 		AAAA140626184544AA0000FB /* GSM3MobileServerProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSM3MobileServerProvider.h; sourceTree = "<group>"; };
 		AAAA140626184544AA0000FC /* GSM3MobileServerService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GSM3MobileServerService.cpp; sourceTree = "<group>"; };
 		AAAA140626184544AA0000FD /* GSM3MobileServerService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSM3MobileServerService.h; sourceTree = "<group>"; };
+		DF10D8DE195F8B170062BE5D /* RXPacket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RXPacket.cpp; sourceTree = "<group>"; };
+		DF10D8DF195F8B170062BE5D /* RXPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXPacket.h; sourceTree = "<group>"; };
+		DF10D8E2195F8B220062BE5D /* TXPacket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TXPacket.cpp; sourceTree = "<group>"; };
+		DF10D8E3195F8B220062BE5D /* TXPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXPacket.h; sourceTree = "<group>"; };
+		DF10D8E6195F8B2A0062BE5D /* PacketController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PacketController.cpp; sourceTree = "<group>"; };
+		DF10D8E7195F8B2A0062BE5D /* PacketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketController.h; sourceTree = "<group>"; };
 		DF17EF79195D043E002ECABA /* Index */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Index; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF17EF7C195D043E002ECABA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		DF17EF7E195D043E002ECABA /* LocalLibrary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalLibrary.cpp; sourceTree = "<group>"; };
@@ -1056,6 +1065,36 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		DF10D8DD195F8B170062BE5D /* RXPacket */ = {
+			isa = PBXGroup;
+			children = (
+				DF10D8DE195F8B170062BE5D /* RXPacket.cpp */,
+				DF10D8DF195F8B170062BE5D /* RXPacket.h */,
+			);
+			name = RXPacket;
+			path = ../../../../../Arduino/libraries/RXPacket;
+			sourceTree = "<group>";
+		};
+		DF10D8E1195F8B220062BE5D /* TXPacket */ = {
+			isa = PBXGroup;
+			children = (
+				DF10D8E2195F8B220062BE5D /* TXPacket.cpp */,
+				DF10D8E3195F8B220062BE5D /* TXPacket.h */,
+			);
+			name = TXPacket;
+			path = ../../../../../Arduino/libraries/TXPacket;
+			sourceTree = "<group>";
+		};
+		DF10D8E5195F8B2A0062BE5D /* PacketController */ = {
+			isa = PBXGroup;
+			children = (
+				DF10D8E6195F8B2A0062BE5D /* PacketController.cpp */,
+				DF10D8E7195F8B2A0062BE5D /* PacketController.h */,
+			);
+			name = PacketController;
+			path = ../../../../../Arduino/libraries/PacketController;
+			sourceTree = "<group>";
+		};
 		DF17EF6E195D043E002ECABA = {
 			isa = PBXGroup;
 			children = (
@@ -1096,6 +1135,9 @@
 		DF17EF83195D043E002ECABA /* Sketchbook */ = {
 			isa = PBXGroup;
 			children = (
+				DF10D8E5195F8B2A0062BE5D /* PacketController */,
+				DF10D8E1195F8B220062BE5D /* TXPacket */,
+				DF10D8DD195F8B170062BE5D /* RXPacket */,
 				DF17EF84195D043E002ECABA /* Sketchbook.txt */,
 			);
 			name = Sketchbook;
@@ -1385,9 +1427,11 @@
 				AA2A140626184544AA00006B /* itoa.h in Sources */,
 				AA2A140626184544AA00006C /* main.cpp in Sources */,
 				AA2A140626184544AA00006D /* Print.cpp in Sources */,
+				DF10D8E8195F8B2A0062BE5D /* PacketController.cpp in Sources */,
 				AA2A140626184544AA00006E /* Print.h in Sources */,
 				AA2A140626184544AA00006F /* Printable.h in Sources */,
 				AA2A140626184544AA000070 /* Reset.cpp in Sources */,
+				DF10D8E0195F8B170062BE5D /* RXPacket.cpp in Sources */,
 				AA2A140626184544AA000071 /* Reset.h in Sources */,
 				AA2A140626184544AA000072 /* RingBuffer.cpp in Sources */,
 				AA2A140626184544AA000073 /* RingBuffer.h in Sources */,
@@ -1462,6 +1506,7 @@
 				AA2A140626184544AA0000CE /* Dns.cpp in Sources */,
 				AA2A140626184544AA0000CF /* Dns.h in Sources */,
 				AA2A140626184544AA0000D0 /* Ethernet.cpp in Sources */,
+				DF10D8E4195F8B220062BE5D /* TXPacket.cpp in Sources */,
 				AA2A140626184544AA0000D1 /* Ethernet.h in Sources */,
 				AA2A140626184544AA0000D2 /* EthernetClient.cpp in Sources */,
 				AA2A140626184544AA0000D3 /* EthernetClient.h in Sources */,
