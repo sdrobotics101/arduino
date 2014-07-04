@@ -1136,8 +1136,8 @@
 			isa = PBXGroup;
 			children = (
 				DF10D8E5195F8B2A0062BE5D /* PacketController */,
-				DF10D8E1195F8B220062BE5D /* TXPacket */,
 				DF10D8DD195F8B170062BE5D /* RXPacket */,
+				DF10D8E1195F8B220062BE5D /* TXPacket */,
 				DF17EF84195D043E002ECABA /* Sketchbook.txt */,
 			);
 			name = Sketchbook;
