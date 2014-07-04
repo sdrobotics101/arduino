@@ -13,8 +13,8 @@ PacketController::PacketController() {
 }
 
 PacketStatus PacketController::listen() {
-    if (Serial1.available() > 12) {
-        for (i = 0; i < 12; i++) {
+    if (Serial1.available() > 20) {
+        for (int i = 0; i < 20; i++) {
             if (Serial1.read() == 0xBD) {
                 if (Serial1.read() == 0xFA) {
                     return _rxPacket.readPacket();
@@ -31,7 +31,7 @@ void PacketController::send() {
     _txPacket.sendPacket();
 }
 
-void PacketController::set(TXIndex index, int8_t value) {
+void PacketController::set(TXIndex index, uint8_t value) {
     _txPacket._data[index] = value;
 }
 
@@ -40,7 +40,7 @@ int8_t PacketController::get(RXIndex index) {
 }
 
 int16_t PacketController::getPosZ() {
-    int16_t posZ += _rxPacket._data[POSZ];
+    int16_t posZ = _rxPacket._data[POSZ];
     posZ << 8;
     posZ += _rxPacket._data[POSZ+1];
     return posZ;

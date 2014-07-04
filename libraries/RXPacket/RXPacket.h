@@ -12,6 +12,7 @@
 #include <iostream>
 #include "Arduino.h"
 
+
 enum PacketStatus {
     VALID_PACKET = 0,
     INVALID_PACKET = 1,
@@ -29,7 +30,7 @@ enum RXIndex {
     POSZ = 6,
     TORPEDOCTL = 8,
     SERVOCTL = 9,
-    SPARE = 15,
+    RXSPARE = 15,
     CHECKSUM = 16
 };
 
@@ -38,7 +39,7 @@ class RXPacket {
 public:
     RXPacket();
 private:
-    int8_t _data[18];
+    uint8_t _data[18];
     PacketStatus readPacket();
     bool isChecksumValid();
 };

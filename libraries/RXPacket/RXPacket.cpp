@@ -16,7 +16,7 @@ RXPacket::RXPacket() {
 }
 
 PacketStatus RXPacket::readPacket() {
-    Serial1.readBytes(&_data, 18);
+    Serial1.readBytes(_data, 18);
     if (isChecksumValid()) {
         return VALID_PACKET;
     } else {
@@ -33,7 +33,7 @@ bool RXPacket::isChecksumValid() {
     for (int i = 7; i < 16; i++) {
         sum += _data[i];
     }
-    if (sum == ((_data[CHECKSUM] * 256) + _data[CHECKSUM+1]) {
+    if (sum == ((_data[CHECKSUM] * 256) + _data[CHECKSUM+1])) {
         return true;
     } else {
         return false;

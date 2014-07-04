@@ -22,7 +22,7 @@ void TXPacket::sendPacket() {
     int16_t checksum2 = checksum;
     _data[10] = (int8_t)checksum >> 8;
     _data[11] = (int8_t)((checksum2 << 8) >> 8);
-    Serial1.write(_data, 12);
+    Serial1.write(_data, (size_t)12);
 }
 
 int16_t TXPacket::computeChecksum() {

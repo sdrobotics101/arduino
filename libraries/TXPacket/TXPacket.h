@@ -12,6 +12,7 @@
 #include <iostream>
 #include "Arduino.h"
 
+
 enum TXIndex {
     ACCX = 2,
     ACCY = 3,
@@ -20,7 +21,7 @@ enum TXIndex {
     MAGY = 6,
     MAGZ = 7,
     PRESSURE = 6,
-    SPARE = 9,
+    TXSPARE = 9,
 };
 
 class TXPacket {
@@ -28,7 +29,7 @@ class TXPacket {
 public:
     TXPacket();
 private:
-    int8_t _data[12];
+    uint8_t _data[12];
     void sendPacket();
     int16_t computeChecksum();
 };
