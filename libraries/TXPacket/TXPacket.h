@@ -9,25 +9,29 @@
 #ifndef ____TXPacket__
 #define ____TXPacket__
 
+#include <iostream>
+#include "Arduino.h"
+
 enum TXIndex {
-    ACCX = 0,
-    ACCY = 1,
-    ACCZ = 2,
-    MAGX = 3,
-    MAGY = 4,
-    MAGZ = 5,
+    ACCX = 2,
+    ACCY = 3,
+    ACCZ = 4,
+    MAGX = 5,
+    MAGY = 6,
+    MAGZ = 7,
     PRESSURE = 6,
-    SPARE = 7,
-    CHECKSUM = 8
+    SPARE = 9,
 };
 
 class TXPacket {
-    public:
-        
+    friend class PacketController;
+public:
+    TXPacket();
+private:
+    int8_t _data[12];
+    void sendPacket();
+    int16_t computeChecksum();
 };
 
-
-#include <iostream>
-#include "Arduino.h"
 
 #endif /* defined(____TXPacket__) */

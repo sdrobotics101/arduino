@@ -12,6 +12,13 @@
 #include <iostream>
 #include "Arduino.h"
 
+enum PacketStatus {
+    VALID_PACKET = 0,
+    INVALID_PACKET = 1,
+    NO_HEADER_FOUND = 2,
+    NOT_ENOUGH_DATA = 3
+};
+
 enum RXIndex {
     VELX = 0,
     VELY = 1,
@@ -23,15 +30,16 @@ enum RXIndex {
     TORPEDOCTL = 8,
     SERVOCTL = 9,
     SPARE = 15,
-    CHECKSUM = 17
+    CHECKSUM = 16
 };
 
 class RXPacket {
+    friend class PacketController;
 public:
     RXPacket();
 private:
-    int8_t data[18];
-    bool readPacket();
+    int8_t _data[18];
+    PacketStatus readPacket();
     bool isChecksumValid();
 };
 
