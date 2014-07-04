@@ -19,7 +19,7 @@ public:
     PacketController();
     PacketStatus listen();
     void send();
-    void set(TXIndex index, int8_t value);
+    void set(TXIndex index, uint8_t value);
     int8_t get(RXIndex index);
     int16_t getPosZ();
 private:
