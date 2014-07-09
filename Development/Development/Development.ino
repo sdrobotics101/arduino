@@ -37,31 +37,9 @@
 #error Platform not defined
 #endif
 
-#include "PacketController.h"
-
-PacketController packetController;
-PacketStatus packetStatus;
-
 void setup() {
 }
 
 void loop() {
-    packetStatus = packetController.listen();
-    if (packetStatus == NO_HEADER_FOUND) {
-        //set to 0
-        //add 1 to bad packet counter
-    } else if (packetStatus == NOT_ENOUGH_DATA) {
-        //execute last command
-    } else if (packetStatus == INVALID_PACKET) {
-        //execute last command
-        //add 1 to bad packet counter
-    } else if (packetStatus == VALID_PACKET) {
-        //execute command
-        //reset bad packet counter;
-    }
-    
-    //packetController.set(idx, val);
-    
-    packetController.send();
     
 }

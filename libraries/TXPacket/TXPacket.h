@@ -20,7 +20,7 @@ enum TXIndex {
     MAGX = 5,
     MAGY = 6,
     MAGZ = 7,
-    PRESSURE = 6,
+    PRESSURE = 8,
     TXSPARE = 9,
 };
 
