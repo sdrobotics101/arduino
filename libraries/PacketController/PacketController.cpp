@@ -13,7 +13,7 @@ PacketController::PacketController() {
 }
 
 PacketStatus PacketController::listen() {
-    if (Serial1.available() > 20) {
+    if (Serial1.available() > 19) {
         for (int i = 0; i < 20; i++) {
             if (Serial1.read() == 0xBD) {
                 if (Serial1.read() == 0xFA) {
