@@ -15,8 +15,12 @@ RXPacket::RXPacket() {
     }
 }
 
-PacketStatus RXPacket::readPacket() {
-    Serial1.readBytes(_data, 18);
+void RXPacket::begin() {
+    Serial.println("RXPacket Initialized");
+}
+
+PacketStatus RXPacket::readPacket(USARTClass serialPort) {
+    serialPort.readBytes(_data, 18);
     if (isChecksumValid()) {
         return VALID_PACKET;
     } else {

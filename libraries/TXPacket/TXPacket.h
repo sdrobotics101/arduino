@@ -25,12 +25,14 @@ enum TXIndex {
 
 class TXPacket {
     friend class PacketController;
-public:
-    TXPacket();
 private:
-    uint8_t _data[12];
-    void sendPacket();
+    TXPacket();
+    void begin();
+    
+    void sendPacket(USARTClass serialPort);
     int16_t computeChecksum();
+    
+    uint8_t _data[12];
 };
 
 

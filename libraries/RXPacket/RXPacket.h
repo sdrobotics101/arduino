@@ -35,12 +35,14 @@ enum RXIndex {
 
 class RXPacket {
     friend class PacketController;
-public:
-    RXPacket();
 private:
-    uint8_t _data[18];
-    PacketStatus readPacket();
+    RXPacket();
+    void begin();
+    
+    PacketStatus readPacket(USARTClass serialPort);
     bool isChecksumValid();
+    
+    uint8_t _data[18];
 };
 
 #endif /* defined(____RXPacket__) */

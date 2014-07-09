@@ -8,16 +8,23 @@
 
 #include "PacketController.h"
 
-PacketController::PacketController() {
-    Serial1.begin(115200);
+PacketController::PacketController(USARTClass rxSerialPort, USARTClass txSerialPort) : _rxSerialPort(rxSerialPort), _txSerialPort(txSerialPort) {}
+
+void PacketController::begin(int baudRate) {
+    Serial.begin(baudRate);
+    _rxSerialPort.begin(baudRate);
+    _txSerialPort.begin(baudRate);
+    _rxPacket.begin();
+    _txPacket.begin();
+    Serial.println("PacketController Initialized");
 }
 
 PacketStatus PacketController::listen() {
-    if (Serial1.available() > 19) {
+    if (_rxSerialPort.available() > 19) {
         for (int i = 0; i < 20; i++) {
-            if (Serial1.read() == 0xBD) {
-                if (Serial1.read() == 0xFA) {
-                    return _rxPacket.readPacket();
+            if (_rxSerialPort.read() == 0xBD) {
+                if (_rxSerialPort.read() == 0xFA) {
+                    return _rxPacket.readPacket(_rxSerialPort);
                 }
             }
         }
@@ -28,7 +35,7 @@ PacketStatus PacketController::listen() {
 }
 
 void PacketController::send() {
-    _txPacket.sendPacket();
+    _txPacket.sendPacket(_txSerialPort);
 }
 
 void PacketController::set(TXIndex index, uint8_t value) {

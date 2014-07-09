@@ -17,12 +17,16 @@ TXPacket::TXPacket() {
     }
 }
 
-void TXPacket::sendPacket() {
+void TXPacket::begin() {
+    Serial.println("TXPacket Initialized");
+}
+
+void TXPacket::sendPacket(USARTClass serialPort) {
     int16_t checksum = computeChecksum();
     int16_t checksum2 = checksum;
     _data[10] = (uint8_t)checksum >> 8;
     _data[11] = (uint8_t)((checksum2 << 8) >> 8);
-    Serial1.write(_data, (size_t)12);
+    serialPort.write(_data, (size_t)12);
 }
 
 int16_t TXPacket::computeChecksum() {
