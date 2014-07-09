@@ -37,31 +37,39 @@
 #error Platform not defined
 #endif
 
+#include "RXPacket.h"
+#include "TXPacket.h"
 #include "PacketController.h"
 
-PacketController packetController;
-PacketStatus packetStatus;
+PacketController controller;
 
 void setup() {
+    Serial.begin(115200);
 }
 
 void loop() {
-    packetStatus = packetController.listen();
-    if (packetStatus == NO_HEADER_FOUND) {
-        //set to 0
-        //add 1 to bad packet counter
-    } else if (packetStatus == NOT_ENOUGH_DATA) {
-        //execute last command
-    } else if (packetStatus == INVALID_PACKET) {
-        //execute last command
-        //add 1 to bad packet counter
-    } else if (packetStatus == VALID_PACKET) {
-        //execute command
-        //reset bad packet counter;
+    controller.set(ACCX, 0);
+    controller.set(ACCY, 1);
+    controller.set(ACCZ, 2);
+    controller.set(MAGX, 3);
+    controller.set(MAGY, 4);
+    controller.set(MAGZ, 5);
+    controller.set(PRESSURE, 6);
+    controller.set(TXSPARE, 7);
+    
+    controller.send();
+    
+    if (Serial1.available() > 0) {
+        Serial.write(Serial1.read());
     }
     
-    //packetController.set(idx, val);
-    
-    packetController.send();
-    
 }
+
+
+
+
+
+
+
+
+
