@@ -31,13 +31,13 @@ PacketStatus RXPacket::readPacket(USARTClass serialPort) {
 bool RXPacket::isChecksumValid() {
     int16_t sum = 0xBDFA;
     for (int i = 0; i < 6; i++) {
-        sum += _data[i];
+        sum += (int8_t)_data[i];
     }
-    sum += _data[POSZ] * 256;
+    sum += ((int8_t)_data[POSZ] * 256);
     for (int i = 7; i < 16; i++) {
-        sum += _data[i];
+        sum += (int8_t)_data[i];
     }
-    if (sum == ((_data[CHECKSUM] * 256) + _data[CHECKSUM+1])) {
+    if (sum == (((int8_t)_data[CHECKSUM] * 256) + (int8_t)_data[CHECKSUM+1])) {
         return true;
     } else {
         return false;

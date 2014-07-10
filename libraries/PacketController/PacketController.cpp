@@ -38,7 +38,7 @@ void PacketController::send() {
     _txPacket.sendPacket(_txSerialPort);
 }
 
-void PacketController::set(TXIndex index, uint8_t value) {
+void PacketController::set(TXIndex index, int8_t value) {
     _txPacket._data[index] = value;
 }
 
