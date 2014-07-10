@@ -25,7 +25,7 @@ void TXPacket::sendPacket(USARTClass serialPort) {
     int16_t checksum = computeChecksum();
     _data[10] = (int8_t)(floor(checksum / 256));
     _data[11] = (int8_t)(checksum % 256);
-    serialPort.write(_data, (size_t)12);
+    serialPort.write(_data, 12);
 }
 
 int16_t TXPacket::computeChecksum() {
