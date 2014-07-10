@@ -10,6 +10,7 @@
 #define ____TXPacket__
 
 #include "Arduino.h"
+#include <math.h>
 
 
 enum TXIndex {

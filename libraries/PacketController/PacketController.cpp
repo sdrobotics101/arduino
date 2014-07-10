@@ -38,7 +38,7 @@ void PacketController::send() {
     _txPacket.sendPacket(_txSerialPort);
 }
 
-void PacketController::set(TXIndex index, uint8_t value) {
+void PacketController::set(TXIndex index, int8_t value) {
     _txPacket._data[index] = value;
 }
 
@@ -48,7 +48,7 @@ int8_t PacketController::get(RXIndex index) {
 
 int16_t PacketController::getPosZ() {
     int16_t posZ = _rxPacket._data[POSZ];
-    posZ << 8;
+    posZ *= 256;
     posZ += _rxPacket._data[POSZ+1];
     return posZ;
 }
