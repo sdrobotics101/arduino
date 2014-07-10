@@ -15,7 +15,7 @@
 
 class PacketController {
 public:
-    PacketController(USARTClass rxSerialPort = Serial1, USARTClass txSerialPort = Serial1);
+    PacketController(USARTClass &rxSerialPort = Serial1, USARTClass &txSerialPort = Serial1);
     void begin(int baudRate = 115200);
     
     PacketStatus listen();
@@ -26,8 +26,8 @@ public:
     int16_t getPosZ();
     
 private:
-    USARTClass _rxSerialPort;
-    USARTClass _txSerialPort;
+    USARTClass &_rxSerialPort;
+    USARTClass &_txSerialPort;
     RXPacket _rxPacket;
     TXPacket _txPacket;
     

@@ -8,7 +8,7 @@
 
 #include "PacketController.h"
 
-PacketController::PacketController(USARTClass rxSerialPort, USARTClass txSerialPort) : _rxSerialPort(rxSerialPort), _txSerialPort(txSerialPort) {}
+PacketController::PacketController(USARTClass &rxSerialPort, USARTClass &txSerialPort) : _rxSerialPort(rxSerialPort), _txSerialPort(txSerialPort) {}
 
 void PacketController::begin(int baudRate) {
     Serial.begin(baudRate);
