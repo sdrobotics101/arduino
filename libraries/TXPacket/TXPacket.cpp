@@ -10,8 +10,8 @@
 
 
 TXPacket::TXPacket() {
-    _data[0] = 0x1D;
-    _data[1] = 0x3B;
+    _data[0] = 0x3B;
+    _data[1] = 0x1D;
     for (int i = 2; i < 12; i++) {
         _data[i] = 0;
     }
@@ -23,8 +23,8 @@ void TXPacket::begin() {
 
 void TXPacket::sendPacket(USARTClass serialPort) {
     int16_t checksum = computeChecksum();
-    _data[10] = (int8_t)(floor(checksum / 256));
-    _data[11] = (int8_t)(checksum % 256);
+    _data[11] = (int8_t)(floor(checksum / 256));
+    _data[10] = (int8_t)(checksum % 256);
     serialPort.write(_data, 12);
 }
 
