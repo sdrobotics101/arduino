@@ -22,8 +22,8 @@ void PacketController::begin(int baudRate) {
 PacketStatus PacketController::listen() {
     if (_rxSerialPort.available() > 19) {
         for (int i = 0; i < 20; i++) {
-            if (_rxSerialPort.read() == 0xBD) {
-                if (_rxSerialPort.read() == 0xFA) {
+            if (_rxSerialPort.read() == 0xFA) {
+                if (_rxSerialPort.read() == 0xBD) {
                     return _rxPacket.readPacket(_rxSerialPort);
                 }
             }
@@ -47,8 +47,8 @@ int8_t PacketController::get(RXIndex index) {
 }
 
 int16_t PacketController::getPosZ() {
-    int16_t posZ = _rxPacket._data[POSZ];
+    int16_t posZ = _rxPacket._data[POSZ+1];
     posZ *= 256;
-    posZ += _rxPacket._data[POSZ+1];
+    posZ += _rxPacket._data[POSZ];
     return posZ;
 }
