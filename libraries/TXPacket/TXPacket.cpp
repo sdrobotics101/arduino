@@ -13,7 +13,7 @@ TXPacket::TXPacket() {
     _data[0] = 0x3B;
     _data[1] = 0x1D;
     for (int i = 2; i < 12; i++) {
-        _data[i] = 0;
+        _data[i] = (int8_t)0;
     }
 }
 
