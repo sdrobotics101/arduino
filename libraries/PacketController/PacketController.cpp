@@ -11,11 +11,51 @@
 PacketController::PacketController(USARTClass &rxSerialPort, USARTClass &txSerialPort) : _rxSerialPort(rxSerialPort), _txSerialPort(txSerialPort) {}
 
 void PacketController::begin(int baudRate) {
+    
     Serial.begin(baudRate);
+    
+    if (Serial) {
+        Serial.println("Serial Initialized");
+    } else {
+        Serial.println("Serial Failed to Initalize"); //How can this actually output?
+    }
+    
     _rxSerialPort.begin(baudRate);
     _txSerialPort.begin(baudRate);
+    
+    if (_rxSerialPort) {
+        Serial.print("RX Serial Port Initialized: ");
+        if (&_rxSerialPort == &Serial1) {
+            Serial.println("Serial 1");
+        } else if (&_rxSerialPort == &Serial2) {
+            Serial.println("Serial 2");
+        } else if (&_rxSerialPort == &Serial3) {
+            Serial.println("Serial 3");
+        } else {
+            Serial.println("Unknown");
+        }
+    } else {
+        Serial.println("RX Serial Port Failed to Initialize");
+    }
+    
+    if (_txSerialPort) {
+        Serial.print("TX Serial Port Initialized: ");
+        if (&_txSerialPort == &Serial1) {
+            Serial.println("Serial 1");
+        } else if (&_txSerialPort == &Serial2) {
+            Serial.println("Serial 2");
+        } else if (&_txSerialPort == &Serial3) {
+            Serial.println("Serial 3");
+        } else {
+            Serial.println("Unknown");
+        }
+    } else {
+        Serial.println("RX Serial Port Failed to Initialize");
+    }
+    
     _rxPacket.begin();
     _txPacket.begin();
+    
     Serial.println("PacketController Initialized");
 }
 
