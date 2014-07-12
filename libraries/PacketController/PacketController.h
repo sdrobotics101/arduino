@@ -15,7 +15,7 @@
 
 class PacketController {
 public:
-    PacketController(USARTClass &rxSerialPort = Serial1, USARTClass &txSerialPort = Serial1);
+    PacketController(USARTClass &rxSerialPort = Serial3, USARTClass &txSerialPort = Serial3);
     void begin(int baudRate = 115200);
     
     PacketStatus listen();

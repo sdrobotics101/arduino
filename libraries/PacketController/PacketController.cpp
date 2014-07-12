@@ -23,7 +23,8 @@ PacketStatus PacketController::listen() {
     if (_rxSerialPort.available() > 19) {
         for (int i = 0; i < 20; i++) {
             if (_rxSerialPort.read() == 0xFA) {
-                if (_rxSerialPort.read() == 0xBD) {
+                if (_rxSerialPort.peek() == 0xBD) {
+		    _rxSerialPort.read();
                     return _rxPacket.readPacket(_rxSerialPort);
                 }
             }

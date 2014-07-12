@@ -10,7 +10,7 @@ void setup() {
 }
 
 void loop() {
-  
+  /*
   Serial.println("Writing Data");
   
   Serial1.write(0xAB); //JUNK
@@ -44,7 +44,7 @@ void loop() {
   Serial1.write(0x0E);
   
   delay(1000);
-  
+  */
   Serial.println("Listening");
   pStatus = controller.listen();
   
