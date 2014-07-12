@@ -17,7 +17,7 @@ void PacketController::begin(int baudRate) {
     if (Serial) {
         Serial.println("Serial Initialized");
     } else {
-        Serial.println("Serial Failed to Initalize"); //How can this actually output?
+        Serial.println("Serial Failed to Initialize"); //How can this actually output?
     }
     
     _rxSerialPort.begin(baudRate);
