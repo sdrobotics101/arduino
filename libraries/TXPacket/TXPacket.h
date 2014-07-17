@@ -31,7 +31,7 @@ private:
     void begin();
     
     void sendPacket(USARTClass serialPort);
-    int16_t computeChecksum();
+    uint16_t computeChecksum();
     
     uint8_t _data[12];
 };
