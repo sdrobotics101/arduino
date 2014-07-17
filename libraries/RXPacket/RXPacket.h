@@ -40,7 +40,7 @@ private:
     void begin();
     
     PacketStatus readPacket(USARTClass serialPort);
-    bool isChecksumValid();
+    uint16_t computeChecksum();
     
     uint8_t _data[18];
 };

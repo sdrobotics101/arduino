@@ -83,13 +83,13 @@ void PacketController::set(TXIndex index, int8_t value) {
     _txPacket._data[index] = value;
 }
 
-int8_t PacketController::get(RXIndex index) {
+int8_t PacketController::get8(RXIndex index) {
     return _rxPacket._data[index];
 }
 
-int16_t PacketController::getPosZ() {
-    int16_t posZ = _rxPacket._data[POSZ+1];
-    posZ *= 256;
-    posZ += _rxPacket._data[POSZ];
-    return posZ;
+int16_t PacketController::get16(RXIndex index) {
+    int16_t val = _rxPacket._data[index+1];
+    val *= 256;
+    val += _rxPacket._data[index];
+    return val;
 }

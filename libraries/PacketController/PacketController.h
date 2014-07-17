@@ -22,8 +22,8 @@ public:
     void send();
     
     void set(TXIndex index, int8_t value);
-    int8_t get(RXIndex index);
-    int16_t getPosZ();
+    int8_t get8(RXIndex index);
+    int16_t get16(RXIndex index);
     
 private:
     USARTClass &_rxSerialPort;
