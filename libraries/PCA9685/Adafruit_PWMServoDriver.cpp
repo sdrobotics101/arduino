@@ -30,7 +30,8 @@ void Adafruit_PWMServoDriver::begin(void) {
 
 
 void Adafruit_PWMServoDriver::reset(void) {
- write8(PCA9685_MODE1, 0x0);
+ write8(PCA9685_MODE1, 0x00);
+ write8(PCA9685_MODE2, 0x04)
 }
 
 void Adafruit_PWMServoDriver::setPWMFreq(float freq) {
@@ -41,9 +42,9 @@ void Adafruit_PWMServoDriver::setPWMFreq(float freq) {
   prescaleval /= 4096;
   prescaleval /= freq;
   prescaleval -= 1;
-  Serial.print("Estimated pre-scale: "); Serial.println(prescaleval);
+  //Serial.print("Estimated pre-scale: "); Serial.println(prescaleval);
   uint8_t prescale = floor(prescaleval + 0.5);
-  Serial.print("Final pre-scale: "); Serial.println(prescale);  
+  //Serial.print("Final pre-scale: "); Serial.println(prescale);
   
   uint8_t oldmode = read8(PCA9685_MODE1);
   uint8_t newmode = (oldmode&0x7F) | 0x10; // sleep
@@ -54,11 +55,13 @@ void Adafruit_PWMServoDriver::setPWMFreq(float freq) {
   write8(PCA9685_MODE1, oldmode | 0xa1);  //  This sets the MODE1 register to turn on auto increment.
                                           // This is why the beginTransmission below was not working.
   //  Serial.print("Mode now 0x"); Serial.println(read8(PCA9685_MODE1), HEX);
+  write8(PCA9685_MODE2, 0x04);
 }
 
 void Adafruit_PWMServoDriver::setPWM(uint8_t num, uint16_t on, uint16_t off) {
   //Serial.print("Setting PWM "); Serial.print(num); Serial.print(": "); Serial.print(on); Serial.print("->"); Serial.println(off);
-
+  setMode1(0x21);
+  setMode2(0x04);
   WIRE.beginTransmission(_i2caddr);
   WIRE.write(LED0_ON_L+4*num);
   WIRE.write(on);
@@ -66,6 +69,22 @@ void Adafruit_PWMServoDriver::setPWM(uint8_t num, uint16_t on, uint16_t off) {
   WIRE.write(off);
   WIRE.write(off>>8);
   WIRE.endTransmission();
+}
+
+void Adafruit_PWMServoDriver::setMode1(uint8_t d) {
+  write8(PCA9685_MODE1, d);
+}
+
+void Adafruit_PWMServoDriver::setMode2(uint8_t d) {
+  write8(PCA9685_MODE2, d);
+}
+
+uint8_t Adafruit_PWMServoDriver::getMode1() {
+  return read8(PCA9685_MODE1);
+}
+
+uint8_t Adafruit_PWMServoDriver::getMode2() {
+  return read8(PCA9685_MODE2);
 }
 
 uint8_t Adafruit_PWMServoDriver::read8(uint8_t addr) {
