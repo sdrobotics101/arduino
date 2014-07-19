@@ -31,7 +31,7 @@ void Adafruit_PWMServoDriver::begin(void) {
 
 void Adafruit_PWMServoDriver::reset(void) {
  write8(PCA9685_MODE1, 0x00);
- write8(PCA9685_MODE2, 0x04)
+ write8(PCA9685_MODE2, 0x04);
 }
 
 void Adafruit_PWMServoDriver::setPWMFreq(float freq) {
