@@ -58,8 +58,8 @@ void setup() {
   pwmU1.begin();
   pwmU2.begin();
   
-  pwmU1.setPWMFreq(1600);
-  pwmU2.setPWMFreq(1600);
+  pwmU1.setPWMFreq(1000);
+  pwmU2.setPWMFreq(1000);
   
   pwmU1.setPWM(MXF1, 0, 0);
   pwmU1.setPWM(MXF2, 0, 0);
