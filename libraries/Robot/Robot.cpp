@@ -82,7 +82,7 @@ double Robot::getDispZ(double dt) {
     return stateGyroZ + (gyroZ/131) * dt);
 }
 
-void Robot::stabilize() {
+void Robot::stabilize(int16_t posZ, double K) {
     double dt = micros() - time;
     time = micros();
     
@@ -95,6 +95,11 @@ void Robot::stabilize() {
     double z2 = ( outputX) + (-outputY);
     double z3 = ( outputX) + ( outputY);
     double z4 = (-outputX) + ( outputY);
+    
+    z1 = (K*z1) + ((1 - K) * posZ);
+    z2 = (K*z2) + ((1 - K) * posZ);
+    z3 = (K*z3) + ((1 - K) * posZ);
+    z4 = (K*z4) + ((1 - K) * posZ);
 }
 
 void Robot::setMotorU1(MotorU1 motor, uint16_t value) {
