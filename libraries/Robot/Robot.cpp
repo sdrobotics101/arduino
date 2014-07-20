@@ -88,21 +88,20 @@ void Robot::stabilize() {
     
     updateMPU9150();
     
-    double dispX = getDispX(dt);
-    double dispY = getDispY(dt);
+    double outputX = pidOutputX.compute(getDispX(dt));
+    double outputY = pidOutputY.compute(getDispY(dt));
     
-    double outputX = pidOutputX.compute(dispX);
-    double outputY = pidOutputY.compute(dispY);
-    
-    
-    
+    double z1 = (-outputX) + (-outputY);
+    double z2 = ( outputX) + (-outputY);
+    double z3 = ( outputX) + ( outputY);
+    double z4 = (-outputX) + ( outputY);
 }
 
-void Robot::setMotorU1(MotorU1 motor, int16_t value) {
+void Robot::setMotorU1(MotorU1 motor, uint16_t value) {
     _pwmU1.setPWM(motor, motor*256, ((motor*256) + value) % 4096);
 }
 
-void Robot::setMotorU2(MotorU2 motor, int16_t value) {
+void Robot::setMotorU2(MotorU2 motor, uint16_t value) {
     _pwmU2.setPWM(motor, motor*256, ((motor*256) + value) % 4096);
 }
 

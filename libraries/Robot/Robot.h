@@ -102,8 +102,8 @@ private:
     
     void stabilize();
     
-    void setMotorU1(MotorU1 motor, int16_t value);
-    void setMotorU2(MotorU2 motor, int16_t value);
+    void setMotorU1(MotorU1 motor, uint16_t value);
+    void setMotorU2(MotorU2 motor, uint16_t value);
     
     MPU6050 _mpu9150;
     Adafruit_PWMServoDriver _pwmU1;

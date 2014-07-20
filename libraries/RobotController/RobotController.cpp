@@ -7,3 +7,11 @@
 //
 
 #include "RobotController.h"
+
+
+
+void RobotController::executeCycle() {
+    //get PacketController input
+    //filter input - handle bad packets
+    //Robot setMotion
+}
