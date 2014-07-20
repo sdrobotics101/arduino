@@ -53,6 +53,10 @@ MPU6050::MPU6050(uint8_t address) {
     devAddr = address;
 }
 
+uint8_t MPU6050::getAddress() {
+    return devAddr;
+}
+
 /** Power on and prepare for general usage.
  * This will activate the device and take it out of sleep mode (which must be done
  * after start-up). This function also sets both the accelerometer and the gyroscope
