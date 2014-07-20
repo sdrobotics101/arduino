@@ -23,6 +23,10 @@ Adafruit_PWMServoDriver::Adafruit_PWMServoDriver(uint8_t addr) {
   _i2caddr = addr;
 }
 
+uint8_t Adafruit_PWMServoDriver::getAddress() {
+    return _i2caddr;
+}
+
 void Adafruit_PWMServoDriver::begin(void) {
  WIRE.begin();
  reset();

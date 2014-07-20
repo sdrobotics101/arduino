@@ -43,6 +43,7 @@
 class Adafruit_PWMServoDriver {
  public:
   Adafruit_PWMServoDriver(uint8_t addr = 0x40);
+  uint8_t getAddress();
     
   void begin(void);
   void reset(void);
