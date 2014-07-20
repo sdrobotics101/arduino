@@ -39,8 +39,11 @@ void Robot::setMotion(int8_t velX,
                       int8_t rotZ,
                       int16_t posZ,
                       int8_t torpedoCtl,
-                      int8_t* servoCtl) {
-    
+                      int8_t servoCtl[6])
+{
+    stabilize();
+    //Write velX, velY, rotX, rotY
+    //Other commands
     
 }
 
@@ -52,3 +55,70 @@ void Robot::stop() {
         _pwmU2.setPWM(i, 0, 0);
     }
 }
+
+double Robot::updateMPU9150() {
+    _mpu9150.getMotion6(&accX, &accY, &accZ, &gyroX, &gyroY, &gyroZ);
+}
+
+double Robot::getDispX(double dt) {
+    double accAngle = atan2(accY, sqrt(pow(accX, 2) + pow(accZ, 2)));
+    accAngle *= (180 / PI);
+    
+    double gyroAngle = stateGyroX + ((gyroX/131) * dt);
+    
+    return (0.98 * gyroAngle) + (0.02 * accAngle);
+}
+
+double Robot::getDispY(double dt) {
+    double accAngle = atan2(accX, sqrt(pow(accY, 2) + pow(accZ, 2)));
+    accAngle *= (180 / PI);
+    
+    double gyroAngle = stateGyroY + ((gyroY/131) * dt);
+    
+    return (0.98 * gyroAngle) + (0.02 * accAngle);
+}
+
+double Robot::getDispZ(double dt) {
+    return stateGyroZ + (gyroZ/131) * dt);
+}
+
+void Robot::stabilize() {
+    double dt = micros() - time;
+    time = micros();
+    
+    updateMPU9150();
+    
+    double dispX = getDispX(dt);
+    double dispY = getDispY(dt);
+    
+    double outputX = pidOutputX.compute(dispX);
+    double outputY = pidOutputY.compute(dispY);
+    
+    
+    
+}
+
+void Robot::setMotorU1(MotorU1 motor, int16_t value) {
+    _pwmU1.setPWM(motor, motor*256, ((motor*256) + value) % 4096);
+}
+
+void Robot::setMotorU2(MotorU2 motor, int16_t value) {
+    _pwmU2.setPWM(motor, motor*256, ((motor*256) + value) % 4096);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

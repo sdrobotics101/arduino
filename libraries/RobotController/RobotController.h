@@ -15,7 +15,10 @@
 #include "PacketController.h"
 
 class RobotController {
-
+public:
+    RobotController();
+    void begin();
+    void executeCycle();
 };
 
 
