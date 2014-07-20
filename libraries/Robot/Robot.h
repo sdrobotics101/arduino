@@ -19,20 +19,7 @@
 #include "Adafruit_PWMServoDriver.h"
 #include "PID.h"
 
-#define SYSTEM_SAMPLE_PERIOD   ((double) 0.1)
-#define DISP_XY_RATIO          ((double) 0.8)
-#define DISP_XY_SCALE          ((double) 1/50.0)
-#define STABILIZER_KP          ((double) 10.0/16.0)
-#define STABILIZER_KI          ((double) 5.0/16.0)
-#define STABILIZER_KD          ((double) 1.0/16.0)
-#define DEPTH_KP               ((double) 10.0/16.0)
-#define DEPTH_KI               ((double) 5.0/16.0)
-#define DEPTH_KD               ((double) 1.0/16.0)
-#define VERT_COMBINE_RATIO     ((double) 0.5)
-#define MOTOR_Z_OFFSET         ((double) 2048)
-#define MOTOR_Z_SCALE          ((double) 4096)
-
-enum MotorU1 {                           
+enum MotorU1 {
     MYF4 = 0,
     MYF3 = 1,
     MYF2 = 2,
@@ -68,9 +55,30 @@ enum MotorU2 {
 
 class Robot {
 public:
-    Robot(uint8_t mpuAddr = 0x68,
-          uint8_t pwmU1Addr = 0x79,
-          uint8_t pwmU2Addr = 0x71);
+    Robot(uint8_t mpuAddr,
+          uint8_t pwmU1Addr,
+          uint8_t pwmU2Addr,
+          
+          double pidOutputXKP,
+          double pidOutputXKI,
+          double pidOutputXKD,
+          double pidOutputXKF,
+          
+          double pidOutputYKP,
+          double pidOutputYKI,
+          double pidOutputYKD,
+          double pidOutputYKF,
+          
+          double pidDepthKP,
+          double pidDepthKI,
+          double pidDepthKD,
+          double pidDepthKF,
+          
+          double combinerConstant);
+    
+    double getDispX(double dt);
+    double getDispY(double dt);
+    double getDispZ(double dt);
     
     void begin();
     void setMotion(int8_t velX,
@@ -85,22 +93,45 @@ public:
     void stop();
 private:
     
+    // Constants : These fine tune the control loop
+    double DISP_XY_RATIO       = 0.8;
+    double STABILIZER_KP       = 10.0/16.0;
+    double STABILIZER_KI       =  5.0/16.0;
+    double STABILIZER_KD       =  1.0/16.0;
+    double DEPTH_KP            = 10.0/16.0;
+    double DEPTH_KI            =  5.0/16.0;
+    double DEPTH_KD            =  1.0/16.0;
+    double VERT_COMBINE_RATIO  = 0.5;
+    double MOTOR_Z_OFFSET      = 2048;
+    double MOTOR_Z_SCALE       = 4096;
+    
+    // Constants : Based on calibration
+    double _gyroOffsetX = 0;
+    double _gyroOffsetY = 0;
+    double _gyroOffsetZ = 0;
+    
     unsigned long time = micros();
     
-    int16_t accX,  accY,  accZ;
-    int16_t gyroX, gyroY, gyroZ;
+    int16_t _accX,  _accY,  _accZ;
+    int16_t _gyroX, _gyroY, _gyroZ;
     
-    double stateGyroX = 0;
-    double stateGyroY = 0;
-    double stateGyroZ = 0;
+    double _accAngleX  = 0.0;
+    double _accAngleY  = 0.0;
+    double _accAngleZ  = 0.0;
+    
+    double _gyroAngleX = 0;
+    double _gyroAngleY = 0;
+    double _gyroAngleZ = 0;
+    
+    double _combinerConstant;
     
     double updateMPU9150();
     
-    double getDispX(double dt);
-    double getDispY(double dt);
-    double getDispZ(double dt);
+    //double getDispX(double dt);
+    //double getDispY(double dt);
+    //double getDispZ(double dt);
     
-    void stabilize();
+    void stabilize(int16_t posZ);
     
     void setMotorU1(MotorU1 motor, uint16_t value);
     void setMotorU2(MotorU2 motor, uint16_t value);
@@ -109,9 +140,9 @@ private:
     Adafruit_PWMServoDriver _pwmU1;
     Adafruit_PWMServoDriver _pwmU2;
     
-    PID pidOutputX;
-    PID pidOutputY;
-    PID pidDepth;
+    PID _pidOutputX;
+    PID _pidOutputY;
+    PID _pidDepth;
 };
 
 

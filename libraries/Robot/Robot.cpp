@@ -10,23 +10,58 @@
 
 Robot::Robot(uint8_t mpuAddr,
              uint8_t pwmU1Addr,
-             uint8_t pwmU2Addr):
-                _mpu9150(MPU6050(mpuAddr)),
-                _pwmU1(Adafruit_PWMServoDriver(pwmU1Addr)),
-                _pwmU2(Adafruit_PWMServoDriver(pwmU2Addr)) {}
+             uint8_t pwmU2Addr,
+             
+             double pidOutputXKP,
+             double pidOutputXKI,
+             double pidOutputXKD,
+             double pidOutputXKF,
+             
+             double pidOutputYKP,
+             double pidOutputYKI,
+             double pidOutputYKD,
+             double pidOutputYKF,
+             
+             double pidDepthKP,
+             double pidDepthKI,
+             double pidDepthKD,
+             double pidDepthKF,
+             
+             double combinerConstant) :
+
+                _mpu9150(mpuAddr),
+                _pwmU1(pwmU1Addr),
+                _pwmU2(pwmU2Addr),
+
+                _pidOutputX(pidOutputXKP,
+                            pidOutputXKI,
+                            pidOutputXKD,
+                            pidOutputXKF),
+
+                _pidOutputY(pidOutputYKP,
+                            pidOutputYKI,
+                            pidOutputYKD,
+                            pidOutputYKF),
+
+                _pidDepth(  pidDepthKP,
+                            pidDepthKI,
+                            pidDepthKD,
+                            pidDepthKF),
+
+                _combinerConstant(combinerConstant) {}
 
 void Robot::begin() {
     _mpu9150.initialize();
     Serial.print("MPU9150 Initialized: ");
-    Serial.println(_mpu9150.getAddress());
+    Serial.println(_mpu9150.getAddress(), HEX);
     
     _pwmU1.begin();
     Serial.print("PWMU1 Initialized: ");
-    Serial.println(_pwmU1.getAddress());
+    Serial.println(_pwmU1.getAddress(), HEX);
     
     _pwmU2.begin();
     Serial.print("PWMU2 Initialized: ");
-    Serial.println(_pwmU2.getAddress());
+    Serial.println(_pwmU2.getAddress(), HEX);
     
     Serial.println("Robot Initialized");
 }
@@ -41,7 +76,8 @@ void Robot::setMotion(int8_t velX,
                       int8_t torpedoCtl,
                       int8_t servoCtl[6])
 {
-    stabilize();
+    updateMPU9150();
+    stabilize(posZ);
     //Write velX, velY, rotX, rotY
     //Other commands
     
@@ -57,49 +93,49 @@ void Robot::stop() {
 }
 
 double Robot::updateMPU9150() {
-    _mpu9150.getMotion6(&accX, &accY, &accZ, &gyroX, &gyroY, &gyroZ);
+    _mpu9150.getMotion6(&_accX, &_accY, &_accZ, &_gyroX, &_gyroY, &_gyroZ);
 }
 
 double Robot::getDispX(double dt) {
-    double accAngle = atan2(accY, sqrt(pow(accX, 2) + pow(accZ, 2)));
-    accAngle *= (180 / PI);
+    _accAngleX   = atan2(_accY, sqrt(pow(_accX, 2) + pow(_accZ, 2)));
+    _gyroAngleX += (((_gyroX - _gyroOffsetX)/65.54) * dt) * (PI/180);
     
-    double gyroAngle = stateGyroX + ((gyroX/131) * dt);
-    
-    return (0.98 * gyroAngle) + (0.02 * accAngle);
+    return sin((DISP_XY_RATIO * _gyroAngleX) + ((1-DISP_XY_RATIO) * _accAngleY));
 }
 
 double Robot::getDispY(double dt) {
-    double accAngle = atan2(accX, sqrt(pow(accY, 2) + pow(accZ, 2)));
-    accAngle *= (180 / PI);
+    _accAngleY   = atan2(_accX, sqrt(pow(_accY, 2) + pow(_accZ, 2)));
+    _gyroAngleY += (((_gyroY - _gyroOffsetY)/65.54) * dt) * (PI/180);
     
-    double gyroAngle = stateGyroY + ((gyroY/131) * dt);
-    
-    return (0.98 * gyroAngle) + (0.02 * accAngle);
+    return sin((DISP_XY_RATIO * _gyroAngleY) + ((1-DISP_XY_RATIO) * _accAngleY));
 }
 
 double Robot::getDispZ(double dt) {
-    return stateGyroZ + (gyroZ/131) * dt);
+    _gyroAngleZ += (((_gyroZ - _gyroOffsetZ)/65.54) * dt) * (PI/180);
+    
+    return sin(_gyroAngleZ);
 }
 
-void Robot::stabilize(int16_t posZ, double K) {
-    double dt = micros() - time;
+void Robot::stabilize(int16_t posZ) {
+    double dt = (micros() - time)/1000000;
     time = micros();
     
-    updateMPU9150();
-    
-    double outputX = pidOutputX.compute(getDispX(dt));
-    double outputY = pidOutputY.compute(getDispY(dt));
+    double outputX = _pidOutputX.compute(getDispX(dt));
+    double outputY = _pidOutputY.compute(getDispY(dt));
     
     double z1 = (-outputX) + (-outputY);
     double z2 = ( outputX) + (-outputY);
     double z3 = ( outputX) + ( outputY);
     double z4 = (-outputX) + ( outputY);
     
-    z1 = (K*z1) + ((1 - K) * posZ);
-    z2 = (K*z2) + ((1 - K) * posZ);
-    z3 = (K*z3) + ((1 - K) * posZ);
-    z4 = (K*z4) + ((1 - K) * posZ);
+    z1 = (_combinerConstant * z1) + ((1 - _combinerConstant) * posZ);
+    z2 = (_combinerConstant * z2) + ((1 - _combinerConstant) * posZ);
+    z3 = (_combinerConstant * z3) + ((1 - _combinerConstant) * posZ);
+    z4 = (_combinerConstant * z4) + ((1 - _combinerConstant) * posZ);
+    
+    
+    
+    
 }
 
 void Robot::setMotorU1(MotorU1 motor, uint16_t value) {

@@ -18,12 +18,12 @@ PID::PID(double kp, double ki, double kd, double kf) {
 double PID::compute(double err) {
     double xp, xi, xd;
     
-    xp = kp * err;
-    xi = (ki * err) + stateI;
-    xd = kd * (err - stateD);
+    xp = _kp * err;
+    xi = (_ki * err) + _stateI;
+    xd = _kd * (err - _stateD);
     
-    stateI = xi;
-    stateD = err;
+    _stateI = xi;
+    _stateD = err;
     
-    return xp + xi + xd + xf;
+    return xp + xi + xd + _kf;
 }
