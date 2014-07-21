@@ -19,6 +19,9 @@
 #include "Adafruit_PWMServoDriver.h"
 #include "PID.h"
 
+/**
+ *  Motor mapping for U1 chip
+ */
 enum MotorU1 {
     MYF4 = 0,
     MYF3 = 1,
@@ -41,6 +44,9 @@ enum MotorU1 {
     MXR1 = 15
 };
 
+/**
+ *  Motor mapping for U2 chip
+ */
 enum MotorU2 {
     MZF4 = 8,
     MZF3 = 9,
@@ -53,7 +59,11 @@ enum MotorU2 {
     MZR1 = 15
 };
 
+/**
+ *  Reads sensor data, calculates motor outputs, sets actuators
+ */
 class Robot {
+    friend class RobotController;
 public:
     Robot(uint8_t mpuAddr,
           uint8_t pwmU1Addr,
@@ -74,12 +84,12 @@ public:
           double pidDepthKD,
           double pidDepthKF,
           
-          double combinerConstant);
-    
-    double getDispX(double dt);
-    double getDispY(double dt);
-    double getDispZ(double dt);
-    
+          double combinerConstant,
+          double dispXYRatio,
+          
+          double outputScaleZ,
+          double outputOffsetZ);
+
     void begin();
     void setMotion(int8_t velX,
                    int8_t velY,
@@ -90,56 +100,81 @@ public:
                    int16_t posZ,
                    int8_t torpedoCtl,
                    int8_t servoCtl[6]);
+    void continueMotion();
     void stop();
-private:
+    void calibrate();
     
-    // Constants : These fine tune the control loop
-    double DISP_XY_RATIO       = 0.8;
-    double STABILIZER_KP       = 10.0/16.0;
-    double STABILIZER_KI       =  5.0/16.0;
-    double STABILIZER_KD       =  1.0/16.0;
-    double DEPTH_KP            = 10.0/16.0;
-    double DEPTH_KI            =  5.0/16.0;
-    double DEPTH_KD            =  1.0/16.0;
-    double VERT_COMBINE_RATIO  = 0.5;
-    double MOTOR_Z_OFFSET      = 2048;
-    double MOTOR_Z_SCALE       = 4096;
+private:
+    void updateDt();
+    
+    void updateMPU9150();
+    double getDispX();
+    double getDispY();
+    double getDispZ();
+    
+    void stabilize();
+    
+    void setMotorU1(MotorU1 motor, int16_t value);
+    void setMotorU2(MotorU2 motor, int16_t value);
+
+    //Command values
+    int8_t      _velX;
+    int8_t      _velY;
+    int8_t      _velZ;
+    int8_t      _rotX;
+    int8_t      _rotY;
+    int8_t      _rotZ;
+    int16_t     _posZ;
+    int8_t      _torpedoCtl;
+    int8_t      _servoCtl[6];
     
     // Constants : Based on calibration
-    double _gyroOffsetX = 0;
-    double _gyroOffsetY = 0;
-    double _gyroOffsetZ = 0;
+    int16_t _accOffsetX;
+    int16_t _accOffsetY;
+    int16_t _accOffsetZ;
+    int16_t _gyroOffsetX;
+    int16_t _gyroOffsetY;
+    int16_t _gyroOffsetZ;
     
-    unsigned long time = micros();
-    
-    int16_t _accX,  _accY,  _accZ;
+    //Raw sensor data
+    int16_t _accX , _accY , _accZ ;
     int16_t _gyroX, _gyroY, _gyroZ;
+
+    //Processed data
+    double _accAngleX , _accAngleY , _accAngleZ ;
+    double _gyroAngleX, _gyroAngleY, _gyroAngleZ;
+    double _combAngleX, _combAngleY, _combAngleZ;
+    double _dispX     , _dispY     , _dispZ     ;
+    double _filtX     , _filtY     , _filtZ     ;
+    double _stabZ[4];
+    double _combZ[4];
+
+    //Motor commands
+    int16_t _mxf[4];
+    int16_t _mxr[4];
+    int16_t _myf[4];
+    int16_t _myr[4];
+    int16_t _mzf[4];
+    int16_t _mzr[4];
     
-    double _accAngleX  = 0.0;
-    double _accAngleY  = 0.0;
-    double _accAngleZ  = 0.0;
+    //Timekeepers
+    unsigned long _realtime;
+    double        _dt;
     
-    double _gyroAngleX = 0;
-    double _gyroAngleY = 0;
-    double _gyroAngleZ = 0;
+    //Loop constants
+    double  _combinerConstant;
+    double _dispXYRatio;
     
-    double _combinerConstant;
+    //Scale values
+    double  _outputScaleZ;
+    double  _outputOffsetZ;
     
-    double updateMPU9150();
-    
-    //double getDispX(double dt);
-    //double getDispY(double dt);
-    //double getDispZ(double dt);
-    
-    void stabilize(int16_t posZ);
-    
-    void setMotorU1(MotorU1 motor, uint16_t value);
-    void setMotorU2(MotorU2 motor, uint16_t value);
-    
+    //Sensors and actuators
     MPU6050 _mpu9150;
     Adafruit_PWMServoDriver _pwmU1;
     Adafruit_PWMServoDriver _pwmU2;
     
+    //PID controllers
     PID _pidOutputX;
     PID _pidOutputY;
     PID _pidDepth;

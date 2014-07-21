@@ -22,8 +22,8 @@ private:
     double _ki;
     double _kd;
     double _kf;
-    double _stateI = 0;
-    double _stateD = 0;
+    double _stateI;
+    double _stateD;
 };
 
 
