@@ -8,6 +8,40 @@
 
 #include "RobotController.h"
 
+/**
+ *  Constructor
+ *
+ *  @param mpuAddr                 I2C address of MPU9150
+ *  @param pwmU1Addr               I2C address of PCA9685 on U1
+ *  @param pwmU2Addr               I2C address of PCA9685 on U2
+ *  @param pidOutputXKP            Kp for output X PID controller
+ *  @param pidOutputXKI            Ki for output X PID controller
+ *  @param pidOutputXKD            Kd for output X PID controller
+ *  @param pidOutputXKF            Kf for output X PID controller
+ *  @param pidOutputYKP            Kp for output Y PID controller
+ *  @param pidOutputYKI            Ki for output Y PID controller
+ *  @param pidOutputYKD            Kd for output Y PID controller
+ *  @param pidOutputYKF            Kf for output Y PID controller
+ *  @param pidDepthKP              Kp for depth PID controller
+ *  @param pidDepthKI              Ki for depth PID controller 
+ *  @param pidDepthKD              Kd for depth PID controller 
+ *  @param pidDepthKF              Kf for depth PID controller
+ *  @param pidAngleKP              Kp for angle Z PID controller
+ *  @param pidAngleKI              Ki for angle Z PID controller
+ *  @param pidAngleKD              Kd for angle Z PID controller
+ *  @param pidAngleKF              Kf for angle Z PID controller
+ *  @param dispXYRatio             Complementary filter ratio
+ *  @param verticalCombinerRatio   Vertical combiner ratio
+ *  @param horizontalCombinerRatio Horizontal combiner ratio
+ *  @param outputScaleXY           Scale in XY direction
+ *  @param outputScaleZ            Scale in Z direction
+ *  @param outputOffsetZ           Offset in Z direction
+ *  @param rxSerialPort            Which serial port to read from
+ *  @param txSerialPort            Which serial port to write to
+ *  @param badPacketThreshold      The number of bad packets allowed before error
+ *
+ *  @return Nothing
+ */
 RobotController::RobotController(uint8_t mpuAddr,
                                  uint8_t pwmU1Addr,
                                  uint8_t pwmU2Addr,
@@ -86,7 +120,9 @@ RobotController::RobotController(uint8_t mpuAddr,
     _badPacketCount = 0;
 }
 
-
+/**
+ *  Initializes RobotController
+ */
 void RobotController::begin() {
     Serial.begin(115200);
     if (Serial) {
@@ -100,6 +136,9 @@ void RobotController::begin() {
     Serial.println("RobotController Initialized");
 }
 
+/**
+ *  Executes a single cycle of the robot loop
+ */
 void RobotController::executeCycle() {
     _packetStatus = _packetController.listen();
 

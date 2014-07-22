@@ -74,7 +74,6 @@ enum MotorU2 {
  *  Reads sensor data, calculates motor outputs, sets actuators
  */
 class Robot {
-    friend class RobotController;
 public:
     Robot(uint8_t mpuAddr,
           uint8_t pwmU1Addr,

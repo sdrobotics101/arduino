@@ -14,6 +14,9 @@
 #include "Robot.h"
 #include "PacketController.h"
 
+/**
+ *  Complete controller for robot and communications
+ */
 class RobotController {
 public:
     RobotController(uint8_t mpuAddr,
