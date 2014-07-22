@@ -9,6 +9,9 @@
 #include "PID.h"
 
 PID::PID(double kp, double ki, double kd, double kf) {
+    _stateI = 0;
+    _stateD = 0;
+
     _kp = kp;
     _ki = ki;
     _kd = kd;
