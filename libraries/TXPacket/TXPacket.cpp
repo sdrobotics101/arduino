@@ -9,6 +9,9 @@
 #include "TXPacket.h"
 
 
+/**
+ *  Constructor
+ */
 TXPacket::TXPacket() {
     _data[0] = 0x3B;
     _data[1] = 0x1D;
@@ -17,10 +20,18 @@ TXPacket::TXPacket() {
     }
 }
 
+/**
+ *  Initializes TXPacket
+ */
 void TXPacket::begin() {
     Serial.println("TXPacket Initialized");
 }
 
+/**
+ *  Sends a packet to the serial port
+ *
+ *  @param serialPort Which serial port to send to
+ */
 void TXPacket::sendPacket(USARTClass serialPort) {
     uint16_t checksum = computeChecksum();
     _data[11] = (floor(checksum / 256));
@@ -28,6 +39,11 @@ void TXPacket::sendPacket(USARTClass serialPort) {
     serialPort.write(_data, 12);
 }
 
+/**
+ *  Computes the checksum
+ *
+ *  @return The computed checksum
+ */
 uint16_t TXPacket::computeChecksum() {
     uint16_t sum = 0;
     for (int i = 0; i < 10; i++) {

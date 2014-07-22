@@ -11,7 +11,9 @@
 
 #include "Arduino.h"
 
-
+/**
+ *  Status of the packet received
+ */
 enum PacketStatus {
     VALID_PACKET = 0,
     INVALID_PACKET = 1,
@@ -19,6 +21,9 @@ enum PacketStatus {
     NOT_ENOUGH_DATA = 3
 };
 
+/**
+ *  Index of a value in RXPacket
+ */
 enum RXIndex {
     VELX = 0,
     VELY = 1,
@@ -33,6 +38,9 @@ enum RXIndex {
     CHECKSUM = 16
 };
 
+/**
+ *  Handles input from serial port
+ */
 class RXPacket {
     friend class PacketController;
 private:

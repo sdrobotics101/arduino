@@ -52,9 +52,16 @@ Robot::Robot(uint8_t mpuAddr,
              double  pidDepthKD,
              double  pidDepthKF,
              
+             double  pidAngleKP,
+             double  pidAngleKI,
+             double  pidAngleKD,
+             double  pidAngleKF,
+             
              double  dispXYRatio,
              double  verticalCombinerRatio,
+             double  horizontalCombinerRatio,
 	     
+             double  outputScaleXY,
              double  outputScaleZ,
              double  outputOffsetZ) :
 
@@ -77,9 +84,16 @@ Robot::Robot(uint8_t mpuAddr,
                             pidDepthKD,
                             pidDepthKF),
 
+                _pidAngle(  pidAngleKP,
+                            pidAngleKI,
+                            pidAngleKD,
+                            pidAngleKF),
+
                 _dispXYRatio(dispXYRatio),
                 _verticalCombinerRatio(verticalCombinerRatio),
+                _horizontalCombinerRatio(horizontalCombinerRatio),
 
+                _outputScaleXY(outputScaleXY),
                 _outputScaleZ (outputScaleZ ),
                 _outputOffsetZ(outputOffsetZ)
 {
@@ -96,15 +110,35 @@ Robot::Robot(uint8_t mpuAddr,
     
     _accOffsetX  = 0;   _accOffsetY  = 0;   _accOffsetZ  = 0;
     _gyroOffsetX = 0;   _gyroOffsetY = 0;   _gyroOffsetZ = 0;
-    _accAngleX   = 0.0; _accAngleY   = 0.0; _accAngleZ   = 0.0;
-    _gyroAngleX  = 0.0; _gyroAngleY  = 0.0; _gyroAngleZ  = 0.0;
-    _combAngleX  = 0.0; _combAngleY  = 0.0; _combAngleZ  = 0.0;
-    _dispX       = 0.0; _dispY       = 0.0; _dispZ       = 0.0;
-    _filtX       = 0.0; _filtY       = 0.0; _filtZ       = 0.0;
+    
+    _accX  = 0; _accY  = 0; _accZ  = 0;
+    _gyroX = 0; _gyroY = 0; _gyroZ = 0;
+    
+    _accAngleX   = 0.0; _accAngleY   = 0.0;
+    _gyroAngleX  = 0.0; _gyroAngleY  = 0.0;
+    _combAngleX  = 0.0; _combAngleY  = 0.0;
+    _dispX       = 0.0; _dispY       = 0.0;
+    _filtX       = 0.0; _filtY       = 0.0;
+    
+    _gyroAngleZ = 0.0;
+    _combAngleZ = 0.0;
+    _rotR       = 0.0;
+    _filtR      = 0.0;
+    _scaledVelX = 0.0; _scaledVelY = 0.0;
 
     for (int i=0; i<4; i++) {
        _stabZ[i] = 0.0;
        _combZ[i] = 0.0;
+        
+       _rotXF[i] = 0.0;
+       _rotXR[i] = 0.0;
+       _rotYF[i] = 0.0;
+       _rotYR[i] = 0.0;
+       _linXF[i] = 0.0;
+       _linXR[i] = 0.0;
+       _linYF[i] = 0.0;
+       _linYR[i] = 0.0;
+        
        _mxf[i]   = 0;
        _mxr[i]   = 0;
        _myf[i]   = 0;
@@ -116,14 +150,13 @@ Robot::Robot(uint8_t mpuAddr,
     _realtime   = micros();
     _dt         = 0.0;
     
-    _mode = 1; //set back to 0
+    _mode = 1; //set back to 0 for final
 }
 
 /**
  *  Initializes I2C bus, sensors, actuators
  */
 void Robot::begin() {
-    //TWBR = 400000L;
     Wire.begin();
     Serial.println("Wire Initialized");
     
@@ -309,7 +342,7 @@ double Robot::getDispZ() {
 
     _gyroAngleZ += (scaledGyroZ * _dt * (PI/180));
     
-    return sin(_gyroAngleZ);
+    return _gyroAngleZ;
 }
 
 /**
@@ -322,13 +355,11 @@ void Robot::stabilize() {
 
     double hackX = _dispX;
     double hackY = _dispY;
-    //double hackZ = _dispZ;
     
     // upon powerup, we wake up in the frozen state, till s/w commands otherwise
     if ((_mode & (1<<2))==0) {
         hackX -= _filtX;
         hackY -= _filtY;
-        //hackZ -= _filtZ;
     }
 
     _filtX = _pidOutputX.compute(hackX);
@@ -386,21 +417,16 @@ void Robot::stabilize() {
             Serial.print(_gyroZ); Serial.print(" ");
             Serial.print(_accAngleX , 4); Serial.print(" ");
             Serial.print(_accAngleY , 4); Serial.print(" ");
-            Serial.print(_accAngleZ , 4); Serial.print(" ");
             Serial.print(_gyroAngleX, 4); Serial.print(" ");
             Serial.print(_gyroAngleY, 4); Serial.print(" ");
-            Serial.print(_gyroAngleZ, 4); Serial.print(" ");
             Serial.print(_combAngleX, 4); Serial.print(" ");
             Serial.print(_combAngleY, 4); Serial.print(" ");
-            Serial.print(_combAngleZ, 4); Serial.print(" ");
             Serial.print(_dispX, 4); Serial.print(" ");
             Serial.print(_dispY, 4); Serial.print(" ");
-            Serial.print(_dispZ, 4); Serial.print(" ");
         }
         
         Serial.print(_filtX, 4); Serial.print(" ");
         Serial.print(_filtY, 4); Serial.print(" ");
-        Serial.print(_filtZ, 4); Serial.print(" ");
         
         if ((_mode & 0x3) > 1) {
             for (int i = 0; i < 4; i++) {
@@ -418,6 +444,122 @@ void Robot::stabilize() {
         }
         
         Serial.println("");
+    }
+    
+    
+}
+
+void Robot::move() {
+    _gyroAngleZ = getDispZ();
+    _combAngleZ = ((double)_rotZ * (PI/128)) - _gyroAngleZ;
+    _rotR = sin(_combAngleZ);
+    
+    double hackZ = _rotR;
+    
+    // upon powerup, we wake up in the frozen state, till s/w commands otherwise
+    if ((_mode & (1<<2))==0) {
+        hackZ -= _filtR;
+    }
+    
+    _filtR = _pidAngle.compute(hackZ);
+    
+    if (_filtR > 0.0) {
+        _rotXF[0] =  _filtR; _rotXR[2] =  _filtR;
+        _rotXF[1] =  _filtR; _rotXR[3] =  _filtR;
+        _rotYF[0] =  _filtR; _rotYR[0] =  _filtR;
+        _rotYF[1] =  _filtR; _rotYR[1] =  _filtR;
+        
+        _rotXF[2] =     0.0; _rotXR[0] =     0.0;
+        _rotXF[3] =     0.0; _rotXR[1] =     0.0;
+        _rotYF[2] =     0.0; _rotXR[0] =     0.0;
+        _rotYF[3] =     0.0; _rotXR[1] =     0.0;
+    }
+    else if (_filtR < 0.0) {
+        _rotXF[0] =     0.0; _rotXR[2] =     0.0;
+        _rotXF[1] =     0.0; _rotXR[3] =     0.0;
+        _rotYF[0] =     0.0; _rotYR[0] =     0.0;
+        _rotYF[1] =     0.0; _rotYR[1] =     0.0;
+        
+        _rotXF[2] = -_filtR; _rotXR[0] = -_filtR;
+        _rotXF[3] = -_filtR; _rotXR[1] = -_filtR;
+        _rotYF[2] = -_filtR; _rotXR[0] = -_filtR;
+        _rotYF[3] = -_filtR; _rotXR[1] = -_filtR;
+    }
+    else {
+        _rotXF[0] =     0.0; _rotXR[2] =     0.0;
+        _rotXF[1] =     0.0; _rotXR[3] =     0.0;
+        _rotYF[0] =     0.0; _rotYR[0] =     0.0;
+        _rotYF[1] =     0.0; _rotYR[1] =     0.0;
+        
+        _rotXF[2] =     0.0; _rotXR[0] =     0.0;
+        _rotXF[3] =     0.0; _rotXR[1] =     0.0;
+        _rotYF[2] =     0.0; _rotXR[0] =     0.0;
+        _rotYF[3] =     0.0; _rotXR[1] =     0.0;
+    }
+    
+    _scaledVelX = (double)_velX/128;
+    _scaledVelY = (double)_velY/128;
+    
+    if (_scaledVelX > 0.0) {
+        _linXF[0] = _scaledVelX; _linXR[0] =          0.0;
+        _linXF[1] = _scaledVelX; _linXR[1] =          0.0;
+        _linXF[2] = _scaledVelX; _linXR[2] =          0.0;
+        _linXF[3] = _scaledVelX; _linXR[3] =          0.0;
+    }
+    else if (_scaledVelX < 0.0) {
+        _linXF[0] =         0.0; _linXR[0] = -_scaledVelX;
+        _linXF[1] =         0.0; _linXR[1] = -_scaledVelX;
+        _linXF[2] =         0.0; _linXR[2] = -_scaledVelX;
+        _linXF[3] =         0.0; _linXR[3] = -_scaledVelX;
+    }
+    else {
+        _linXF[0] =         0.0; _linXR[0] =          0.0;
+        _linXF[1] =         0.0; _linXR[1] =          0.0;
+        _linXF[2] =         0.0; _linXR[2] =          0.0;
+        _linXF[3] =         0.0; _linXR[3] =          0.0;
+    }
+    
+    if (_scaledVelY > 0.0) {
+        _linYF[0] = _scaledVelY; _linYR[0] =          0.0;
+        _linYF[1] = _scaledVelY; _linYR[1] =          0.0;
+        _linYF[2] = _scaledVelY; _linYR[2] =          0.0;
+        _linYF[3] = _scaledVelY; _linYR[3] =          0.0;
+    }
+    else if (_scaledVelY < 0.0) {
+        _linYF[0] =         0.0; _linYR[0] = -_scaledVelY;
+        _linYF[1] =         0.0; _linYR[1] = -_scaledVelY;
+        _linYF[2] =         0.0; _linYR[2] = -_scaledVelY;
+        _linYF[3] =         0.0; _linYR[3] = -_scaledVelY;
+    }
+    else {
+        _linXF[0] =         0.0; _linYR[0] =          0.0;
+        _linXF[1] =         0.0; _linYR[1] =          0.0;
+        _linXF[2] =         0.0; _linYR[2] =          0.0;
+        _linXF[3] =         0.0; _linYR[3] =          0.0;
+    }
+    
+    
+    double tmpXF[4];  
+    double tmpXR[4]; 
+    double tmpYF[4]; 
+    double tmpYR[4]; 
+    
+    for (int i=0; i<4; i++) {
+        
+        tmpXF[i] = (_outputScaleXY * ((_horizontalCombinerRatio * _linXF[i]) + ((1 - _horizontalCombinerRatio) * _rotXF[i]))) + 0.5;
+        tmpXR[i] = (_outputScaleXY * ((_horizontalCombinerRatio * _linXR[i]) + ((1 - _horizontalCombinerRatio) * _rotXR[i]))) + 0.5;
+        tmpYF[i] = (_outputScaleXY * ((_horizontalCombinerRatio * _linYF[i]) + ((1 - _horizontalCombinerRatio) * _rotYF[i]))) + 0.5;
+        tmpYR[i] = (_outputScaleXY * ((_horizontalCombinerRatio * _linYR[i]) + ((1 - _horizontalCombinerRatio) * _rotYR[i]))) + 0.5;
+        
+        if (tmpXF[i] > 4095.0) tmpXF[i] = 4095.0;
+        if (tmpXR[i] > 4095.0) tmpXR[i] = 4095.0;
+        if (tmpYF[i] > 4095.0) tmpYF[i] = 4095.0;
+        if (tmpYR[i] > 4095.0) tmpYR[i] = 4095.0;
+        
+        _mxf[i] = ((int16_t)tmpXF[i]);
+        _mxr[i] = ((int16_t)tmpXR[i]);
+        _myf[i] = ((int16_t)tmpYF[i]);
+        _myr[i] = ((int16_t)tmpYR[i]);
     }
     
     
