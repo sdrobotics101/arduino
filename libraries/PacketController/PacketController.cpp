@@ -16,7 +16,11 @@
  *
  *  @return Nothing
  */
-PacketController::PacketController(USARTClass &rxSerialPort, USARTClass &txSerialPort) : _rxSerialPort(rxSerialPort), _txSerialPort(txSerialPort) {}
+PacketController::PacketController(USARTClass &rxSerialPort,
+                                   USARTClass &txSerialPort) :
+                                        _rxSerialPort(rxSerialPort),
+                                        _txSerialPort(txSerialPort)
+{}
 
 /**
  *  Initializes PacketController
@@ -24,15 +28,6 @@ PacketController::PacketController(USARTClass &rxSerialPort, USARTClass &txSeria
  *  @param baudRate What baud rate to run at
  */
 void PacketController::begin(int baudRate) {
-    
-    Serial.begin(baudRate);
-    
-    if (Serial) {
-        Serial.println("Serial Initialized");
-    } else {
-        Serial.println("Serial Failed to Initialize"); //How can this actually output?
-    }
-    
     _rxSerialPort.begin(baudRate);
     _txSerialPort.begin(baudRate);
     

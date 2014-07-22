@@ -20,7 +20,7 @@
 #include "PID.h"
 
 /**
- *  These could be converted into enums
+ *  Operating modes
  */
 #define MODE_LINEAR_DISABLE         0x80
 #define	MODE_ROTATION_DISABLE		0x40
@@ -196,14 +196,14 @@ private:
     double        _dt;
     
     //Loop constants
-    double _dispXYRatio;
-    double _verticalCombinerRatio;
-    double _horizontalCombinerRatio;
+    const double _dispXYRatio;
+    const double _verticalCombinerRatio;
+    const double _horizontalCombinerRatio;
     
     //Scale values
-    double _outputScaleXY;
-    double _outputScaleZ;
-    double _outputOffsetZ;
+    const double _outputScaleXY;
+    const double _outputScaleZ;
+    const double _outputOffsetZ;
     
     //Sensors and actuators
     MPU6050 _mpu9150;

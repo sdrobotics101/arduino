@@ -11,14 +11,17 @@
 /**
  *  Constructor
  */
-PID::PID(double kp, double ki, double kd, double kf) {
+PID::PID(double kp,
+         double ki,
+         double kd,
+         double kf) :
+            _kp(kp),
+            _ki(ki),
+            _kd(kd),
+            _kf(kf)
+{
     _stateI = 0;
     _stateD = 0;
-
-    _kp = kp;
-    _ki = ki;
-    _kd = kd;
-    _kf = kf;
 }
 
 /**

@@ -21,10 +21,10 @@ public:
     double compute(double err);
     
 private:
-    double _kp;
-    double _ki;
-    double _kd;
-    double _kf;
+    const double _kp;
+    const double _ki;
+    const double _kd;
+    const double _kf;
     double _stateI;
     double _stateD;
 };
