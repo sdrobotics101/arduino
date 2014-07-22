@@ -9,27 +9,33 @@
 #include "Robot.h"
 
 /**
- *  Robot constructor
+ *  Constructor
  *
- *  @param mpuAddr          I2C Address of MPU9150
- *  @param pwmU1Addr        I2C Address of PCA9685 on U1
- *  @param pwmU2Addr        I2C Address of PCA9685 on U2
- *  @param pidOutputXKP     Kp value for PID output X controller
- *  @param pidOutputXKI     Ki value for PID output X controller
- *  @param pidOutputXKD     Kd value for PID output X controller
- *  @param pidOutputXKF     Kf value for PID output X controller
- *  @param pidOutputYKP     Kp value for PID output Y controller
- *  @param pidOutputYKI     Ki value for PID output Y controller
- *  @param pidOutputYKD     Kd value for PID output Y controller
- *  @param pidOutputYKF     Kf value for PID output Y controller
- *  @param pidDepthKP       Kp value for PID depth controller
- *  @param pidDepthKI       Ki value for PID depth controller
- *  @param pidDepthKD       Kd value for PID depth controller
- *  @param pidDepthKF       Kf value for PID depth controller
- *  @param verticalCombinerRatio Vertical combiner constant
- *  @param dispXYRatio      Complementary filter constant
- *  @param outputScaleZ     Output scale Z
- *  @param outputOffsetZ    Output offset Z
+ *  @param mpuAddr                 I2C address of MPU9150
+ *  @param pwmU1Addr               I2C address of PCA9685 on U1
+ *  @param pwmU2Addr               I2C address of PCA9685 on U2
+ *  @param pidOutputXKP            Kp for output X PID controller
+ *  @param pidOutputXKI            Ki for output X PID controller
+ *  @param pidOutputXKD            Kd for output X PID controller
+ *  @param pidOutputXKF            Kf for output X PID controller
+ *  @param pidOutputYKP            Kp for output Y PID controller
+ *  @param pidOutputYKI            Ki for output Y PID controller
+ *  @param pidOutputYKD            Kd for output Y PID controller
+ *  @param pidOutputYKF            Kf for output Y PID controller
+ *  @param pidDepthKP              Kp for depth PID controller
+ *  @param pidDepthKI              Ki for depth PID controller
+ *  @param pidDepthKD              Kd for depth PID controller
+ *  @param pidDepthKF              Kf for depth PID controller
+ *  @param pidAngleKP              Kp for angle Z PID controller
+ *  @param pidAngleKI              Ki for angle Z PID controller
+ *  @param pidAngleKD              Kd for angle Z PID controller
+ *  @param pidAngleKF              Kf for angle Z PID controller
+ *  @param dispXYRatio             Complementary filter ratio
+ *  @param verticalCombinerRatio   Vertical combiner ratio
+ *  @param horizontalCombinerRatio Horizontal combiner ratio
+ *  @param outputScaleXY           Scale in XY direction
+ *  @param outputScaleZ            Scale in Z direction
+ *  @param outputOffsetZ           Offset in Z direction
  *
  *  @return Nothing
  */
@@ -106,20 +112,25 @@ Robot::Robot(uint8_t mpuAddr,
      _posZ      = 0;
     
      _torpedoCtl    = 0;
-     _servoCtl[6]   = 0;
+     for (int i=0; i<6; i++) {
+        _servoCtl[i] = 0;
+     }
+     _mode          = 0;
     
     _accOffsetX  = 0;   _accOffsetY  = 0;   _accOffsetZ  = 0;
     _gyroOffsetX = 0;   _gyroOffsetY = 0;   _gyroOffsetZ = 0;
     
     _accX  = 0; _accY  = 0; _accZ  = 0;
     _gyroX = 0; _gyroY = 0; _gyroZ = 0;
+    _pressure = 0;
     
     _accAngleX   = 0.0; _accAngleY   = 0.0;
     _gyroAngleX  = 0.0; _gyroAngleY  = 0.0;
     _combAngleX  = 0.0; _combAngleY  = 0.0;
-    _dispX       = 0.0; _dispY       = 0.0;
-    _filtX       = 0.0; _filtY       = 0.0;
-    
+    _dispX       = 0.0; _dispY       = 0.0; _dispZ  = 0.0;
+    _filtX       = 0.0; _filtY       = 0.0; _filtZ  = 0.0;
+                                            _depthZ = 0.0;
+
     _gyroAngleZ = 0.0;
     _combAngleZ = 0.0;
     _rotR       = 0.0;
@@ -149,8 +160,6 @@ Robot::Robot(uint8_t mpuAddr,
 
     _realtime   = micros();
     _dt         = 0.0;
-    
-    _mode = 1; //set back to 0 for final
 }
 
 /**
@@ -216,9 +225,7 @@ void Robot::setMotion(int8_t velX,
     updateMPU9150();
     updateDt();
     stabilize();
-    //Write velX, velY, rotX, rotY
-    //Other commands
-    
+    move();
 }
 
 /**
@@ -228,6 +235,7 @@ void Robot::continueMotion() {
     updateMPU9150();
     updateDt();
     stabilize();
+    move();
 }
 
 /**
@@ -352,18 +360,24 @@ void Robot::stabilize() {
 
     _dispX = getDispX();
     _dispY = getDispY();
+    _dispZ = ((double)_posZ/8.0) - ((double)_pressure*(14.0/65536)*10.1976);
 
-    double hackX = _dispX;
-    double hackY = _dispY;
     
     // upon powerup, we wake up in the frozen state, till s/w commands otherwise
-    if ((_mode & (1<<2))==0) {
+    double hackX = _dispX;
+    double hackY = _dispY;
+    double hackZ = _dispZ;
+    if ((_mode & MODE_NORMAL_ENABLE)==0) {
         hackX -= _filtX;
         hackY -= _filtY;
     }
+    hackZ -= _dispZ;	// ROHAN : KEEP THIS HERE TILL WE GET THE PRESSURE SENSOR WORKING
+                        //         OTHERWISE STABILIZER LOOP WILL GO UNSTABLE. ONCE WE
+			//         HAVE THE SENSOR, THIS CAN GO BACK WITH THE OTHER HACKS
 
     _filtX = _pidOutputX.compute(hackX);
     _filtY = _pidOutputY.compute(hackY);
+    _filtZ = _pidDepth.compute(hackZ);
 
     // Map the X-Y filter outputs to the 4 metrics metricZ
     _stabZ[0] = (  _filtX) + (- _filtY); 
@@ -373,7 +387,11 @@ void Robot::stabilize() {
 
     // Combine the stability control and depth control adjustments
     for (int i = 0; i < 4; i++) {
-        _combZ[i] = _stabZ[i];
+
+	_combZ[i] = 0.0;    
+
+	if ((_mode & MODE_STABILIZER_DISABLE)==0) _combZ[i] += ((    _verticalCombinerRatio) * _stabZ[i]);
+	if ((_mode & MODE_DEPTH_DISABLE     )==0) _combZ[i] += ((1 - _verticalCombinerRatio) * _filtZ   );
     }
 
     // Map the final adjustments to the different motors
@@ -402,33 +420,35 @@ void Robot::stabilize() {
     setMotorU2(MZF3, _mzf[2]);
     setMotorU2(MZF4, _mzf[3]);
     
-    
     // Log to serial port if flag is turned on
-    if ((_mode & 0x3) > 0) {
+    if ((_mode & MODE_LOG_LEVEL) > 0) {
         
         Serial.print("S: ");
         
-        if ((_mode & 0x3) > 2) {
-            Serial.print(_accX ); Serial.print(" ");
-            Serial.print(_accY ); Serial.print(" ");
-            Serial.print(_accZ ); Serial.print(" ");
-            Serial.print(_gyroX); Serial.print(" ");
-            Serial.print(_gyroY); Serial.print(" ");
-            Serial.print(_gyroZ); Serial.print(" ");
+        if ((_mode & MODE_LOG_LEVEL) > 2) {
+            Serial.print(_accX         ); Serial.print(" ");
+            Serial.print(_accY         ); Serial.print(" ");
+            Serial.print(_accZ         ); Serial.print(" ");
+            Serial.print(_gyroX        ); Serial.print(" ");
+            Serial.print(_gyroY        ); Serial.print(" ");
+            Serial.print(_posZ         ); Serial.print(" ");
+            Serial.print(_pressure     ); Serial.print(" ");
             Serial.print(_accAngleX , 4); Serial.print(" ");
             Serial.print(_accAngleY , 4); Serial.print(" ");
             Serial.print(_gyroAngleX, 4); Serial.print(" ");
             Serial.print(_gyroAngleY, 4); Serial.print(" ");
             Serial.print(_combAngleX, 4); Serial.print(" ");
             Serial.print(_combAngleY, 4); Serial.print(" ");
-            Serial.print(_dispX, 4); Serial.print(" ");
-            Serial.print(_dispY, 4); Serial.print(" ");
+            Serial.print(_dispX     , 4); Serial.print(" ");
+            Serial.print(_dispY     , 4); Serial.print(" ");
+            Serial.print(_dispZ     , 4); Serial.print(" ");
         }
         
         Serial.print(_filtX, 4); Serial.print(" ");
         Serial.print(_filtY, 4); Serial.print(" ");
+        Serial.print(_filtZ, 4); Serial.print(" ");
         
-        if ((_mode & 0x3) > 1) {
+        if ((_mode & MODE_LOG_LEVEL) > 1) {
             for (int i = 0; i < 4; i++) {
                 Serial.print(_stabZ[i], 4); Serial.print(" ");
             }
@@ -449,57 +469,60 @@ void Robot::stabilize() {
     
 }
 
+/**
+ *  Moves the robot according to values specified
+ */
 void Robot::move() {
     _gyroAngleZ = getDispZ();
     _combAngleZ = ((double)_rotZ * (PI/128)) - _gyroAngleZ;
-    _rotR = sin(_combAngleZ);
+    _rotR       = sin(_combAngleZ);
     
     double hackZ = _rotR;
     
     // upon powerup, we wake up in the frozen state, till s/w commands otherwise
-    if ((_mode & (1<<2))==0) {
+    if ((_mode & MODE_NORMAL_ENABLE)==0) {
         hackZ -= _filtR;
     }
     
     _filtR = _pidAngle.compute(hackZ);
-    
+
     if (_filtR > 0.0) {
         _rotXF[0] =  _filtR; _rotXR[2] =  _filtR;
         _rotXF[1] =  _filtR; _rotXR[3] =  _filtR;
-        _rotYF[0] =  _filtR; _rotYR[0] =  _filtR;
-        _rotYF[1] =  _filtR; _rotYR[1] =  _filtR;
+        _rotYF[0] =  _filtR; _rotYR[2] =  _filtR;
+        _rotYF[1] =  _filtR; _rotYR[3] =  _filtR;
         
         _rotXF[2] =     0.0; _rotXR[0] =     0.0;
         _rotXF[3] =     0.0; _rotXR[1] =     0.0;
-        _rotYF[2] =     0.0; _rotXR[0] =     0.0;
-        _rotYF[3] =     0.0; _rotXR[1] =     0.0;
+        _rotYF[2] =     0.0; _rotYR[0] =     0.0;
+        _rotYF[3] =     0.0; _rotYR[1] =     0.0;
     }
     else if (_filtR < 0.0) {
         _rotXF[0] =     0.0; _rotXR[2] =     0.0;
         _rotXF[1] =     0.0; _rotXR[3] =     0.0;
-        _rotYF[0] =     0.0; _rotYR[0] =     0.0;
-        _rotYF[1] =     0.0; _rotYR[1] =     0.0;
+        _rotYF[0] =     0.0; _rotYR[2] =     0.0;
+        _rotYF[1] =     0.0; _rotYR[3] =     0.0;
         
         _rotXF[2] = -_filtR; _rotXR[0] = -_filtR;
         _rotXF[3] = -_filtR; _rotXR[1] = -_filtR;
-        _rotYF[2] = -_filtR; _rotXR[0] = -_filtR;
-        _rotYF[3] = -_filtR; _rotXR[1] = -_filtR;
+        _rotYF[2] = -_filtR; _rotYR[0] = -_filtR;
+        _rotYF[3] = -_filtR; _rotYR[1] = -_filtR;
     }
     else {
         _rotXF[0] =     0.0; _rotXR[2] =     0.0;
         _rotXF[1] =     0.0; _rotXR[3] =     0.0;
-        _rotYF[0] =     0.0; _rotYR[0] =     0.0;
-        _rotYF[1] =     0.0; _rotYR[1] =     0.0;
+        _rotYF[0] =     0.0; _rotYR[2] =     0.0;
+        _rotYF[1] =     0.0; _rotYR[3] =     0.0;
         
         _rotXF[2] =     0.0; _rotXR[0] =     0.0;
         _rotXF[3] =     0.0; _rotXR[1] =     0.0;
-        _rotYF[2] =     0.0; _rotXR[0] =     0.0;
-        _rotYF[3] =     0.0; _rotXR[1] =     0.0;
+        _rotYF[2] =     0.0; _rotYR[0] =     0.0;
+        _rotYF[3] =     0.0; _rotYR[1] =     0.0;
     }
     
-    _scaledVelX = (double)_velX/128;
-    _scaledVelY = (double)_velY/128;
-    
+    _scaledVelX = (double)_velX/128.0;
+    _scaledVelY = (double)_velY/128.0;
+
     if (_scaledVelX > 0.0) {
         _linXF[0] = _scaledVelX; _linXR[0] =          0.0;
         _linXF[1] = _scaledVelX; _linXR[1] =          0.0;
@@ -532,12 +555,11 @@ void Robot::move() {
         _linYF[3] =         0.0; _linYR[3] = -_scaledVelY;
     }
     else {
-        _linXF[0] =         0.0; _linYR[0] =          0.0;
-        _linXF[1] =         0.0; _linYR[1] =          0.0;
-        _linXF[2] =         0.0; _linYR[2] =          0.0;
-        _linXF[3] =         0.0; _linYR[3] =          0.0;
+        _linYF[0] =         0.0; _linYR[0] =          0.0;
+        _linYF[1] =         0.0; _linYR[1] =          0.0;
+        _linYF[2] =         0.0; _linYR[2] =          0.0;
+        _linYF[3] =         0.0; _linYR[3] =          0.0;
     }
-    
     
     double tmpXF[4];  
     double tmpXR[4]; 
@@ -545,11 +567,30 @@ void Robot::move() {
     double tmpYR[4]; 
     
     for (int i=0; i<4; i++) {
-        
-        tmpXF[i] = (_outputScaleXY * ((_horizontalCombinerRatio * _linXF[i]) + ((1 - _horizontalCombinerRatio) * _rotXF[i]))) + 0.5;
-        tmpXR[i] = (_outputScaleXY * ((_horizontalCombinerRatio * _linXR[i]) + ((1 - _horizontalCombinerRatio) * _rotXR[i]))) + 0.5;
-        tmpYF[i] = (_outputScaleXY * ((_horizontalCombinerRatio * _linYF[i]) + ((1 - _horizontalCombinerRatio) * _rotYF[i]))) + 0.5;
-        tmpYR[i] = (_outputScaleXY * ((_horizontalCombinerRatio * _linYR[i]) + ((1 - _horizontalCombinerRatio) * _rotYR[i]))) + 0.5;
+
+        tmpXF[i] = 0.0;
+        tmpXR[i] = 0.0;
+        tmpYF[i] = 0.0;
+        tmpYR[i] = 0.0;
+
+	if ((_mode & MODE_LINEAR_DISABLE)==0) {
+       	    tmpXF[i] += (_horizontalCombinerRatio * _linXF[i]);
+            tmpXR[i] += (_horizontalCombinerRatio * _linXR[i]);
+            tmpYF[i] += (_horizontalCombinerRatio * _linYF[i]);
+            tmpYR[i] += (_horizontalCombinerRatio * _linYR[i]);
+	}
+
+	if ((_mode & MODE_ROTATION_DISABLE)==0) {
+       	    tmpXF[i] += ((1 - _horizontalCombinerRatio) * _rotXF[i]);
+            tmpXR[i] += ((1 - _horizontalCombinerRatio) * _rotXR[i]);
+            tmpYF[i] += ((1 - _horizontalCombinerRatio) * _rotYF[i]);
+            tmpYR[i] += ((1 - _horizontalCombinerRatio) * _rotYR[i]);
+	}
+
+    	tmpXF[i] = (_outputScaleXY * tmpXF[i]) + 0.5;
+    	tmpXR[i] = (_outputScaleXY * tmpXR[i]) + 0.5;
+    	tmpYF[i] = (_outputScaleXY * tmpYF[i]) + 0.5;
+    	tmpYR[i] = (_outputScaleXY * tmpYR[i]) + 0.5;
         
         if (tmpXF[i] > 4095.0) tmpXF[i] = 4095.0;
         if (tmpXR[i] > 4095.0) tmpXR[i] = 4095.0;
@@ -561,7 +602,80 @@ void Robot::move() {
         _myf[i] = ((int16_t)tmpYF[i]);
         _myr[i] = ((int16_t)tmpYR[i]);
     }
-    
+
+    setMotorU1(MXR1, _mxr[0]);
+    setMotorU1(MXR2, _mxr[1]);
+    setMotorU1(MXR3, _mxr[2]);
+    setMotorU1(MXR4, _mxr[3]);
+
+    setMotorU1(MXF1, _mxf[0]);
+    setMotorU1(MXF2, _mxf[1]);
+    setMotorU1(MXF3, _mxf[2]);
+    setMotorU1(MXF4, _mxf[3]);
+
+    setMotorU1(MYR1, _myr[0]);
+    setMotorU1(MYR2, _myr[1]);
+    setMotorU1(MYR3, _myr[2]);
+    setMotorU1(MYR4, _myr[3]);
+
+    setMotorU1(MYF1, _myf[0]);
+    setMotorU1(MYF2, _myf[1]);
+    setMotorU1(MYF3, _myf[2]);
+    setMotorU1(MYF4, _myf[3]);
+
+    // Log to serial port if flag is turned on
+    if ((_mode & MODE_LOG_LEVEL) > 0) {
+
+        Serial.print("M: ");
+
+        if ((_mode & MODE_LOG_LEVEL) > 2) {
+            Serial.print(_gyroZ);         Serial.print(" ");
+	    Serial.print(_gyroAngleZ, 4); Serial.print(" ");
+	    Serial.print(_combAngleZ, 4); Serial.print(" ");
+	    Serial.print(_rotR      , 4); Serial.print(" ");
+            Serial.print(_velX);          Serial.print(" ");
+            Serial.print(_velY);          Serial.print(" ");
+        }
+
+        Serial.print(_filtR     , 4); Serial.print(" ");
+        Serial.print(_scaledVelX, 4); Serial.print(" ");
+        Serial.print(_scaledVelY, 4); Serial.print(" ");
+        
+        if ((_mode & MODE_LOG_LEVEL) > 1) {
+            for (int i = 0; i < 4; i++) {
+                Serial.print(_rotXF[i], 4); Serial.print(" ");
+                Serial.print(_rotXR[i], 4); Serial.print(" ");
+            }
+
+            for (int i = 0; i < 4; i++) {
+                Serial.print(_rotYF[i], 4); Serial.print(" ");
+                Serial.print(_rotYR[i], 4); Serial.print(" ");
+            }
+
+            for (int i = 0; i < 4; i++) {
+                Serial.print(_linXF[i], 4); Serial.print(" ");
+                Serial.print(_linXR[i], 4); Serial.print(" ");
+            }
+
+            for (int i = 0; i < 4; i++) {
+                Serial.print(_linYF[i], 4); Serial.print(" ");
+                Serial.print(_linYR[i], 4); Serial.print(" ");
+            }
+        }
+        
+        for (int i = 0; i < 4; i++) {
+            Serial.print(_mxf[i]); Serial.print(" ");
+            Serial.print(_mxr[i]); Serial.print(" ");
+        }
+
+        for (int i = 0; i < 4; i++) {
+            Serial.print(_myf[i]); Serial.print(" ");
+            Serial.print(_myr[i]); Serial.print(" ");
+        }
+        
+        Serial.println("");
+    }
+
     
 }
 

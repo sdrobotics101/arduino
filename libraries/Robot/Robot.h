@@ -20,6 +20,17 @@
 #include "PID.h"
 
 /**
+ *  These could be converted into enums
+ */
+#define MODE_LINEAR_DISABLE         0x80
+#define	MODE_ROTATION_DISABLE		0x40
+#define MODE_DEPTH_DISABLE          0x20
+#define MODE_STABILIZER_DISABLE		0x10
+#define MODE_CALIBRATION_ENABLE		0x08
+#define MODE_NORMAL_ENABLE          0x04
+#define MODE_LOG_LEVEL              0x03
+
+/**
  *  Motor mapping for U1 chip
  */
 enum MotorU1 {
@@ -149,14 +160,16 @@ private:
     //Raw sensor data
     int16_t _accX , _accY , _accZ ;
     int16_t _gyroX, _gyroY, _gyroZ;
+    int16_t _pressure;
 
     //Processed data for stabilization and depth control
     double _accAngleX , _accAngleY;
     double _gyroAngleX, _gyroAngleY;
     double _combAngleX, _combAngleY;
-    double _dispX     , _dispY;
-    double _filtX     , _filtY;
+    double _dispX     , _dispY     , _dispZ;
+    double _filtX     , _filtY     , _filtZ;
     double _stabZ[4];
+    double _depthZ;
     double _combZ[4];
 
     //Processed data for linear and rotation control
