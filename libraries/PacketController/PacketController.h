@@ -13,6 +13,9 @@
 #include "RXPacket.h"
 #include "TXPacket.h"
 
+/**
+ *  Handles all packet I/O
+ */
 class PacketController {
 public:
     PacketController(USARTClass &rxSerialPort = Serial3, USARTClass &txSerialPort = Serial3);

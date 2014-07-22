@@ -8,6 +8,9 @@
 
 #include "PID.h"
 
+/**
+ *  Constructor
+ */
 PID::PID(double kp, double ki, double kd, double kf) {
     _stateI = 0;
     _stateD = 0;
@@ -18,6 +21,13 @@ PID::PID(double kp, double ki, double kd, double kf) {
     _kf = kf;
 }
 
+/**
+ *  Computes the output given the error
+ *
+ *  @param err The error in the system
+ *
+ *  @return The output to drive at
+ */
 double PID::compute(double err) {
     double xp, xi, xd;
     

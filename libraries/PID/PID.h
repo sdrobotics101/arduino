@@ -12,6 +12,9 @@
 #include <stdint.h>
 #include <math.h>
 
+/**
+ *  A class for controlling PID loops
+ */
 class PID {
 public:
     PID(double kp, double ki, double kd, double kf);

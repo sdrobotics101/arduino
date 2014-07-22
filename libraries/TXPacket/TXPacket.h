@@ -12,7 +12,9 @@
 #include "Arduino.h"
 #include <math.h>
 
-
+/**
+ *  Index of a value in TXPacket
+ */
 enum TXIndex {
     ACCX = 2,
     ACCY = 3,
@@ -24,6 +26,9 @@ enum TXIndex {
     TXSPARE = 9,
 };
 
+/**
+ *  Handles output to serial port
+ */
 class TXPacket {
     friend class PacketController;
 private:

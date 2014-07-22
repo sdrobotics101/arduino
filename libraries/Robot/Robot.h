@@ -84,9 +84,16 @@ public:
           double pidDepthKD,
           double pidDepthKF,
           
+          double pidAngleKP,
+          double pidAngleKI,
+          double pidAngleKD,
+          double pidAngleKF,
+          
           double dispXYRatio,
           double verticalCombinerRatio,
+          double horizontalCombinerRatio,
           
+          double outputScaleXY,
           double outputScaleZ,
           double outputOffsetZ);
 
@@ -114,6 +121,7 @@ private:
     double getDispZ();
     
     void stabilize();
+    void move();
     
     void setMotorU1(MotorU1 motor, int16_t value);
     void setMotorU2(MotorU2 motor, int16_t value);
@@ -142,15 +150,26 @@ private:
     int16_t _accX , _accY , _accZ ;
     int16_t _gyroX, _gyroY, _gyroZ;
 
-    //Processed data
-    double _accAngleX , _accAngleY , _accAngleZ ;
-    double _gyroAngleX, _gyroAngleY, _gyroAngleZ;
-    double _combAngleX, _combAngleY, _combAngleZ;
-    double _dispX     , _dispY     , _dispZ     ;
-    double _filtX     , _filtY     , _filtZ     ;
+    //Processed data for stabilization and depth control
+    double _accAngleX , _accAngleY;
+    double _gyroAngleX, _gyroAngleY;
+    double _combAngleX, _combAngleY;
+    double _dispX     , _dispY;
+    double _filtX     , _filtY;
     double _stabZ[4];
     double _combZ[4];
 
+    //Processed data for linear and rotation control
+    double _gyroAngleZ;
+    double _combAngleZ;
+    double _rotR;
+    double _filtR;
+    double _scaledVelX, _scaledVelY;
+    double _rotXF[4], _rotXR[4];
+    double _rotYF[4], _rotYR[4];
+    double _linXF[4], _linXR[4];
+    double _linYF[4], _linYR[4];
+    
     //Motor commands
     int16_t _mxf[4];
     int16_t _mxr[4];
@@ -165,11 +184,13 @@ private:
     
     //Loop constants
     double _dispXYRatio;
-    double  _verticalCombinerRatio;
+    double _verticalCombinerRatio;
+    double _horizontalCombinerRatio;
     
     //Scale values
-    double  _outputScaleZ;
-    double  _outputOffsetZ;
+    double _outputScaleXY;
+    double _outputScaleZ;
+    double _outputOffsetZ;
     
     //Sensors and actuators
     MPU6050 _mpu9150;
@@ -180,6 +201,7 @@ private:
     PID _pidOutputX;
     PID _pidOutputY;
     PID _pidDepth;
+    PID _pidAngle;
 };
 
 
