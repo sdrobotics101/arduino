@@ -84,8 +84,8 @@ public:
           double pidDepthKD,
           double pidDepthKF,
           
-          double combinerConstant,
           double dispXYRatio,
+          double verticalCombinerRatio,
           
           double outputScaleZ,
           double outputOffsetZ);
@@ -99,7 +99,8 @@ public:
                    int8_t rotZ,
                    int16_t posZ,
                    int8_t torpedoCtl,
-                   int8_t servoCtl[6]);
+                   int8_t servoCtl[6],
+                   uint8_t mode);
     void continueMotion();
     void stop();
     void calibrate();
@@ -127,6 +128,7 @@ private:
     int16_t     _posZ;
     int8_t      _torpedoCtl;
     int8_t      _servoCtl[6];
+    uint8_t     _mode;
     
     // Constants : Based on calibration
     int16_t _accOffsetX;
@@ -162,8 +164,8 @@ private:
     double        _dt;
     
     //Loop constants
-    double  _combinerConstant;
     double _dispXYRatio;
+    double  _verticalCombinerRatio;
     
     //Scale values
     double  _outputScaleZ;

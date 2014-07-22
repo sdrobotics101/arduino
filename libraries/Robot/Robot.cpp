@@ -26,7 +26,7 @@
  *  @param pidDepthKI       Ki value for PID depth controller
  *  @param pidDepthKD       Kd value for PID depth controller
  *  @param pidDepthKF       Kf value for PID depth controller
- *  @param combinerConstant Vertical combiner constant
+ *  @param verticalCombinerRatio Vertical combiner constant
  *  @param dispXYRatio      Complementary filter constant
  *  @param outputScaleZ     Output scale Z
  *  @param outputOffsetZ    Output offset Z
@@ -52,8 +52,8 @@ Robot::Robot(uint8_t mpuAddr,
              double  pidDepthKD,
              double  pidDepthKF,
              
-             double  combinerConstant,
              double  dispXYRatio,
+             double  verticalCombinerRatio,
 	     
              double  outputScaleZ,
              double  outputOffsetZ) :
@@ -77,8 +77,8 @@ Robot::Robot(uint8_t mpuAddr,
                             pidDepthKD,
                             pidDepthKF),
 
-                _combinerConstant(combinerConstant),
                 _dispXYRatio(dispXYRatio),
+                _verticalCombinerRatio(verticalCombinerRatio),
 
                 _outputScaleZ (outputScaleZ ),
                 _outputOffsetZ(outputOffsetZ)
@@ -115,13 +115,15 @@ Robot::Robot(uint8_t mpuAddr,
 
     _realtime   = micros();
     _dt         = 0.0;
+    
+    _mode = 1; //set back to 0
 }
 
 /**
  *  Initializes I2C bus, sensors, actuators
  */
 void Robot::begin() {
-    TWBR = 400000L;
+    //TWBR = 400000L;
     Wire.begin();
     Serial.println("Wire Initialized");
     
@@ -136,7 +138,7 @@ void Robot::begin() {
     _pwmU2.begin();
     Serial.print("PWMU2 Initialized: ");
     Serial.println(_pwmU2.getAddress(), HEX);
-    
+   
     Serial.println("Robot Initialized");
 }
 
@@ -152,6 +154,7 @@ void Robot::begin() {
  *  @param posZ       Position Z
  *  @param torpedoCtl Torpedo control
  *  @param servoCtl   Servo control
+ *  @param mode       Mode control
  */
 void Robot::setMotion(int8_t velX,
                       int8_t velY,
@@ -161,7 +164,8 @@ void Robot::setMotion(int8_t velX,
                       int8_t rotZ,
                       int16_t posZ,
                       int8_t torpedoCtl,
-                      int8_t servoCtl[6])
+                      int8_t servoCtl[6],
+                      uint8_t mode)
 {
     _velX = velX;
     _velY = velY;
@@ -171,11 +175,13 @@ void Robot::setMotion(int8_t velX,
     _rotZ = rotZ;
     _posZ = posZ;
     _torpedoCtl = torpedoCtl;
+    _mode = mode;
     for (int i = 0; i < 6; i++) {
         _servoCtl[i] = servoCtl[i];
     }
     
     updateMPU9150();
+    updateDt();
     stabilize();
     //Write velX, velY, rotX, rotY
     //Other commands
@@ -186,7 +192,9 @@ void Robot::setMotion(int8_t velX,
  *  Continues previously set motion
  */
 void Robot::continueMotion() {
-    
+    updateMPU9150();
+    updateDt();
+    stabilize();
 }
 
 /**
@@ -233,8 +241,8 @@ void Robot::calibrate() {
    _gyroOffsetX = (int16_t) ((sumGyroX+64)>>7);
    _gyroOffsetY = (int16_t) ((sumGyroY+64)>>7);
    _gyroOffsetZ = (int16_t) ((sumGyroZ+64)>>7);
-
-#if 0   
+    
+   Serial.print("C: ");
    Serial.print(_accOffsetX); Serial.print(" ");
    Serial.print(_accOffsetY); Serial.print(" ");
    Serial.print(_accOffsetZ); Serial.print(" ");
@@ -242,7 +250,6 @@ void Robot::calibrate() {
    Serial.print(_gyroOffsetY); Serial.print(" ");
    Serial.print(_gyroOffsetZ); Serial.print(" ");
    Serial.println("");
-#endif   
 }
 
 /**
@@ -270,7 +277,7 @@ void Robot::updateMPU9150() {
 double Robot::getDispX() {
     double scaledGyroX = (double) (_gyroX - _gyroOffsetX) / 65.54;
 
-    _accAngleX   = atan2(_accY, sqrt(pow(_accX, 2) + pow(_accZ, 2)));
+    _accAngleX   = atan2((double)_accY, sqrt(pow((double)_accX, 2) + pow((double)_accZ, 2)));
     _gyroAngleX	 = scaledGyroX * _dt * (PI/180);
     _combAngleX  = (_dispXYRatio  * (_gyroAngleX + _combAngleX)) + ((1 - _dispXYRatio) * _accAngleX);
 
@@ -285,7 +292,7 @@ double Robot::getDispX() {
 double Robot::getDispY() {
     double scaledGyroY = (double) (_gyroY - _gyroOffsetY) / 65.54;
 
-    _accAngleY   = atan2(_accX, sqrt(pow(_accY, 2) + pow(_accZ, 2)));
+    _accAngleY   = atan2((double)_accX, sqrt(pow((double)_accY, 2) + pow((double)_accZ, 2)));
     _gyroAngleY	 = scaledGyroY * _dt * (PI/180);
     _combAngleY  = (_dispXYRatio  * (_gyroAngleY + _combAngleY)) + ((1 - _dispXYRatio) * _accAngleY);
     
@@ -312,16 +319,20 @@ void Robot::stabilize() {
 
     _dispX = getDispX();
     _dispY = getDispY();
-    //_dispZ = getDispZ();
 
-    // KLUDGE : __ROHAN__ REMEMBER TO TAKE OUT THIS STEP IN THE REAL FILTER
-    //double hackX = _dispX - _filtX;
-    //double hackY = _dispY - _filtY;
-    //double hackZ = _dispZ - _filtZ;
+    double hackX = _dispX;
+    double hackY = _dispY;
+    //double hackZ = _dispZ;
+    
+    // upon powerup, we wake up in the frozen state, till s/w commands otherwise
+    if ((_mode & (1<<2))==0) {
+        hackX -= _filtX;
+        hackY -= _filtY;
+        //hackZ -= _filtZ;
+    }
 
-    _filtX = _pidOutputX.compute(_dispX);
-    _filtY = _pidOutputY.compute(_dispY);
-    //_filtZ = _pidDepth  .compute(_dispZ);
+    _filtX = _pidOutputX.compute(hackX);
+    _filtY = _pidOutputY.compute(hackY);
 
     // Map the X-Y filter outputs to the 4 metrics metricZ
     _stabZ[0] = (  _filtX) + (- _filtY); 
@@ -344,9 +355,9 @@ void Robot::stabilize() {
 
        int16_t intZ = ((int16_t) (dblZ));			// convert to integer
 
-       if      (intZ > 0) { _mzr[i] = intZ; _mzf[i] =  0;    }
-       else if (intZ < 0) { _mzr[i] = 0;    _mzf[i] = -intZ; }
-       else               { _mzr[i] = 0;    _mzf[i] =  0;    }
+       if      (intZ < 0) { _mzr[i] = -intZ; _mzf[i] =    0; }
+       else if (intZ > 0) { _mzr[i] =     0; _mzf[i] = intZ; }
+       else               { _mzr[i] =     0; _mzf[i] =    0; }
         
     }
     
@@ -359,6 +370,57 @@ void Robot::stabilize() {
     setMotorU2(MZF2, _mzf[1]);
     setMotorU2(MZF3, _mzf[2]);
     setMotorU2(MZF4, _mzf[3]);
+    
+    
+    // Log to serial port if flag is turned on
+    if ((_mode & 0x3) > 0) {
+        
+        Serial.print("S: ");
+        
+        if ((_mode & 0x3) > 2) {
+            Serial.print(_accX ); Serial.print(" ");
+            Serial.print(_accY ); Serial.print(" ");
+            Serial.print(_accZ ); Serial.print(" ");
+            Serial.print(_gyroX); Serial.print(" ");
+            Serial.print(_gyroY); Serial.print(" ");
+            Serial.print(_gyroZ); Serial.print(" ");
+            Serial.print(_accAngleX , 4); Serial.print(" ");
+            Serial.print(_accAngleY , 4); Serial.print(" ");
+            Serial.print(_accAngleZ , 4); Serial.print(" ");
+            Serial.print(_gyroAngleX, 4); Serial.print(" ");
+            Serial.print(_gyroAngleY, 4); Serial.print(" ");
+            Serial.print(_gyroAngleZ, 4); Serial.print(" ");
+            Serial.print(_combAngleX, 4); Serial.print(" ");
+            Serial.print(_combAngleY, 4); Serial.print(" ");
+            Serial.print(_combAngleZ, 4); Serial.print(" ");
+            Serial.print(_dispX, 4); Serial.print(" ");
+            Serial.print(_dispY, 4); Serial.print(" ");
+            Serial.print(_dispZ, 4); Serial.print(" ");
+        }
+        
+        Serial.print(_filtX, 4); Serial.print(" ");
+        Serial.print(_filtY, 4); Serial.print(" ");
+        Serial.print(_filtZ, 4); Serial.print(" ");
+        
+        if ((_mode & 0x3) > 1) {
+            for (int i = 0; i < 4; i++) {
+                Serial.print(_stabZ[i], 4); Serial.print(" ");
+            }
+            
+            for (int i = 0; i < 4; i++) {
+                Serial.print(_combZ[i], 4); Serial.print(" ");
+            }
+        }
+        
+        for (int i = 0; i < 4; i++) {
+            Serial.print(_mzf[i]); Serial.print(" ");
+            Serial.print(_mzr[i]); Serial.print(" ");
+        }
+        
+        Serial.println("");
+    }
+    
+    
 }
 
 /**
