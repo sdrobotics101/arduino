@@ -144,20 +144,14 @@ void RobotController::executeCycle() {
 
     switch (_packetStatus) {
         case VALID_PACKET:
-            int8_t servoCtl[6];
-            for (int i = 0; i < 6; i++) {
-                servoCtl[i] = _packetController.get8((RXIndex)(SERVOCTL+i));
-            }
-            _robot.setMotion(_packetController.get8(VELX),
-                             _packetController.get8(VELY),
-                             _packetController.get8(VELZ),
-                             _packetController.get8(ROTX),
-                             _packetController.get8(ROTY),
-                             _packetController.get8(ROTZ),
-                             _packetController.get16(POSZ),
-                             _packetController.get8(TORPEDOCTL),
-                             servoCtl,
-                             _packetController.get8(RXSPARE));
+            _robot.setMotion(_packetController.getS8(VELX),
+                             _packetController.getS8(VELY),
+                             _packetController.getS8(VELZ),
+                             _packetController.getS8(ROTZ),
+                             _packetController.getU8(TORPEDOCTL),
+                             _packetController.getU8(SERVOCTL),
+                             _packetController.getU8(LEDCTL),
+							 _packetController.getU16(MODE));
         break;
             
         case INVALID_PACKET:

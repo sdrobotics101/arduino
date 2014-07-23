@@ -110,13 +110,11 @@ public:
     void setMotion(int8_t velX,
                    int8_t velY,
                    int8_t velZ,
-                   int8_t rotX,
-                   int8_t rotY,
                    int8_t rotZ,
-                   int16_t posZ,
-                   int8_t torpedoCtl,
-                   int8_t servoCtl[6],
-                   uint8_t mode);
+                   uint8_t torpedoCtl,
+                   uint8_t servoCtl,
+				   uint8_t ledCtl,
+                   uint16_t mode);
     void continueMotion();
     void stop();
     void calibrate();
@@ -139,13 +137,11 @@ private:
     int8_t      _velX;
     int8_t      _velY;
     int8_t      _velZ;
-    int8_t      _rotX;
-    int8_t      _rotY;
     int8_t      _rotZ;
-    int16_t     _posZ;
-    int8_t      _torpedoCtl;
-    int8_t      _servoCtl[6];
-    uint8_t     _mode;
+    uint8_t     _torpedoCtl;
+    uint8_t     _servoCtl;
+	uint8_t     _ledCtl;
+    uint16_t    _mode;
     
     // Constants : Based on calibration
     int16_t _accOffsetX;

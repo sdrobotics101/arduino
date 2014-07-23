@@ -103,18 +103,13 @@ Robot::Robot(uint8_t mpuAddr,
                 _outputScaleZ (outputScaleZ ),
                 _outputOffsetZ(outputOffsetZ)
 {
-     _velX      = 0;
-     _velY      = 0;
-     _velZ      = 0;
-     _rotX      = 0;
-     _rotY      = 0;
-     _rotZ      = 0;
-     _posZ      = 0;
-    
+     _velX      	= 0;
+     _velY      	= 0;
+     _velZ      	= 0;
+     _rotZ      	= 0;
      _torpedoCtl    = 0;
-     for (int i=0; i<6; i++) {
-        _servoCtl[i] = 0;
-     }
+     _servoCtl 		= 0;
+	 _ledCtl 		= 0;
      _mode          = 1;
     
     _accOffsetX  = 625;   _accOffsetY  = -350;   _accOffsetZ  = 17240;
@@ -184,43 +179,23 @@ void Robot::begin() {
     Serial.println("Robot Initialized");
 }
 
-/**
- *  Input to create desired motion
- *
- *  @param velX       Velocity X
- *  @param velY       Velocity Y
- *  @param velZ       Velocity Z
- *  @param rotX       Rotation X
- *  @param rotY       Rotation Y
- *  @param rotZ       Rotation Z
- *  @param posZ       Position Z
- *  @param torpedoCtl Torpedo control
- *  @param servoCtl   Servo control
- *  @param mode       Mode control
- */
 void Robot::setMotion(int8_t velX,
-                      int8_t velY,
+					  int8_t velY,
                       int8_t velZ,
-                      int8_t rotX,
-                      int8_t rotY,
                       int8_t rotZ,
-                      int16_t posZ,
-                      int8_t torpedoCtl,
-                      int8_t servoCtl[6],
-                      uint8_t mode)
+                      uint8_t torpedoCtl,
+                      uint8_t servoCtl,
+				      uint8_t ledCtl,
+                      uint16_t mode)
 {
     _velX = velX;
     _velY = velY;
     _velZ = velZ;
-    _rotX = rotX;
-    _rotY = rotY;
     _rotZ = rotZ;
-    _posZ = posZ;
     _torpedoCtl = torpedoCtl;
+	_servoCtl = servoCtl;
+	_ledCtl = ledCtl;
     _mode = mode;
-    for (int i = 0; i < 6; i++) {
-        _servoCtl[i] = servoCtl[i];
-    }
     
     updateMPU9150();
     updateDt();
@@ -360,7 +335,7 @@ void Robot::stabilize() {
 
     _dispX = getDispX();
     _dispY = getDispY();
-    _dispZ = ((double)_posZ/8.0) - ((double)_pressure*(14.0/65536)*10.1976);
+    _dispZ = ((double)_velZ/8.0) - ((double)_pressure*(14.0/65536)*10.1976);
 
     
     // upon powerup, we wake up in the frozen state, till s/w commands otherwise
@@ -431,7 +406,7 @@ void Robot::stabilize() {
             Serial.print(_accZ         ); Serial.print(" ");
             Serial.print(_gyroX        ); Serial.print(" ");
             Serial.print(_gyroY        ); Serial.print(" ");
-            Serial.print(_posZ         ); Serial.print(" ");
+            Serial.print(_velZ         ); Serial.print(" ");
             Serial.print(_pressure     ); Serial.print(" ");
             Serial.print(_accAngleX , 4); Serial.print(" ");
             Serial.print(_accAngleY , 4); Serial.print(" ");
