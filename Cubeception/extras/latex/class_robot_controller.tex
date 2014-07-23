@@ -1,0 +1,143 @@
+\hypertarget{class_robot_controller}{\section{Robot\+Controller Class Reference}
+\label{class_robot_controller}\index{Robot\+Controller@{Robot\+Controller}}
+}
+
+
+{\ttfamily \#include $<$Robot\+Controller.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_robot_controller_a9521693023feb00c1e76535d92c37185}{Robot\+Controller} (uint8\+\_\+t mpu\+Addr, uint8\+\_\+t pwm\+U1\+Addr, uint8\+\_\+t pwm\+U2\+Addr, double pid\+Output\+X\+K\+P, double pid\+Output\+X\+K\+I, double pid\+Output\+X\+K\+D, double pid\+Output\+X\+K\+F, double pid\+Output\+Y\+K\+P, double pid\+Output\+Y\+K\+I, double pid\+Output\+Y\+K\+D, double pid\+Output\+Y\+K\+F, double pid\+Depth\+K\+P, double pid\+Depth\+K\+I, double pid\+Depth\+K\+D, double pid\+Depth\+K\+F, double pid\+Angle\+K\+P, double pid\+Angle\+K\+I, double pid\+Angle\+K\+D, double pid\+Angle\+K\+F, double disp\+X\+Y\+Ratio, double vertical\+Combiner\+Ratio, double horizontal\+Combiner\+Ratio, double output\+Scale\+X\+Y, double output\+Scale\+Z, double output\+Offset\+Z, U\+S\+A\+R\+T\+Class \&rx\+Serial\+Port, U\+S\+A\+R\+T\+Class \&tx\+Serial\+Port, uint8\+\_\+t bad\+Packet\+Threshold)
+\item 
+void \hyperlink{class_robot_controller_a2fb8b5e204c0139c86cf8495baf32847}{begin} ()
+\item 
+void \hyperlink{class_robot_controller_a38daa28e15d388b708adce81476a2688}{execute\+Cycle} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Complete controller for robot and communications 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_robot_controller_a9521693023feb00c1e76535d92c37185}{\index{Robot\+Controller@{Robot\+Controller}!Robot\+Controller@{Robot\+Controller}}
+\index{Robot\+Controller@{Robot\+Controller}!Robot\+Controller@{Robot\+Controller}}
+\subsubsection[{Robot\+Controller}]{\setlength{\rightskip}{0pt plus 5cm}Robot\+Controller\+::\+Robot\+Controller (
+\begin{DoxyParamCaption}
+\item[{uint8\+\_\+t}]{mpu\+Addr, }
+\item[{uint8\+\_\+t}]{pwm\+U1\+Addr, }
+\item[{uint8\+\_\+t}]{pwm\+U2\+Addr, }
+\item[{double}]{pid\+Output\+X\+K\+P, }
+\item[{double}]{pid\+Output\+X\+K\+I, }
+\item[{double}]{pid\+Output\+X\+K\+D, }
+\item[{double}]{pid\+Output\+X\+K\+F, }
+\item[{double}]{pid\+Output\+Y\+K\+P, }
+\item[{double}]{pid\+Output\+Y\+K\+I, }
+\item[{double}]{pid\+Output\+Y\+K\+D, }
+\item[{double}]{pid\+Output\+Y\+K\+F, }
+\item[{double}]{pid\+Depth\+K\+P, }
+\item[{double}]{pid\+Depth\+K\+I, }
+\item[{double}]{pid\+Depth\+K\+D, }
+\item[{double}]{pid\+Depth\+K\+F, }
+\item[{double}]{pid\+Angle\+K\+P, }
+\item[{double}]{pid\+Angle\+K\+I, }
+\item[{double}]{pid\+Angle\+K\+D, }
+\item[{double}]{pid\+Angle\+K\+F, }
+\item[{double}]{disp\+X\+Y\+Ratio, }
+\item[{double}]{vertical\+Combiner\+Ratio, }
+\item[{double}]{horizontal\+Combiner\+Ratio, }
+\item[{double}]{output\+Scale\+X\+Y, }
+\item[{double}]{output\+Scale\+Z, }
+\item[{double}]{output\+Offset\+Z, }
+\item[{U\+S\+A\+R\+T\+Class \&}]{rx\+Serial\+Port, }
+\item[{U\+S\+A\+R\+T\+Class \&}]{tx\+Serial\+Port, }
+\item[{uint8\+\_\+t}]{bad\+Packet\+Threshold}
+\end{DoxyParamCaption}
+)}}\label{class_robot_controller_a9521693023feb00c1e76535d92c37185}
+Constructor
+
+
+\begin{DoxyParams}{Parameters}
+{\em mpu\+Addr} & I2\+C address of M\+P\+U9150 \\
+\hline
+{\em pwm\+U1\+Addr} & I2\+C address of P\+C\+A9685 on U1 \\
+\hline
+{\em pwm\+U2\+Addr} & I2\+C address of P\+C\+A9685 on U2 \\
+\hline
+{\em pid\+Output\+X\+K\+P} & Kp for output X \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+X\+K\+I} & Ki for output X \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+X\+K\+D} & Kd for output X \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+X\+K\+F} & Kf for output X \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+Y\+K\+P} & Kp for output Y \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+Y\+K\+I} & Ki for output Y \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+Y\+K\+D} & Kd for output Y \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+Y\+K\+F} & Kf for output Y \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Depth\+K\+P} & Kp for depth \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Depth\+K\+I} & Ki for depth \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Depth\+K\+D} & Kd for depth \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Depth\+K\+F} & Kf for depth \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Angle\+K\+P} & Kp for angle Z \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Angle\+K\+I} & Ki for angle Z \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Angle\+K\+D} & Kd for angle Z \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Angle\+K\+F} & Kf for angle Z \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em disp\+X\+Y\+Ratio} & Complementary filter ratio \\
+\hline
+{\em vertical\+Combiner\+Ratio} & Vertical combiner ratio \\
+\hline
+{\em horizontal\+Combiner\+Ratio} & Horizontal combiner ratio \\
+\hline
+{\em output\+Scale\+X\+Y} & Scale in X\+Y direction \\
+\hline
+{\em output\+Scale\+Z} & Scale in Z direction \\
+\hline
+{\em output\+Offset\+Z} & Offset in Z direction \\
+\hline
+{\em rx\+Serial\+Port} & Which serial port to read from \\
+\hline
+{\em tx\+Serial\+Port} & Which serial port to write to \\
+\hline
+{\em bad\+Packet\+Threshold} & The number of bad packets allowed before error\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Nothing 
+\end{DoxyReturn}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_robot_controller_a2fb8b5e204c0139c86cf8495baf32847}{\index{Robot\+Controller@{Robot\+Controller}!begin@{begin}}
+\index{begin@{begin}!Robot\+Controller@{Robot\+Controller}}
+\subsubsection[{begin}]{\setlength{\rightskip}{0pt plus 5cm}void Robot\+Controller\+::begin (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{class_robot_controller_a2fb8b5e204c0139c86cf8495baf32847}
+Initializes \hyperlink{class_robot_controller}{Robot\+Controller} \hypertarget{class_robot_controller_a38daa28e15d388b708adce81476a2688}{\index{Robot\+Controller@{Robot\+Controller}!execute\+Cycle@{execute\+Cycle}}
+\index{execute\+Cycle@{execute\+Cycle}!Robot\+Controller@{Robot\+Controller}}
+\subsubsection[{execute\+Cycle}]{\setlength{\rightskip}{0pt plus 5cm}void Robot\+Controller\+::execute\+Cycle (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_robot_controller_a38daa28e15d388b708adce81476a2688}
+Executes a single cycle of the robot loop 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\+Robot\+Controller/Robot\+Controller.\+h\item 
+src/\+Robot\+Controller/Robot\+Controller.\+cpp\end{DoxyCompactItemize}

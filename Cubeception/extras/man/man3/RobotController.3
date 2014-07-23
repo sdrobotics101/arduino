@@ -1,0 +1,106 @@
+.TH "RobotController" 3 "Tue Jul 22 2014" "Version 1.0" "Cubeception" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+RobotController \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <RobotController\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBRobotController\fP (uint8_t mpuAddr, uint8_t pwmU1Addr, uint8_t pwmU2Addr, double pidOutputXKP, double pidOutputXKI, double pidOutputXKD, double pidOutputXKF, double pidOutputYKP, double pidOutputYKI, double pidOutputYKD, double pidOutputYKF, double pidDepthKP, double pidDepthKI, double pidDepthKD, double pidDepthKF, double pidAngleKP, double pidAngleKI, double pidAngleKD, double pidAngleKF, double dispXYRatio, double verticalCombinerRatio, double horizontalCombinerRatio, double outputScaleXY, double outputScaleZ, double outputOffsetZ, USARTClass &rxSerialPort, USARTClass &txSerialPort, uint8_t badPacketThreshold)"
+.br
+.ti -1c
+.RI "void \fBbegin\fP ()"
+.br
+.ti -1c
+.RI "void \fBexecuteCycle\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Complete controller for robot and communications 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "RobotController::RobotController (uint8_tmpuAddr, uint8_tpwmU1Addr, uint8_tpwmU2Addr, doublepidOutputXKP, doublepidOutputXKI, doublepidOutputXKD, doublepidOutputXKF, doublepidOutputYKP, doublepidOutputYKI, doublepidOutputYKD, doublepidOutputYKF, doublepidDepthKP, doublepidDepthKI, doublepidDepthKD, doublepidDepthKF, doublepidAngleKP, doublepidAngleKI, doublepidAngleKD, doublepidAngleKF, doubledispXYRatio, doubleverticalCombinerRatio, doublehorizontalCombinerRatio, doubleoutputScaleXY, doubleoutputScaleZ, doubleoutputOffsetZ, USARTClass &rxSerialPort, USARTClass &txSerialPort, uint8_tbadPacketThreshold)"
+Constructor
+.PP
+\fBParameters:\fP
+.RS 4
+\fImpuAddr\fP I2C address of MPU9150 
+.br
+\fIpwmU1Addr\fP I2C address of PCA9685 on U1 
+.br
+\fIpwmU2Addr\fP I2C address of PCA9685 on U2 
+.br
+\fIpidOutputXKP\fP Kp for output X \fBPID\fP controller 
+.br
+\fIpidOutputXKI\fP Ki for output X \fBPID\fP controller 
+.br
+\fIpidOutputXKD\fP Kd for output X \fBPID\fP controller 
+.br
+\fIpidOutputXKF\fP Kf for output X \fBPID\fP controller 
+.br
+\fIpidOutputYKP\fP Kp for output Y \fBPID\fP controller 
+.br
+\fIpidOutputYKI\fP Ki for output Y \fBPID\fP controller 
+.br
+\fIpidOutputYKD\fP Kd for output Y \fBPID\fP controller 
+.br
+\fIpidOutputYKF\fP Kf for output Y \fBPID\fP controller 
+.br
+\fIpidDepthKP\fP Kp for depth \fBPID\fP controller 
+.br
+\fIpidDepthKI\fP Ki for depth \fBPID\fP controller 
+.br
+\fIpidDepthKD\fP Kd for depth \fBPID\fP controller 
+.br
+\fIpidDepthKF\fP Kf for depth \fBPID\fP controller 
+.br
+\fIpidAngleKP\fP Kp for angle Z \fBPID\fP controller 
+.br
+\fIpidAngleKI\fP Ki for angle Z \fBPID\fP controller 
+.br
+\fIpidAngleKD\fP Kd for angle Z \fBPID\fP controller 
+.br
+\fIpidAngleKF\fP Kf for angle Z \fBPID\fP controller 
+.br
+\fIdispXYRatio\fP Complementary filter ratio 
+.br
+\fIverticalCombinerRatio\fP Vertical combiner ratio 
+.br
+\fIhorizontalCombinerRatio\fP Horizontal combiner ratio 
+.br
+\fIoutputScaleXY\fP Scale in XY direction 
+.br
+\fIoutputScaleZ\fP Scale in Z direction 
+.br
+\fIoutputOffsetZ\fP Offset in Z direction 
+.br
+\fIrxSerialPort\fP Which serial port to read from 
+.br
+\fItxSerialPort\fP Which serial port to write to 
+.br
+\fIbadPacketThreshold\fP The number of bad packets allowed before error
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Nothing 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void RobotController::begin (void)"
+Initializes \fBRobotController\fP 
+.SS "void RobotController::executeCycle ()"
+Executes a single cycle of the robot loop 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Cubeception from the source code\&.

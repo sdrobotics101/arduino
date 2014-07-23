@@ -1,0 +1,143 @@
+\hypertarget{class_packet_controller}{\section{Packet\+Controller Class Reference}
+\label{class_packet_controller}\index{Packet\+Controller@{Packet\+Controller}}
+}
+
+
+{\ttfamily \#include $<$Packet\+Controller.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_packet_controller_ac64f16775ce7037811c7ddb96840bb55}{Packet\+Controller} (U\+S\+A\+R\+T\+Class \&rx\+Serial\+Port=Serial3, U\+S\+A\+R\+T\+Class \&tx\+Serial\+Port=Serial3)
+\item 
+void \hyperlink{class_packet_controller_a837520371e028d11425aabe120ba4d3d}{begin} (int baud\+Rate=115200)
+\item 
+Packet\+Status \hyperlink{class_packet_controller_a1cb73e40893a34761227cefdfa35a0cf}{listen} ()
+\item 
+void \hyperlink{class_packet_controller_a9d512cbc5b824c0bb424a95fd73bf648}{send} ()
+\item 
+void \hyperlink{class_packet_controller_ac597c16ed3b2e8455d4fafe850b456ee}{set} (T\+X\+Index index, int8\+\_\+t value)
+\item 
+int8\+\_\+t \hyperlink{class_packet_controller_aacdc7e49b324cc12b58229b1d63f0332}{get8} (R\+X\+Index index)
+\item 
+int16\+\_\+t \hyperlink{class_packet_controller_a7e37130fb7ea53152f055e640ebdd7ed}{get16} (R\+X\+Index index)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Handles all packet I/\+O 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_packet_controller_ac64f16775ce7037811c7ddb96840bb55}{\index{Packet\+Controller@{Packet\+Controller}!Packet\+Controller@{Packet\+Controller}}
+\index{Packet\+Controller@{Packet\+Controller}!Packet\+Controller@{Packet\+Controller}}
+\subsubsection[{Packet\+Controller}]{\setlength{\rightskip}{0pt plus 5cm}Packet\+Controller\+::\+Packet\+Controller (
+\begin{DoxyParamCaption}
+\item[{U\+S\+A\+R\+T\+Class \&}]{rx\+Serial\+Port = {\ttfamily Serial3}, }
+\item[{U\+S\+A\+R\+T\+Class \&}]{tx\+Serial\+Port = {\ttfamily Serial3}}
+\end{DoxyParamCaption}
+)}}\label{class_packet_controller_ac64f16775ce7037811c7ddb96840bb55}
+Constructor
+
+
+\begin{DoxyParams}{Parameters}
+{\em rx\+Serial\+Port} & Which serial port to read from \\
+\hline
+{\em tx\+Serial\+Port} & Which serial port to send to\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Nothing 
+\end{DoxyReturn}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_packet_controller_a837520371e028d11425aabe120ba4d3d}{\index{Packet\+Controller@{Packet\+Controller}!begin@{begin}}
+\index{begin@{begin}!Packet\+Controller@{Packet\+Controller}}
+\subsubsection[{begin}]{\setlength{\rightskip}{0pt plus 5cm}void Packet\+Controller\+::begin (
+\begin{DoxyParamCaption}
+\item[{int}]{baud\+Rate = {\ttfamily 115200}}
+\end{DoxyParamCaption}
+)}}\label{class_packet_controller_a837520371e028d11425aabe120ba4d3d}
+Initializes \hyperlink{class_packet_controller}{Packet\+Controller}
+
+
+\begin{DoxyParams}{Parameters}
+{\em baud\+Rate} & What baud rate to run at \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_packet_controller_a7e37130fb7ea53152f055e640ebdd7ed}{\index{Packet\+Controller@{Packet\+Controller}!get16@{get16}}
+\index{get16@{get16}!Packet\+Controller@{Packet\+Controller}}
+\subsubsection[{get16}]{\setlength{\rightskip}{0pt plus 5cm}int16\+\_\+t Packet\+Controller\+::get16 (
+\begin{DoxyParamCaption}
+\item[{R\+X\+Index}]{index}
+\end{DoxyParamCaption}
+)}}\label{class_packet_controller_a7e37130fb7ea53152f055e640ebdd7ed}
+Gets a single 16-\/bit value from the packet received
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Which value to get\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Value of specified index 
+\end{DoxyReturn}
+\hypertarget{class_packet_controller_aacdc7e49b324cc12b58229b1d63f0332}{\index{Packet\+Controller@{Packet\+Controller}!get8@{get8}}
+\index{get8@{get8}!Packet\+Controller@{Packet\+Controller}}
+\subsubsection[{get8}]{\setlength{\rightskip}{0pt plus 5cm}int8\+\_\+t Packet\+Controller\+::get8 (
+\begin{DoxyParamCaption}
+\item[{R\+X\+Index}]{index}
+\end{DoxyParamCaption}
+)}}\label{class_packet_controller_aacdc7e49b324cc12b58229b1d63f0332}
+Gets a single 8-\/bit value from the packet received
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Which value to get\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Value of specified index 
+\end{DoxyReturn}
+\hypertarget{class_packet_controller_a1cb73e40893a34761227cefdfa35a0cf}{\index{Packet\+Controller@{Packet\+Controller}!listen@{listen}}
+\index{listen@{listen}!Packet\+Controller@{Packet\+Controller}}
+\subsubsection[{listen}]{\setlength{\rightskip}{0pt plus 5cm}Packet\+Status Packet\+Controller\+::listen (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_packet_controller_a1cb73e40893a34761227cefdfa35a0cf}
+Listens for a packet header
+
+\begin{DoxyReturn}{Returns}
+Packet\+Status indicating validity of packet 
+\end{DoxyReturn}
+\hypertarget{class_packet_controller_a9d512cbc5b824c0bb424a95fd73bf648}{\index{Packet\+Controller@{Packet\+Controller}!send@{send}}
+\index{send@{send}!Packet\+Controller@{Packet\+Controller}}
+\subsubsection[{send}]{\setlength{\rightskip}{0pt plus 5cm}void Packet\+Controller\+::send (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_packet_controller_a9d512cbc5b824c0bb424a95fd73bf648}
+Sends a packet to the serial port \hypertarget{class_packet_controller_ac597c16ed3b2e8455d4fafe850b456ee}{\index{Packet\+Controller@{Packet\+Controller}!set@{set}}
+\index{set@{set}!Packet\+Controller@{Packet\+Controller}}
+\subsubsection[{set}]{\setlength{\rightskip}{0pt plus 5cm}void Packet\+Controller\+::set (
+\begin{DoxyParamCaption}
+\item[{T\+X\+Index}]{index, }
+\item[{int8\+\_\+t}]{value}
+\end{DoxyParamCaption}
+)}}\label{class_packet_controller_ac597c16ed3b2e8455d4fafe850b456ee}
+Sets a value in the packet to be sent
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & What value to set \\
+\hline
+{\em value} & What to set value to \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\+Robot\+Controller/\+Packet\+Controller/Packet\+Controller.\+h\item 
+src/\+Robot\+Controller/\+Packet\+Controller/Packet\+Controller.\+cpp\end{DoxyCompactItemize}

@@ -20,6 +20,17 @@
 #include "PID.h"
 
 /**
+ *  Operating modes
+ */
+#define MODE_LINEAR_DISABLE         0x80
+#define	MODE_ROTATION_DISABLE		0x40
+#define MODE_DEPTH_DISABLE          0x20
+#define MODE_STABILIZER_DISABLE		0x10
+#define MODE_CALIBRATION_ENABLE		0x08
+#define MODE_NORMAL_ENABLE          0x04
+#define MODE_LOG_LEVEL              0x03
+
+/**
  *  Motor mapping for U1 chip
  */
 enum MotorU1 {
@@ -63,7 +74,6 @@ enum MotorU2 {
  *  Reads sensor data, calculates motor outputs, sets actuators
  */
 class Robot {
-    friend class RobotController;
 public:
     Robot(uint8_t mpuAddr,
           uint8_t pwmU1Addr,
@@ -149,14 +159,16 @@ private:
     //Raw sensor data
     int16_t _accX , _accY , _accZ ;
     int16_t _gyroX, _gyroY, _gyroZ;
+    int16_t _pressure;
 
     //Processed data for stabilization and depth control
     double _accAngleX , _accAngleY;
     double _gyroAngleX, _gyroAngleY;
     double _combAngleX, _combAngleY;
-    double _dispX     , _dispY;
-    double _filtX     , _filtY;
+    double _dispX     , _dispY     , _dispZ;
+    double _filtX     , _filtY     , _filtZ;
     double _stabZ[4];
+    double _depthZ;
     double _combZ[4];
 
     //Processed data for linear and rotation control
@@ -183,14 +195,14 @@ private:
     double        _dt;
     
     //Loop constants
-    double _dispXYRatio;
-    double _verticalCombinerRatio;
-    double _horizontalCombinerRatio;
+    const double _dispXYRatio;
+    const double _verticalCombinerRatio;
+    const double _horizontalCombinerRatio;
     
     //Scale values
-    double _outputScaleXY;
-    double _outputScaleZ;
-    double _outputOffsetZ;
+    const double _outputScaleXY;
+    const double _outputScaleZ;
+    const double _outputOffsetZ;
     
     //Sensors and actuators
     MPU6050 _mpu9150;
