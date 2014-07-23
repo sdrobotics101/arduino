@@ -73,8 +73,8 @@ void PacketController::begin(int baudRate) {
  *  @return PacketStatus indicating validity of packet
  */
 PacketStatus PacketController::listen() {
-    if (_rxSerialPort.available() > 19) {
-        for (int i = 0; i < 20; i++) {
+    if (_rxSerialPort.available() > 12) {
+        for (int i = 0; i < 13; i++) {
             if (_rxSerialPort.read() == 0xFA) {
                 if (_rxSerialPort.peek() == 0xBD) {
                     _rxSerialPort.read();
@@ -88,44 +88,47 @@ PacketStatus PacketController::listen() {
     }
 }
 
-/**
- *  Sends a packet to the serial port
- */
 void PacketController::send() {
     _txPacket.sendPacket(_txSerialPort);
 }
 
-/**
- *  Sets a value in the packet to be sent
- *
- *  @param index What value to set
- *  @param value What to set value to
- */
-void PacketController::set(TXIndex index, int8_t value) {
+
+void PacketController::setS8(TXIndexS8 index, int8_t value) {
     _txPacket._data[index] = value;
 }
 
-/**
- *  Gets a single 8-bit value from the packet received
- *
- *  @param index Which value to get
- *
- *  @return Value of specified index
- */
-int8_t PacketController::get8(RXIndex index) {
-    return _rxPacket._data[index];
+void PacketController::setU8(TXIndexU8 index, uint8_t value) {
+	_txPacket._data[index] = value;
 }
 
-/**
- *  Gets a single 16-bit value from the packet received
- *
- *  @param index Which value to get
- *
- *  @return Value of specified index
- */
-int16_t PacketController::get16(RXIndex index) {
+void PacketController::setS16(TXIndexS16 index, int16_t value) {
+	_data[index+1] = (floor(value / 256));
+    _data[index] = (value % 256);
+}
+
+void PacketController::setU16(TXIndexU16 index, uint16_t value) {
+	_data[index+1] = (floor(value / 256));
+    _data[index] = (value % 256);
+}
+
+int8_t PacketController::getS8(RXIndexS8 index) {
+    return (int8_t)_rxPacket._data[index];
+}
+
+uint8_t PacketController::getU8(RXIndexU8 index) {
+	return (uint8_t)_rxPacket._data[index];
+}
+
+int16_t PacketController::getS16(RXIndexS16 index) {
     int16_t val = _rxPacket._data[index+1];
     val *= 256;
     val += _rxPacket._data[index];
-    return val;
+    return (int16_t)val;
+}
+
+uint16_t PacketController::getU16(RXIndexU16 index) {
+	uint16_t val = _rxPacket._data[index+1];
+    val *= 256;
+    val += _rxPacket._data[index];
+    return (uint16_t)val;
 }

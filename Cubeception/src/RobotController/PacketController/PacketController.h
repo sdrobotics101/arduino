@@ -25,9 +25,16 @@ public:
     PacketStatus listen();
     void send();
     
-    void set(TXIndex index, int8_t value);
-    int8_t get8(RXIndex index);
-    int16_t get16(RXIndex index);
+    void setS8(TXIndexS8 index, int8_t value);
+	void setU8(TXIndexU8 index, uint8_t value);
+	void setS16(TXIndexS16 index, int16_t value);
+	void setU16(TXIndexU16 index, uint16_t value);
+	
+	
+    int8_t getS8(RXIndexS8 index);
+	uint8_t getU8(RXIndexU8 index);
+    int16_t getS16(RXIndexS16 index);
+	uint16_t getU16(RXIndexU16 index);
     
 private:
     USARTClass &_rxSerialPort;

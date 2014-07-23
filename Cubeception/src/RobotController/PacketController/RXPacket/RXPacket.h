@@ -11,6 +11,8 @@
 
 #include "Arduino.h"
 
+#define RX_PACKET_SIZE 11
+
 /**
  *  Status of the packet received
  */
@@ -21,21 +23,25 @@ enum PacketStatus {
     NOT_ENOUGH_DATA = 3
 };
 
-/**
- *  Index of a value in RXPacket
- */
-enum RXIndex {
-    VELX = 0,
-    VELY = 1,
-    VELZ = 2,
-    ROTX = 3,
-    ROTY = 4,
-    ROTZ = 5,
-    POSZ = 6,
-    TORPEDOCTL = 8,
-    SERVOCTL = 9,
-    RXSPARE = 15,
-    CHECKSUM = 16
+enum RXIndexS8 {
+	VELX = 0,
+	VELY = 1,
+	VELZ = 2,
+	ROTZ = 3
+};
+
+enum RXIndexU8 {
+	TORPEDOCTL = 4,
+	SERVOCTL = 5,
+	LEDCTL = 6
+};
+
+enum RXIndexS16 {
+};
+
+enum RXIndexU16 {
+	MODE = 7,
+	RXCHECKSUM = 9
 };
 
 /**
@@ -50,7 +56,7 @@ private:
     PacketStatus readPacket(USARTClass serialPort);
     uint16_t computeChecksum();
     
-    uint8_t _data[18];
+    uint8_t _data[RX_PACKET_SIZE];
 };
 
 #endif /* defined(____RXPacket__) */
