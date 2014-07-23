@@ -1,0 +1,121 @@
+.TH "PacketController" 3 "Tue Jul 22 2014" "Version 1.0" "Cubeception" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PacketController \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <PacketController\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPacketController\fP (USARTClass &rxSerialPort=Serial3, USARTClass &txSerialPort=Serial3)"
+.br
+.ti -1c
+.RI "void \fBbegin\fP (int baudRate=115200)"
+.br
+.ti -1c
+.RI "PacketStatus \fBlisten\fP ()"
+.br
+.ti -1c
+.RI "void \fBsend\fP ()"
+.br
+.ti -1c
+.RI "void \fBset\fP (TXIndex index, int8_t value)"
+.br
+.ti -1c
+.RI "int8_t \fBget8\fP (RXIndex index)"
+.br
+.ti -1c
+.RI "int16_t \fBget16\fP (RXIndex index)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Handles all packet I/O 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PacketController::PacketController (USARTClass &rxSerialPort = \fCSerial3\fP, USARTClass &txSerialPort = \fCSerial3\fP)"
+Constructor
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrxSerialPort\fP Which serial port to read from 
+.br
+\fItxSerialPort\fP Which serial port to send to
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Nothing 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void PacketController::begin (intbaudRate = \fC115200\fP)"
+Initializes \fBPacketController\fP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbaudRate\fP What baud rate to run at 
+.RE
+.PP
+
+.SS "int16_t PacketController::get16 (RXIndexindex)"
+Gets a single 16-bit value from the packet received
+.PP
+\fBParameters:\fP
+.RS 4
+\fIindex\fP Which value to get
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Value of specified index 
+.RE
+.PP
+
+.SS "int8_t PacketController::get8 (RXIndexindex)"
+Gets a single 8-bit value from the packet received
+.PP
+\fBParameters:\fP
+.RS 4
+\fIindex\fP Which value to get
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Value of specified index 
+.RE
+.PP
+
+.SS "PacketStatus PacketController::listen ()"
+Listens for a packet header
+.PP
+\fBReturns:\fP
+.RS 4
+PacketStatus indicating validity of packet 
+.RE
+.PP
+
+.SS "void PacketController::send ()"
+Sends a packet to the serial port 
+.SS "void PacketController::set (TXIndexindex, int8_tvalue)"
+Sets a value in the packet to be sent
+.PP
+\fBParameters:\fP
+.RS 4
+\fIindex\fP What value to set 
+.br
+\fIvalue\fP What to set value to 
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Cubeception from the source code\&.

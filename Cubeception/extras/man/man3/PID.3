@@ -1,0 +1,47 @@
+.TH "PID" 3 "Tue Jul 22 2014" "Version 1.0" "Cubeception" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PID \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <PID\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPID\fP (double kp, double ki, double kd, double kf)"
+.br
+.ti -1c
+.RI "double \fBcompute\fP (double err)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A class for controlling \fBPID\fP loops 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PID::PID (doublekp, doubleki, doublekd, doublekf)"
+Constructor 
+.SH "Member Function Documentation"
+.PP 
+.SS "double PID::compute (doubleerr)"
+Computes the output given the error
+.PP
+\fBParameters:\fP
+.RS 4
+\fIerr\fP The error in the system
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The output to drive at 
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Cubeception from the source code\&.

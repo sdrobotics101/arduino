@@ -1,0 +1,195 @@
+\hypertarget{class_robot}{\section{Robot Class Reference}
+\label{class_robot}\index{Robot@{Robot}}
+}
+
+
+{\ttfamily \#include $<$Robot.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_robot_af42e5f1555c6a688af3577f1fc3262cb}{Robot} (uint8\+\_\+t mpu\+Addr, uint8\+\_\+t pwm\+U1\+Addr, uint8\+\_\+t pwm\+U2\+Addr, double pid\+Output\+X\+K\+P, double pid\+Output\+X\+K\+I, double pid\+Output\+X\+K\+D, double pid\+Output\+X\+K\+F, double pid\+Output\+Y\+K\+P, double pid\+Output\+Y\+K\+I, double pid\+Output\+Y\+K\+D, double pid\+Output\+Y\+K\+F, double pid\+Depth\+K\+P, double pid\+Depth\+K\+I, double pid\+Depth\+K\+D, double pid\+Depth\+K\+F, double pid\+Angle\+K\+P, double pid\+Angle\+K\+I, double pid\+Angle\+K\+D, double pid\+Angle\+K\+F, double disp\+X\+Y\+Ratio, double vertical\+Combiner\+Ratio, double horizontal\+Combiner\+Ratio, double output\+Scale\+X\+Y, double output\+Scale\+Z, double output\+Offset\+Z)
+\item 
+void \hyperlink{class_robot_a6c7ee2437ae5427a19f2de4903ca0df9}{begin} ()
+\item 
+void \hyperlink{class_robot_ab5fd69af8c7ee03c95202cc72811bc12}{set\+Motion} (int8\+\_\+t vel\+X, int8\+\_\+t vel\+Y, int8\+\_\+t vel\+Z, int8\+\_\+t rot\+X, int8\+\_\+t rot\+Y, int8\+\_\+t rot\+Z, int16\+\_\+t pos\+Z, int8\+\_\+t torpedo\+Ctl, int8\+\_\+t servo\+Ctl\mbox{[}6\mbox{]}, uint8\+\_\+t mode)
+\item 
+void \hyperlink{class_robot_a9f9fae1804d08fa647589d8d33a8642f}{continue\+Motion} ()
+\item 
+void \hyperlink{class_robot_a14dfe126ae973d3b9f81fee81a06ac22}{stop} ()
+\item 
+void \hyperlink{class_robot_abaaaf25f6bb3d2c67fcaae9d9caca8fe}{calibrate} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Reads sensor data, calculates motor outputs, sets actuators 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_robot_af42e5f1555c6a688af3577f1fc3262cb}{\index{Robot@{Robot}!Robot@{Robot}}
+\index{Robot@{Robot}!Robot@{Robot}}
+\subsubsection[{Robot}]{\setlength{\rightskip}{0pt plus 5cm}Robot\+::\+Robot (
+\begin{DoxyParamCaption}
+\item[{uint8\+\_\+t}]{mpu\+Addr, }
+\item[{uint8\+\_\+t}]{pwm\+U1\+Addr, }
+\item[{uint8\+\_\+t}]{pwm\+U2\+Addr, }
+\item[{double}]{pid\+Output\+X\+K\+P, }
+\item[{double}]{pid\+Output\+X\+K\+I, }
+\item[{double}]{pid\+Output\+X\+K\+D, }
+\item[{double}]{pid\+Output\+X\+K\+F, }
+\item[{double}]{pid\+Output\+Y\+K\+P, }
+\item[{double}]{pid\+Output\+Y\+K\+I, }
+\item[{double}]{pid\+Output\+Y\+K\+D, }
+\item[{double}]{pid\+Output\+Y\+K\+F, }
+\item[{double}]{pid\+Depth\+K\+P, }
+\item[{double}]{pid\+Depth\+K\+I, }
+\item[{double}]{pid\+Depth\+K\+D, }
+\item[{double}]{pid\+Depth\+K\+F, }
+\item[{double}]{pid\+Angle\+K\+P, }
+\item[{double}]{pid\+Angle\+K\+I, }
+\item[{double}]{pid\+Angle\+K\+D, }
+\item[{double}]{pid\+Angle\+K\+F, }
+\item[{double}]{disp\+X\+Y\+Ratio, }
+\item[{double}]{vertical\+Combiner\+Ratio, }
+\item[{double}]{horizontal\+Combiner\+Ratio, }
+\item[{double}]{output\+Scale\+X\+Y, }
+\item[{double}]{output\+Scale\+Z, }
+\item[{double}]{output\+Offset\+Z}
+\end{DoxyParamCaption}
+)}}\label{class_robot_af42e5f1555c6a688af3577f1fc3262cb}
+Constructor
+
+
+\begin{DoxyParams}{Parameters}
+{\em mpu\+Addr} & I2\+C address of M\+P\+U9150 \\
+\hline
+{\em pwm\+U1\+Addr} & I2\+C address of P\+C\+A9685 on U1 \\
+\hline
+{\em pwm\+U2\+Addr} & I2\+C address of P\+C\+A9685 on U2 \\
+\hline
+{\em pid\+Output\+X\+K\+P} & Kp for output X \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+X\+K\+I} & Ki for output X \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+X\+K\+D} & Kd for output X \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+X\+K\+F} & Kf for output X \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+Y\+K\+P} & Kp for output Y \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+Y\+K\+I} & Ki for output Y \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+Y\+K\+D} & Kd for output Y \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Output\+Y\+K\+F} & Kf for output Y \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Depth\+K\+P} & Kp for depth \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Depth\+K\+I} & Ki for depth \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Depth\+K\+D} & Kd for depth \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Depth\+K\+F} & Kf for depth \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Angle\+K\+P} & Kp for angle Z \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Angle\+K\+I} & Ki for angle Z \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Angle\+K\+D} & Kd for angle Z \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em pid\+Angle\+K\+F} & Kf for angle Z \hyperlink{class_p_i_d}{P\+I\+D} controller \\
+\hline
+{\em disp\+X\+Y\+Ratio} & Complementary filter ratio \\
+\hline
+{\em vertical\+Combiner\+Ratio} & Vertical combiner ratio \\
+\hline
+{\em horizontal\+Combiner\+Ratio} & Horizontal combiner ratio \\
+\hline
+{\em output\+Scale\+X\+Y} & Scale in X\+Y direction \\
+\hline
+{\em output\+Scale\+Z} & Scale in Z direction \\
+\hline
+{\em output\+Offset\+Z} & Offset in Z direction\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Nothing 
+\end{DoxyReturn}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_robot_a6c7ee2437ae5427a19f2de4903ca0df9}{\index{Robot@{Robot}!begin@{begin}}
+\index{begin@{begin}!Robot@{Robot}}
+\subsubsection[{begin}]{\setlength{\rightskip}{0pt plus 5cm}void Robot\+::begin (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{class_robot_a6c7ee2437ae5427a19f2de4903ca0df9}
+Initializes I2\+C bus, sensors, actuators \hypertarget{class_robot_abaaaf25f6bb3d2c67fcaae9d9caca8fe}{\index{Robot@{Robot}!calibrate@{calibrate}}
+\index{calibrate@{calibrate}!Robot@{Robot}}
+\subsubsection[{calibrate}]{\setlength{\rightskip}{0pt plus 5cm}void Robot\+::calibrate (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_robot_abaaaf25f6bb3d2c67fcaae9d9caca8fe}
+Calculates gyro offsets \hypertarget{class_robot_a9f9fae1804d08fa647589d8d33a8642f}{\index{Robot@{Robot}!continue\+Motion@{continue\+Motion}}
+\index{continue\+Motion@{continue\+Motion}!Robot@{Robot}}
+\subsubsection[{continue\+Motion}]{\setlength{\rightskip}{0pt plus 5cm}void Robot\+::continue\+Motion (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_robot_a9f9fae1804d08fa647589d8d33a8642f}
+Continues previously set motion \hypertarget{class_robot_ab5fd69af8c7ee03c95202cc72811bc12}{\index{Robot@{Robot}!set\+Motion@{set\+Motion}}
+\index{set\+Motion@{set\+Motion}!Robot@{Robot}}
+\subsubsection[{set\+Motion}]{\setlength{\rightskip}{0pt plus 5cm}void Robot\+::set\+Motion (
+\begin{DoxyParamCaption}
+\item[{int8\+\_\+t}]{vel\+X, }
+\item[{int8\+\_\+t}]{vel\+Y, }
+\item[{int8\+\_\+t}]{vel\+Z, }
+\item[{int8\+\_\+t}]{rot\+X, }
+\item[{int8\+\_\+t}]{rot\+Y, }
+\item[{int8\+\_\+t}]{rot\+Z, }
+\item[{int16\+\_\+t}]{pos\+Z, }
+\item[{int8\+\_\+t}]{torpedo\+Ctl, }
+\item[{int8\+\_\+t}]{servo\+Ctl\mbox{[}6\mbox{]}, }
+\item[{uint8\+\_\+t}]{mode}
+\end{DoxyParamCaption}
+)}}\label{class_robot_ab5fd69af8c7ee03c95202cc72811bc12}
+Input to create desired motion
+
+
+\begin{DoxyParams}{Parameters}
+{\em vel\+X} & Velocity X \\
+\hline
+{\em vel\+Y} & Velocity Y \\
+\hline
+{\em vel\+Z} & Velocity Z \\
+\hline
+{\em rot\+X} & Rotation X \\
+\hline
+{\em rot\+Y} & Rotation Y \\
+\hline
+{\em rot\+Z} & Rotation Z \\
+\hline
+{\em pos\+Z} & Position Z \\
+\hline
+{\em torpedo\+Ctl} & Torpedo control \\
+\hline
+{\em servo\+Ctl} & Servo control \\
+\hline
+{\em mode} & Mode control \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_robot_a14dfe126ae973d3b9f81fee81a06ac22}{\index{Robot@{Robot}!stop@{stop}}
+\index{stop@{stop}!Robot@{Robot}}
+\subsubsection[{stop}]{\setlength{\rightskip}{0pt plus 5cm}void Robot\+::stop (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_robot_a14dfe126ae973d3b9f81fee81a06ac22}
+Brings all motors to a halt 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\+Robot\+Controller/\+Robot/Robot.\+h\item 
+src/\+Robot\+Controller/\+Robot/Robot.\+cpp\end{DoxyCompactItemize}

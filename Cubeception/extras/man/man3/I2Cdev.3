@@ -1,0 +1,424 @@
+.TH "I2Cdev" 3 "Tue Jul 22 2014" "Version 1.0" "Cubeception" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+I2Cdev \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBI2Cdev\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static int8_t \fBreadBit\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data, uint16_t timeout=\fBI2Cdev::readTimeout\fP)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadBitW\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data, uint16_t timeout=\fBI2Cdev::readTimeout\fP)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadBits\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data, uint16_t timeout=\fBI2Cdev::readTimeout\fP)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadBitsW\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data, uint16_t timeout=\fBI2Cdev::readTimeout\fP)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadByte\fP (uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint16_t timeout=\fBI2Cdev::readTimeout\fP)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadWord\fP (uint8_t devAddr, uint8_t regAddr, uint16_t *data, uint16_t timeout=\fBI2Cdev::readTimeout\fP)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadBytes\fP (uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data, uint16_t timeout=\fBI2Cdev::readTimeout\fP)"
+.br
+.ti -1c
+.RI "static int8_t \fBreadWords\fP (uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data, uint16_t timeout=\fBI2Cdev::readTimeout\fP)"
+.br
+.ti -1c
+.RI "static bool \fBwriteBit\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteBitW\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteBits\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteBitsW\fP (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteByte\fP (uint8_t devAddr, uint8_t regAddr, uint8_t data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteWord\fP (uint8_t devAddr, uint8_t regAddr, uint16_t data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteBytes\fP (uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data)"
+.br
+.ti -1c
+.RI "static bool \fBwriteWords\fP (uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data)"
+.br
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "static uint16_t \fBreadTimeout\fP = I2CDEV_DEFAULT_READ_TIMEOUT"
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "I2Cdev::I2Cdev ()"
+Default constructor\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "int8_t I2Cdev::readBit (uint8_tdevAddr, uint8_tregAddr, uint8_tbitNum, uint8_t *data, uint16_ttimeout = \fC\fBI2Cdev::readTimeout\fP\fP)\fC [static]\fP"
+Read a single bit from an 8-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to read from 
+.br
+\fIbitNum\fP Bit position to read (0-7) 
+.br
+\fIdata\fP Container for single bit value 
+.br
+\fItimeout\fP Optional read timeout in milliseconds (0 to disable, leave off to use default class value in \fBI2Cdev::readTimeout\fP) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of read operation (true = success) 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readBits (uint8_tdevAddr, uint8_tregAddr, uint8_tbitStart, uint8_tlength, uint8_t *data, uint16_ttimeout = \fC\fBI2Cdev::readTimeout\fP\fP)\fC [static]\fP"
+Read multiple bits from an 8-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to read from 
+.br
+\fIbitStart\fP First bit position to read (0-7) 
+.br
+\fIlength\fP Number of bits to read (not more than 8) 
+.br
+\fIdata\fP Container for right-aligned value (i\&.e\&. '101' read from any bitStart position will equal 0x05) 
+.br
+\fItimeout\fP Optional read timeout in milliseconds (0 to disable, leave off to use default class value in \fBI2Cdev::readTimeout\fP) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of read operation (true = success) 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readBitsW (uint8_tdevAddr, uint8_tregAddr, uint8_tbitStart, uint8_tlength, uint16_t *data, uint16_ttimeout = \fC\fBI2Cdev::readTimeout\fP\fP)\fC [static]\fP"
+Read multiple bits from a 16-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to read from 
+.br
+\fIbitStart\fP First bit position to read (0-15) 
+.br
+\fIlength\fP Number of bits to read (not more than 16) 
+.br
+\fIdata\fP Container for right-aligned value (i\&.e\&. '101' read from any bitStart position will equal 0x05) 
+.br
+\fItimeout\fP Optional read timeout in milliseconds (0 to disable, leave off to use default class value in \fBI2Cdev::readTimeout\fP) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of read operation (1 = success, 0 = failure, -1 = timeout) 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readBitW (uint8_tdevAddr, uint8_tregAddr, uint8_tbitNum, uint16_t *data, uint16_ttimeout = \fC\fBI2Cdev::readTimeout\fP\fP)\fC [static]\fP"
+Read a single bit from a 16-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to read from 
+.br
+\fIbitNum\fP Bit position to read (0-15) 
+.br
+\fIdata\fP Container for single bit value 
+.br
+\fItimeout\fP Optional read timeout in milliseconds (0 to disable, leave off to use default class value in \fBI2Cdev::readTimeout\fP) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of read operation (true = success) 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readByte (uint8_tdevAddr, uint8_tregAddr, uint8_t *data, uint16_ttimeout = \fC\fBI2Cdev::readTimeout\fP\fP)\fC [static]\fP"
+Read single byte from an 8-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to read from 
+.br
+\fIdata\fP Container for byte value read from device 
+.br
+\fItimeout\fP Optional read timeout in milliseconds (0 to disable, leave off to use default class value in \fBI2Cdev::readTimeout\fP) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of read operation (true = success) 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readBytes (uint8_tdevAddr, uint8_tregAddr, uint8_tlength, uint8_t *data, uint16_ttimeout = \fC\fBI2Cdev::readTimeout\fP\fP)\fC [static]\fP"
+Read multiple bytes from an 8-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP First register regAddr to read from 
+.br
+\fIlength\fP Number of bytes to read 
+.br
+\fIdata\fP Buffer to store read data in 
+.br
+\fItimeout\fP Optional read timeout in milliseconds (0 to disable, leave off to use default class value in \fBI2Cdev::readTimeout\fP) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Number of bytes read (-1 indicates failure) 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readWord (uint8_tdevAddr, uint8_tregAddr, uint16_t *data, uint16_ttimeout = \fC\fBI2Cdev::readTimeout\fP\fP)\fC [static]\fP"
+Read single word from a 16-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to read from 
+.br
+\fIdata\fP Container for word value read from device 
+.br
+\fItimeout\fP Optional read timeout in milliseconds (0 to disable, leave off to use default class value in \fBI2Cdev::readTimeout\fP) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of read operation (true = success) 
+.RE
+.PP
+
+.SS "int8_t I2Cdev::readWords (uint8_tdevAddr, uint8_tregAddr, uint8_tlength, uint16_t *data, uint16_ttimeout = \fC\fBI2Cdev::readTimeout\fP\fP)\fC [static]\fP"
+Read multiple words from a 16-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP First register regAddr to read from 
+.br
+\fIlength\fP Number of words to read 
+.br
+\fIdata\fP Buffer to store read data in 
+.br
+\fItimeout\fP Optional read timeout in milliseconds (0 to disable, leave off to use default class value in \fBI2Cdev::readTimeout\fP) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Number of words read (0 indicates failure) 
+.RE
+.PP
+
+.SS "bool I2Cdev::writeBit (uint8_tdevAddr, uint8_tregAddr, uint8_tbitNum, uint8_tdata)\fC [static]\fP"
+write a single bit in an 8-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to write to 
+.br
+\fIbitNum\fP Bit position to write (0-7) 
+.br
+\fIvalue\fP New bit value to write 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of operation (true = success) 
+.RE
+.PP
+
+.SS "bool I2Cdev::writeBits (uint8_tdevAddr, uint8_tregAddr, uint8_tbitStart, uint8_tlength, uint8_tdata)\fC [static]\fP"
+Write multiple bits in an 8-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to write to 
+.br
+\fIbitStart\fP First bit position to write (0-7) 
+.br
+\fIlength\fP Number of bits to write (not more than 8) 
+.br
+\fIdata\fP Right-aligned value to write 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of operation (true = success) 
+.RE
+.PP
+
+.SS "bool I2Cdev::writeBitsW (uint8_tdevAddr, uint8_tregAddr, uint8_tbitStart, uint8_tlength, uint16_tdata)\fC [static]\fP"
+Write multiple bits in a 16-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to write to 
+.br
+\fIbitStart\fP First bit position to write (0-15) 
+.br
+\fIlength\fP Number of bits to write (not more than 16) 
+.br
+\fIdata\fP Right-aligned value to write 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of operation (true = success) 
+.RE
+.PP
+
+.SS "bool I2Cdev::writeBitW (uint8_tdevAddr, uint8_tregAddr, uint8_tbitNum, uint16_tdata)\fC [static]\fP"
+write a single bit in a 16-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register regAddr to write to 
+.br
+\fIbitNum\fP Bit position to write (0-15) 
+.br
+\fIvalue\fP New bit value to write 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of operation (true = success) 
+.RE
+.PP
+
+.SS "bool I2Cdev::writeByte (uint8_tdevAddr, uint8_tregAddr, uint8_tdata)\fC [static]\fP"
+Write single byte to an 8-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register address to write to 
+.br
+\fIdata\fP New byte value to write 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of operation (true = success) 
+.RE
+.PP
+
+.SS "bool I2Cdev::writeBytes (uint8_tdevAddr, uint8_tregAddr, uint8_tlength, uint8_t *data)\fC [static]\fP"
+Write multiple bytes to an 8-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP First register address to write to 
+.br
+\fIlength\fP Number of bytes to write 
+.br
+\fIdata\fP Buffer to copy new data from 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of operation (true = success) 
+.RE
+.PP
+
+.SS "bool I2Cdev::writeWord (uint8_tdevAddr, uint8_tregAddr, uint16_tdata)\fC [static]\fP"
+Write single word to a 16-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP Register address to write to 
+.br
+\fIdata\fP New word value to write 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of operation (true = success) 
+.RE
+.PP
+
+.SS "bool I2Cdev::writeWords (uint8_tdevAddr, uint8_tregAddr, uint8_tlength, uint16_t *data)\fC [static]\fP"
+Write multiple words to a 16-bit device register\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevAddr\fP I2C slave device address 
+.br
+\fIregAddr\fP First register address to write to 
+.br
+\fIlength\fP Number of words to write 
+.br
+\fIdata\fP Buffer to copy new data from 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Status of operation (true = success) 
+.RE
+.PP
+
+.SH "Member Data Documentation"
+.PP 
+.SS "uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT\fC [static]\fP"
+Default timeout value for read operations\&. Set this to 0 to disable timeout detection\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Cubeception from the source code\&.
