@@ -185,7 +185,13 @@ void RobotController::executeCycle() {
     }
 }
 
+void RobotController::calibrate() {
+	_robot.calibrate();
+}
 
+void RobotController::stop() {
+	_robot.stop();
+}
 
 
 

@@ -115,10 +115,10 @@ Robot::Robot(uint8_t mpuAddr,
      for (int i=0; i<6; i++) {
         _servoCtl[i] = 0;
      }
-     _mode          = 0;
+     _mode          = 1;
     
-    _accOffsetX  = 0;   _accOffsetY  = 0;   _accOffsetZ  = 0;
-    _gyroOffsetX = 0;   _gyroOffsetY = 0;   _gyroOffsetZ = 0;
+    _accOffsetX  = 625;   _accOffsetY  = -350;   _accOffsetZ  = 17240;
+    _gyroOffsetX = -31;   _gyroOffsetY = -68;   _gyroOffsetZ = -260;
     
     _accX  = 0; _accY  = 0; _accZ  = 0;
     _gyroX = 0; _gyroY = 0; _gyroZ = 0;

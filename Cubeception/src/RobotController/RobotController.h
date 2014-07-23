@@ -57,6 +57,8 @@ public:
                     uint8_t badPacketThreshold);
     void begin();
     void executeCycle();
+	void calibrate();
+	void stop();
 private:
     PacketStatus _packetStatus;
     
