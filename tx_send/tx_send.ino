@@ -1,10 +1,10 @@
-#include <TXPacket.h>
-#include <RXPacket.h>
-#include <PacketController.h>
+#include <Wire.h>
+#include <Cubeception.h>
 
 PacketController controller;
 
 void setup() {
+    Serial.begin(115200);
     controller.begin();
 }
 
@@ -12,27 +12,26 @@ void loop() {
     Serial.println("Loop Start");
     delay(100);
     Serial.println("Setting Variables");
-    controller.set(ACCX, 1);
-    controller.set(ACCY, 2);
-    controller.set(ACCZ, 3);
-    controller.set(MAGX, 4);
-    controller.set(MAGY, 5);
-    controller.set(MAGZ, 6);
-    controller.set(PRESSURE, 7);
-    controller.set(TXSPARE, 8);
+   
+    controller.setS16(MAGX, 10000);
+    controller.setS16(MAGY, -135);
+    controller.setS16(MAGZ, -15000);
+    controller.setU16(POSZ, 10000);
+    controller.setU16(HEALTH, 0);
+    controller.setU8(BATV, 255);
     
     delay(100);
     Serial.println("Sending Packet");
     
     controller.send();
     Serial.println("Packet Sent");
-    
+    /*
     Serial.println("Loop End");
     delay(3000);
-    /*
+    
     Serial.println("Begin Packet");
     while (Serial1.available() > 0) {
-        Serial.print((int8_t)Serial1.read());
+        Serial.print(Serial1.read(), HEX);
         Serial.print(" ");
     }
     Serial.println("");

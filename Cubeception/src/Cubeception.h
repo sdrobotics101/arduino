@@ -32,14 +32,14 @@
 #define PID_DEPTH_KD ((double)0/16)
 #define PID_DEPTH_KF ((double)0/16)
                      
-#define PID_ANGLE_KP ((double)8/16)
-#define PID_ANGLE_KI ((double)8/16)
+#define PID_ANGLE_KP ((double)15/16)
+#define PID_ANGLE_KI ((double)0/16)
 #define PID_ANGLE_KD ((double)0/16)
 #define PID_ANGLE_KF ((double)0/16)
                      
 #define DISP_XY_RATIO ((double)0.8)
 #define VERTICAL_COMBINER_RATIO ((double)0.4)
-#define HORIZONTAL_COMBINER_RATIO ((double)0.9)
+#define HORIZONTAL_COMBINER_RATIO ((double)0.80)
                                   
 #define OUTPUT_SCALE_XY ((double)4096.0)
 #define OUTPUT_SCALE_Z ((double)4096.0)
