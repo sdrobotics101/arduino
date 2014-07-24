@@ -41,7 +41,7 @@ RobotController robotController(MPU_ADDR,
 
 void setup() {
   robotController.begin();
-
+  robotController.stop();
 }
 
 void loop() {

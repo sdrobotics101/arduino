@@ -12,25 +12,25 @@
 #include "Arduino.h"
 #include <math.h>
 
-#define TX_PACKET_SIZE 13
+#define TX_PACKET_SIZE 15
 
 enum TXIndexU8 {
-	BATV = 10
+	BATV = 12
 };
 
 enum TXIndexS8 {
 };
 
 enum TXIndexU16 {
-	POSZ = 6,
-	HEALTH = 8,
-	TXCHECKSUM = 11
+	POSZ = 8,
+	HEALTH = 10,
+	TXCHECKSUM = 13
 };
 
 enum TXIndexS16 {
-	MAGX = 0,
-	MAGY = 2,
-	MAGZ = 4
+	MAGX = 2,
+	MAGY = 4,
+	MAGZ = 6
 };
 
 /**
