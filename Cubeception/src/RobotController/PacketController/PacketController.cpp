@@ -102,8 +102,8 @@ void PacketController::setU8(TXIndexU8 index, uint8_t value) {
 }
 
 void PacketController::setS16(TXIndexS16 index, int16_t value) {
-	_txPacket._data[index+1] = (floor(value / 256));
-    _txPacket._data[index] = (value % 256);
+		_txPacket._data[index+1] =  (uint8_t)((value & 0xff00)>>8);
+		_txPacket._data[index]   =  (uint8_t) (value & 0x00ff);
 }
 
 void PacketController::setU16(TXIndexU16 index, uint16_t value) {
