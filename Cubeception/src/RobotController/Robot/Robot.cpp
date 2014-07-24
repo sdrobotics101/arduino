@@ -335,7 +335,7 @@ void Robot::stabilize() {
 
     _dispX = getDispX();
     _dispY = getDispY();
-    _dispZ = ((double)_velZ/8.0) - ((double)_pressure*(14.0/65536)*10.1976);
+    _dispZ = ((double)_velZ/128.0);
 
     
     // upon powerup, we wake up in the frozen state, till s/w commands otherwise
@@ -399,6 +399,7 @@ void Robot::stabilize() {
     if ((_mode & MODE_LOG_LEVEL) > 0) {
         
         Serial.print("S: ");
+		Serial.print(_mode); Serial.print(" ");
         
         if ((_mode & MODE_LOG_LEVEL) > 2) {
             Serial.print(_accX         ); Serial.print(" ");
@@ -602,7 +603,8 @@ void Robot::move() {
     if ((_mode & MODE_LOG_LEVEL) > 0) {
 
         Serial.print("M: ");
-
+		Serial.print(_mode); Serial.print(" ");
+		
         if ((_mode & MODE_LOG_LEVEL) > 2) {
             Serial.print(_gyroZ);         Serial.print(" ");
 	    Serial.print(_gyroAngleZ, 4); Serial.print(" ");
