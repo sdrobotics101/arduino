@@ -16,6 +16,7 @@
 
 #include "MPU6050/MPU6050.h"
 #include "PCA9685/Adafruit_PWMServoDriver.h"
+#include "MS5541C/MS5541C.h"
 #include "PID/PID.h"
 
 /**
