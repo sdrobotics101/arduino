@@ -12,6 +12,8 @@
 #include <stdint.h>
 #include <math.h>
 
+#define MAX_SAT_VAL 20.0
+
 /**
  *  A class for controlling PID loops
  */
@@ -19,6 +21,7 @@ class PID {
 public:
     PID(double kp, double ki, double kd, double kf);
     double compute(double err);
+    void reset();
     
 private:
     const double _kp;

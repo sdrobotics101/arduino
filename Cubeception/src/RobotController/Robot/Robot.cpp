@@ -103,58 +103,7 @@ Robot::Robot(uint8_t mpuAddr,
                 _outputScaleZ (outputScaleZ ),
                 _outputOffsetZ(outputOffsetZ)
 {
-     _velX      	= 0;
-     _velY      	= 0;
-     _velZ      	= 0;
-     _rotZ      	= 0;
-     _torpedoCtl    = 0;
-     _servoCtl 		= 0;
-	 _ledCtl 		= 0;
-     _mode          = 1;
-    
-    _accOffsetX  = 625;   _accOffsetY  = -350;   _accOffsetZ  = 17240;
-    _gyroOffsetX = -31;   _gyroOffsetY = -68;   _gyroOffsetZ = -260;
-    
-    _accX  = 0; _accY  = 0; _accZ  = 0;
-    _gyroX = 0; _gyroY = 0; _gyroZ = 0;
-    _pressure = 0;
-    
-    _accAngleX   = 0.0; _accAngleY   = 0.0;
-    _gyroAngleX  = 0.0; _gyroAngleY  = 0.0;
-    _combAngleX  = 0.0; _combAngleY  = 0.0;
-    _dispX       = 0.0; _dispY       = 0.0; _dispZ  = 0.0;
-    _filtX       = 0.0; _filtY       = 0.0; _filtZ  = 0.0;
-                                            _depthZ = 0.0;
-
-    _gyroAngleZ = 0.0;
-    _combAngleZ = 0.0;
-    _rotR       = 0.0;
-    _filtR      = 0.0;
-    _scaledVelX = 0.0; _scaledVelY = 0.0;
-
-    for (int i=0; i<4; i++) {
-       _stabZ[i] = 0.0;
-       _combZ[i] = 0.0;
-        
-       _rotXF[i] = 0.0;
-       _rotXR[i] = 0.0;
-       _rotYF[i] = 0.0;
-       _rotYR[i] = 0.0;
-       _linXF[i] = 0.0;
-       _linXR[i] = 0.0;
-       _linYF[i] = 0.0;
-       _linYR[i] = 0.0;
-        
-       _mxf[i]   = 0;
-       _mxr[i]   = 0;
-       _myf[i]   = 0;
-       _myr[i]   = 0;
-       _mzf[i]   = 0;
-       _mzr[i]   = 0;
-    }
-
-    _realtime   = micros();
-    _dt         = 0.0;
+    reset();
 }
 
 /**
@@ -197,6 +146,9 @@ void Robot::setMotion(int8_t velX,
 	_ledCtl = ledCtl;
     _mode = mode;
     
+	if (_mode & MODE_RESET) {
+	    reset();
+	}
     updateMPU9150();
     updateDt();
     stabilize();
@@ -207,6 +159,9 @@ void Robot::setMotion(int8_t velX,
  *  Continues previously set motion
  */
 void Robot::continueMotion() {
+	if (_mode & MODE_RESET) {
+	    reset();
+	}
     updateMPU9150();
     updateDt();
     stabilize();
@@ -269,6 +224,70 @@ void Robot::calibrate() {
 }
 
 /**
+ *  Resets all the variables
+ */
+void Robot::reset() 
+{
+     _velX      	= 0;
+     _velY      	= 0;
+     _velZ      	= 0;
+     _rotZ      	= 0;
+     _torpedoCtl    = 0;
+     _servoCtl 		= 0;
+	 _ledCtl 		= 0;
+     _mode          = 1;
+    
+    _accOffsetX  = 625;   _accOffsetY  = -350;   _accOffsetZ  = 17240;
+    _gyroOffsetX = -31;   _gyroOffsetY = -68;   _gyroOffsetZ = -260;
+    
+    _accX  = 0; _accY  = 0; _accZ  = 0;
+    _gyroX = 0; _gyroY = 0; _gyroZ = 0;
+    _pressure = 0;
+    
+    _accAngleX   = 0.0; _accAngleY   = 0.0;
+    _gyroAngleX  = 0.0; _gyroAngleY  = 0.0;
+    _combAngleX  = 0.0; _combAngleY  = 0.0;
+    _dispX       = 0.0; _dispY       = 0.0; _dispZ  = 0.0;
+    _filtX       = 0.0; _filtY       = 0.0; _filtZ  = 0.0;
+                                            _depthZ = 0.0;
+
+    _gyroAngleZ = 0.0;
+    _combAngleZ = 0.0;
+    _rotR       = 0.0;
+    _filtR      = 0.0;
+    _scaledVelX = 0.0; _scaledVelY = 0.0;
+
+    for (int i=0; i<4; i++) {
+       _stabZ[i] = 0.0;
+       _combZ[i] = 0.0;
+        
+       _rotXF[i] = 0.0;
+       _rotXR[i] = 0.0;
+       _rotYF[i] = 0.0;
+       _rotYR[i] = 0.0;
+       _linXF[i] = 0.0;
+       _linXR[i] = 0.0;
+       _linYF[i] = 0.0;
+       _linYR[i] = 0.0;
+        
+       _mxf[i]   = 0;
+       _mxr[i]   = 0;
+       _myf[i]   = 0;
+       _myr[i]   = 0;
+       _mzf[i]   = 0;
+       _mzr[i]   = 0;
+    }
+
+    _realtime   = micros();
+    _dt         = 0.0;
+
+	_pidOutputX.reset();
+	_pidOutputY.reset();
+	_pidDepth.reset();
+	_pidAngle.reset();
+}
+
+/**
  *  Updates time
  */
 void Robot::updateDt() {
@@ -297,6 +316,10 @@ double Robot::getDispX() {
     _gyroAngleX	 = scaledGyroX * _dt * (PI/180);
     _combAngleX  = (_dispXYRatio  * (_gyroAngleX + _combAngleX)) + ((1 - _dispXYRatio) * _accAngleX);
 
+    if (_mode & MODE_STABILIZER_DISABLE) {
+        _combAngleX = 0.0;
+    }
+
     return sin(_combAngleX);
 }
 
@@ -312,6 +335,10 @@ double Robot::getDispY() {
     _gyroAngleY	 = scaledGyroY * _dt * (PI/180);
     _combAngleY  = (_dispXYRatio  * (_gyroAngleY + _combAngleY)) + ((1 - _dispXYRatio) * _accAngleY);
     
+    if (_mode & MODE_STABILIZER_DISABLE) {
+        _combAngleY = 0.0;
+    }
+
     return sin(_combAngleY);
 }
 
@@ -336,7 +363,6 @@ void Robot::stabilize() {
     _dispX = getDispX();
     _dispY = getDispY();
     _dispZ = ((double)_velZ/128.0);
-
     
     // upon powerup, we wake up in the frozen state, till s/w commands otherwise
     double hackX = _dispX;
@@ -349,6 +375,15 @@ void Robot::stabilize() {
     hackZ -= _dispZ;	// ROHAN : KEEP THIS HERE TILL WE GET THE PRESSURE SENSOR WORKING
                         //         OTHERWISE STABILIZER LOOP WILL GO UNSTABLE. ONCE WE
 			//         HAVE THE SENSOR, THIS CAN GO BACK WITH THE OTHER HACKS
+
+    if (_mode & MODE_STABILIZER_DISABLE) {
+        hackX = 0.0;
+		hackY = 0.0;
+    }
+
+	if (_mode & MODE_DEPTH_DISABLE) {
+		hackZ = 0.0;
+	}
 
     _filtX = _pidOutputX.compute(hackX);
     _filtY = _pidOutputY.compute(hackY);
@@ -384,16 +419,28 @@ void Robot::stabilize() {
        else               { _mzr[i] =     0; _mzf[i] =    0; }
         
     }
-    
-    setMotorU2(MZR1, _mzr[0]);
-    setMotorU2(MZR2, _mzr[1]);
-    setMotorU2(MZR3, _mzr[2]);
-    setMotorU2(MZR4, _mzr[3]);
-    
-    setMotorU2(MZF1, _mzf[0]);
-    setMotorU2(MZF2, _mzf[1]);
-    setMotorU2(MZF3, _mzf[2]);
-    setMotorU2(MZF4, _mzf[3]);
+
+    if (_mode & MODE_KILL) {
+    	setMotorU2(MZR1, 0);
+    	setMotorU2(MZR2, 0);
+    	setMotorU2(MZR3, 0);
+    	setMotorU2(MZR4, 0);
+    	
+    	setMotorU2(MZF1, 0);
+    	setMotorU2(MZF2, 0);
+    	setMotorU2(MZF3, 0);
+    	setMotorU2(MZF4, 0);
+    } else {
+    	setMotorU2(MZR1, _mzr[0]);
+    	setMotorU2(MZR2, _mzr[1]);
+    	setMotorU2(MZR3, _mzr[2]);
+    	setMotorU2(MZR4, _mzr[3]);
+    	
+    	setMotorU2(MZF1, _mzf[0]);
+    	setMotorU2(MZF2, _mzf[1]);
+    	setMotorU2(MZF3, _mzf[2]);
+    	setMotorU2(MZF4, _mzf[3]);
+    }
     
     // Log to serial port if flag is turned on
     if ((_mode & MODE_LOG_LEVEL) > 0) {
@@ -451,7 +498,7 @@ void Robot::stabilize() {
 void Robot::move() {
     _gyroAngleZ = getDispZ();
     _combAngleZ = ((double)_rotZ * (PI/128)) - _gyroAngleZ;
-    _rotR       = sin(_combAngleZ);
+    _rotR       = _combAngleZ/PI;
     
     double hackZ = _rotR;
     
@@ -460,6 +507,10 @@ void Robot::move() {
         hackZ -= _filtR;
     }
     
+	if (_mode & MODE_ROTATION_DISABLE) {
+		hackZ = 0.0;
+	}
+
     _filtR = _pidAngle.compute(hackZ);
 
     if (_filtR > 0.0) {
@@ -472,8 +523,7 @@ void Robot::move() {
         _rotXF[3] =     0.0; _rotXR[1] =     0.0;
         _rotYF[2] =     0.0; _rotYR[0] =     0.0;
         _rotYF[3] =     0.0; _rotYR[1] =     0.0;
-    }
-    else if (_filtR < 0.0) {
+    } else if (_filtR < 0.0) {
         _rotXF[0] =     0.0; _rotXR[2] =     0.0;
         _rotXF[1] =     0.0; _rotXR[3] =     0.0;
         _rotYF[0] =     0.0; _rotYR[2] =     0.0;
@@ -483,8 +533,7 @@ void Robot::move() {
         _rotXF[3] = -_filtR; _rotXR[1] = -_filtR;
         _rotYF[2] = -_filtR; _rotYR[0] = -_filtR;
         _rotYF[3] = -_filtR; _rotYR[1] = -_filtR;
-    }
-    else {
+    } else {
         _rotXF[0] =     0.0; _rotXR[2] =     0.0;
         _rotXF[1] =     0.0; _rotXR[3] =     0.0;
         _rotYF[0] =     0.0; _rotYR[2] =     0.0;
@@ -504,14 +553,12 @@ void Robot::move() {
         _linXF[1] = _scaledVelX; _linXR[1] =          0.0;
         _linXF[2] = _scaledVelX; _linXR[2] =          0.0;
         _linXF[3] = _scaledVelX; _linXR[3] =          0.0;
-    }
-    else if (_scaledVelX < 0.0) {
+    } else if (_scaledVelX < 0.0) {
         _linXF[0] =         0.0; _linXR[0] = -_scaledVelX;
         _linXF[1] =         0.0; _linXR[1] = -_scaledVelX;
         _linXF[2] =         0.0; _linXR[2] = -_scaledVelX;
         _linXF[3] =         0.0; _linXR[3] = -_scaledVelX;
-    }
-    else {
+    } else {
         _linXF[0] =         0.0; _linXR[0] =          0.0;
         _linXF[1] =         0.0; _linXR[1] =          0.0;
         _linXF[2] =         0.0; _linXR[2] =          0.0;
@@ -523,14 +570,12 @@ void Robot::move() {
         _linYF[1] = _scaledVelY; _linYR[1] =          0.0;
         _linYF[2] = _scaledVelY; _linYR[2] =          0.0;
         _linYF[3] = _scaledVelY; _linYR[3] =          0.0;
-    }
-    else if (_scaledVelY < 0.0) {
+    } else if (_scaledVelY < 0.0) {
         _linYF[0] =         0.0; _linYR[0] = -_scaledVelY;
         _linYF[1] =         0.0; _linYR[1] = -_scaledVelY;
         _linYF[2] =         0.0; _linYR[2] = -_scaledVelY;
         _linYF[3] =         0.0; _linYR[3] = -_scaledVelY;
-    }
-    else {
+    } else {
         _linYF[0] =         0.0; _linYR[0] =          0.0;
         _linYF[1] =         0.0; _linYR[1] =          0.0;
         _linYF[2] =         0.0; _linYR[2] =          0.0;
@@ -579,25 +624,48 @@ void Robot::move() {
         _myr[i] = ((int16_t)tmpYR[i]);
     }
 
-    setMotorU1(MXR1, _mxr[0]);
-    setMotorU1(MXR2, _mxr[1]);
-    setMotorU1(MXR3, _mxr[2]);
-    setMotorU1(MXR4, _mxr[3]);
+    if (_mode & MODE_KILL) {
+    	setMotorU1(MXR1, 0);
+    	setMotorU1(MXR2, 0);
+    	setMotorU1(MXR3, 0);
+    	setMotorU1(MXR4, 0);
 
-    setMotorU1(MXF1, _mxf[0]);
-    setMotorU1(MXF2, _mxf[1]);
-    setMotorU1(MXF3, _mxf[2]);
-    setMotorU1(MXF4, _mxf[3]);
+    	setMotorU1(MXF1, 0);
+    	setMotorU1(MXF2, 0);
+    	setMotorU1(MXF3, 0);
+    	setMotorU1(MXF4, 0);
 
-    setMotorU1(MYR1, _myr[0]);
-    setMotorU1(MYR2, _myr[1]);
-    setMotorU1(MYR3, _myr[2]);
-    setMotorU1(MYR4, _myr[3]);
+    	setMotorU1(MYR1, 0);
+    	setMotorU1(MYR2, 0);
+    	setMotorU1(MYR3, 0);
+    	setMotorU1(MYR4, 0);
 
-    setMotorU1(MYF1, _myf[0]);
-    setMotorU1(MYF2, _myf[1]);
-    setMotorU1(MYF3, _myf[2]);
-    setMotorU1(MYF4, _myf[3]);
+    	setMotorU1(MYF1, 0);
+    	setMotorU1(MYF2, 0);
+    	setMotorU1(MYF3, 0);
+    	setMotorU1(MYF4, 0);
+    } else {
+    	setMotorU1(MXR1, _mxr[0]);
+    	setMotorU1(MXR2, _mxr[1]);
+    	setMotorU1(MXR3, _mxr[2]);
+    	setMotorU1(MXR4, _mxr[3]);
+
+    	setMotorU1(MXF1, _mxf[0]);
+    	setMotorU1(MXF2, _mxf[1]);
+    	setMotorU1(MXF3, _mxf[2]);
+    	setMotorU1(MXF4, _mxf[3]);
+
+    	setMotorU1(MYR1, _myr[0]);
+    	setMotorU1(MYR2, _myr[1]);
+    	setMotorU1(MYR3, _myr[2]);
+    	setMotorU1(MYR4, _myr[3]);
+
+    	setMotorU1(MYF1, _myf[0]);
+    	setMotorU1(MYF2, _myf[1]);
+    	setMotorU1(MYF3, _myf[2]);
+    	setMotorU1(MYF4, _myf[3]);
+    }
+
 
     // Log to serial port if flag is turned on
     if ((_mode & MODE_LOG_LEVEL) > 0) {

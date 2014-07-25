@@ -16,18 +16,21 @@
 
 #include "MPU6050/MPU6050.h"
 #include "PCA9685/Adafruit_PWMServoDriver.h"
+#include "MS5541C/MS5541C.h"
 #include "PID/PID.h"
 
 /**
  *  Operating modes
  */
-#define MODE_LINEAR_DISABLE         0x80
-#define	MODE_ROTATION_DISABLE		0x40
-#define MODE_DEPTH_DISABLE          0x20
-#define MODE_STABILIZER_DISABLE		0x10
-#define MODE_CALIBRATION_ENABLE		0x08
-#define MODE_NORMAL_ENABLE          0x04
-#define MODE_LOG_LEVEL              0x03
+#define MODE_RESET                  0x8000
+#define MODE_KILL                   0x4000
+#define MODE_LINEAR_DISABLE         0x0080
+#define MODE_ROTATION_DISABLE       0x0040
+#define MODE_DEPTH_DISABLE          0x0020
+#define MODE_STABILIZER_DISABLE     0x0010
+#define MODE_CALIBRATION_ENABLE     0x0008
+#define MODE_NORMAL_ENABLE          0x0004
+#define MODE_LOG_LEVEL              0x0003
 
 /**
  *  Motor mapping for U1 chip
@@ -113,13 +116,14 @@ public:
                    int8_t rotZ,
                    uint8_t torpedoCtl,
                    uint8_t servoCtl,
-				   uint8_t ledCtl,
+                   uint8_t ledCtl,
                    uint16_t mode);
     void continueMotion();
     void stop();
     void calibrate();
     
 private:
+    void reset();
     void updateDt();
     
     void updateMPU9150();
@@ -140,7 +144,7 @@ private:
     int8_t      _rotZ;
     uint8_t     _torpedoCtl;
     uint8_t     _servoCtl;
-	uint8_t     _ledCtl;
+    uint8_t     _ledCtl;
     uint16_t    _mode;
     
     // Constants : Based on calibration
