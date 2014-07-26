@@ -1,4 +1,5 @@
 #include <Wire.h>
+#include <SPI.h>
 #include <Cubeception.h>
 
 Adafruit_PWMServoDriver pwmU1(0x79);

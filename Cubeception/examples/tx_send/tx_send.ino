@@ -1,4 +1,5 @@
 #include <Wire.h>
+#include <SPI.h>
 #include <Cubeception.h>
 
 PacketController controller;
