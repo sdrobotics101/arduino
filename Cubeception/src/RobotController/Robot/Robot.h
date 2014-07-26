@@ -123,6 +123,16 @@ public:
     void stop();
     void calibrate();
     
+    int16_t getAccX();
+    int16_t getAccY();
+    int16_t getAccZ();
+    int16_t getGyroX();
+    int16_t getGyroY();
+    int16_t getGyroZ();
+    int16_t getMagX();
+    int16_t getMagY();
+    int16_t getMagZ();
+    
 private:
     void reset();
     void updateDt();
@@ -162,6 +172,7 @@ private:
     //Raw sensor data
     int16_t _accX , _accY , _accZ ;
     int16_t _gyroX, _gyroY, _gyroZ;
+    int16_t _magX , _magY , _magZ ;
     int16_t _pressure;
 
     //Processed data for stabilization and depth control

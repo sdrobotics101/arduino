@@ -317,7 +317,7 @@ void Robot::updateDt() {
  *  Polls data from MPU9150
  */
 void Robot::updateMPU9150() {
-    _mpu9150.getMotion6(&_accX, &_accY, &_accZ, &_gyroX, &_gyroY, &_gyroZ);
+    _mpu9150.getMotion9(&_accX, &_accY, &_accZ, &_gyroX, &_gyroY, &_gyroZ, &_magX, &_magY, &_magZ);
 }
 
 /**
