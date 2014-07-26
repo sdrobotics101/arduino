@@ -25,20 +25,22 @@ MS5541C::MS5541C() : _D1(0),
 
 void MS5541C::begin() {
     getW1();
-    Serial.print(_W1); Serial.print(" ");
-    
     getW2();
-    Serial.print(_W2); Serial.print(" ");
-    
     getW3();
-    Serial.print(_W3); Serial.print(" ");
-    
     getW4();
-    Serial.print(_W4); Serial.print(" ");
-    Serial.println("");
     
     computeConstants();
     
+    Serial.println("MS5541C Initialized");
+    
+    Serial.print("MS5541C W: ");
+    Serial.print(_W1); Serial.print(" ");
+    Serial.print(_W2); Serial.print(" ");
+    Serial.print(_W3); Serial.print(" ");
+    Serial.print(_W4); Serial.print(" ");
+    Serial.println("");
+    
+    Serial.print("MS5541C C: ");
     Serial.print(_C1); Serial.print(" ");
     Serial.print(_C2); Serial.print(" ");
     Serial.print(_C3); Serial.print(" ");
@@ -46,8 +48,6 @@ void MS5541C::begin() {
     Serial.print(_C5); Serial.print(" ");
     Serial.print(_C6); Serial.print(" ");
     Serial.println("");
-    
-    Serial.println("MS5541C Initialized");
     
 }
 

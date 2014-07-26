@@ -209,7 +209,7 @@ private:
     
     //For pressure sensor
     bool _temp;
-    int8_t _queueTime;
+    double _queueTime;
     unsigned long _timeSinceQueuing;
     
     //Sensors and actuators
