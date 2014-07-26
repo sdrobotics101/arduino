@@ -116,6 +116,8 @@ void Robot::begin() {
     SPI.begin();
     Serial.println("SPI Initialized");
     
+    _ms5541C.begin();
+    
     _mpu9150.initialize();
     Serial.print("MPU9150 Initialized: ");
     Serial.println(_mpu9150.getAddress(), HEX);
@@ -152,10 +154,14 @@ void Robot::setMotion(int8_t velX,
 	if (_mode & MODE_RESET) {
 	    reset();
 	}
+    
+    queueMS5541C();
     updateMPU9150();
     updateDt();
     stabilize();
     move();
+    readMS5541C();
+    
 }
 
 /**
@@ -165,10 +171,13 @@ void Robot::continueMotion() {
 	if (_mode & MODE_RESET) {
 	    reset();
 	}
+    
+    queueMS5541C();
     updateMPU9150();
     updateDt();
     stabilize();
     move();
+    readMS5541C();
 }
 
 /**
@@ -283,6 +292,10 @@ void Robot::reset()
 
     _realtime   = micros();
     _dt         = 0.0;
+    
+    _temp = true;
+    _queueTime = 0;
+    _timeSinceQueuing = 0;
 
 	_pidOutputX.reset();
 	_pidOutputY.reset();
@@ -356,6 +369,31 @@ double Robot::getDispZ() {
     _gyroAngleZ += (scaledGyroZ * _dt * (PI/180));
     
     return _gyroAngleZ;
+}
+
+void Robot::queueMS5541C() {
+    if (_temp) {
+        _ms5541C.queueD2();
+    } else {
+        _ms5541C.queueD1();
+    }
+    _queueTime = millis();
+}
+
+void Robot::readMS5541C() {
+    _timeSinceQueuing = millis() - _queueTime;
+    if (_timeSinceQueuing < 35) {
+        delay(35 - _timeSinceQueuing);
+    }
+    
+    if (_temp) {
+        _ms5541C.readD2();
+        _temp = !_temp;
+    } else {
+        _ms5541C.readD1();
+        _pressure = _ms5541C.getPressure();
+        _temp = !_temp;
+    }
 }
 
 /**

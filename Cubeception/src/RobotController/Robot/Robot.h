@@ -132,6 +132,9 @@ private:
     double getDispY();
     double getDispZ();
     
+    void queueMS5541C();
+    void readMS5541C();
+    
     void stabilize();
     void move();
     
@@ -203,6 +206,11 @@ private:
     const double _outputScaleXY;
     const double _outputScaleZ;
     const double _outputOffsetZ;
+    
+    //For pressure sensor
+    bool _temp;
+    int8_t _queueTime;
+    unsigned long _timeSinceQueuing;
     
     //Sensors and actuators
     MPU6050 _mpu9150;
