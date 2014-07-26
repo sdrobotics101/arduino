@@ -113,6 +113,9 @@ void Robot::begin() {
     Wire.begin();
     Serial.println("Wire Initialized");
     
+    SPI.begin();
+    Serial.println("SPI Initialized");
+    
     _mpu9150.initialize();
     Serial.print("MPU9150 Initialized: ");
     Serial.println(_mpu9150.getAddress(), HEX);

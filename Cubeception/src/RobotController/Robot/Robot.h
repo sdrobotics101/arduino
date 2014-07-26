@@ -11,6 +11,7 @@
 
 #include "Arduino.h"
 #include <Wire.h>
+#include <SPI.h>
 
 #include <math.h>
 
@@ -205,6 +206,7 @@ private:
     
     //Sensors and actuators
     MPU6050 _mpu9150;
+    MS5541C _ms5541C;
     Adafruit_PWMServoDriver _pwmU1;
     Adafruit_PWMServoDriver _pwmU2;
     
