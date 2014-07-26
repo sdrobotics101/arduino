@@ -1,7 +1,8 @@
 #include <Wire.h>
+#include <SPI.h>
 #include <Cubeception.h>
 
-PacketController controller;
+PacketController controller(RX_SERIAL_PORT, TX_SERIAL_PORT);
 PacketStatus pStatus;
 
 void setup() {

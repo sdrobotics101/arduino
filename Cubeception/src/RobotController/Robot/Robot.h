@@ -11,6 +11,7 @@
 
 #include "Arduino.h"
 #include <Wire.h>
+#include <SPI.h>
 
 #include <math.h>
 
@@ -122,6 +123,16 @@ public:
     void stop();
     void calibrate();
     
+    int16_t getAccX();
+    int16_t getAccY();
+    int16_t getAccZ();
+    int16_t getGyroX();
+    int16_t getGyroY();
+    int16_t getGyroZ();
+    int16_t getMagX();
+    int16_t getMagY();
+    int16_t getMagZ();
+    
 private:
     void reset();
     void updateDt();
@@ -130,6 +141,9 @@ private:
     double getDispX();
     double getDispY();
     double getDispZ();
+    
+    void queueMS5541C();
+    void readMS5541C();
     
     void stabilize();
     void move();
@@ -158,6 +172,7 @@ private:
     //Raw sensor data
     int16_t _accX , _accY , _accZ ;
     int16_t _gyroX, _gyroY, _gyroZ;
+    int16_t _magX , _magY , _magZ ;
     int16_t _pressure;
 
     //Processed data for stabilization and depth control
@@ -203,8 +218,14 @@ private:
     const double _outputScaleZ;
     const double _outputOffsetZ;
     
+    //For pressure sensor
+    bool _temp;
+    double _queueTime;
+    unsigned long _timeSinceQueuing;
+    
     //Sensors and actuators
     MPU6050 _mpu9150;
+    MS5541C _ms5541C;
     Adafruit_PWMServoDriver _pwmU1;
     Adafruit_PWMServoDriver _pwmU2;
     

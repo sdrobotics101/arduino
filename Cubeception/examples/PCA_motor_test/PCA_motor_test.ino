@@ -1,8 +1,9 @@
 #include <Wire.h>
+#include <SPI.h>
 #include <Cubeception.h>
 
-Adafruit_PWMServoDriver pwmU1(0x79);
-Adafruit_PWMServoDriver pwmU2(0x71);
+Adafruit_PWMServoDriver pwmU1(PWMU1_ADDR);
+Adafruit_PWMServoDriver pwmU2(PWMU2_ADDR);
 
 int pin = 22;
 
