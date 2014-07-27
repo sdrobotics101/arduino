@@ -129,6 +129,8 @@ void Robot::begin() {
     _pwmU2.begin();
     Serial.print("PWMU2 Initialized: ");
     Serial.println(_pwmU2.getAddress(), HEX);
+    
+    analogReadResolution(12);
    
     Serial.println("Robot Initialized");
 }
@@ -233,6 +235,26 @@ void Robot::calibrate() {
    Serial.print(_gyroOffsetY); Serial.print(" ");
    Serial.print(_gyroOffsetZ); Serial.print(" ");
    Serial.println("");
+}
+
+int16_t Robot::getMagX() {
+    return _magX;
+}
+
+int16_t Robot::getMagY() {
+    return _magY;
+}
+
+int16_t Robot::getMagZ() {
+    return _magZ;
+}
+
+uint16_t Robot::getPosZ() {
+    return (uint16_t)_depthZ;
+}
+
+uint16_t getBatV() {
+    return (uint16_t)analogRead(A0);
 }
 
 /**
@@ -392,6 +414,7 @@ void Robot::readMS5541C() {
     } else {
         _ms5541C.readD1();
         _pressure = _ms5541C.getPressure();
+        _depthZ = _pressure / 9810;
         _temp = !_temp;
     }
 }

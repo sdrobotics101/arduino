@@ -177,6 +177,15 @@ void RobotController::executeCycle() {
             _badPacketCount = 0;
         }
     }
+    
+    _packetController.setS16(MAGX, _robot.getMagX());
+    _packetController.setS16(MAGY, _robot.getMagY());
+    _packetController.setS16(MAGZ, _robot.getMagZ());
+    _packetController.setU16(POSZ, _robot.getPosZ());
+    _packetController.setU16(HEALTH, 0);
+    _packetController.setU8(BATV, floor(_robot.getBatV() / 16));
+    _packetController.send();
+    
 }
 
 void RobotController::calibrate() {
