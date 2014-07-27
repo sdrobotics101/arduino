@@ -123,15 +123,12 @@ public:
     void stop();
     void calibrate();
     
-    int16_t getAccX();
-    int16_t getAccY();
-    int16_t getAccZ();
-    int16_t getGyroX();
-    int16_t getGyroY();
-    int16_t getGyroZ();
     int16_t getMagX();
     int16_t getMagY();
     int16_t getMagZ();
+    
+    uint16_t getPosZ();
+    uint16_t getBatV();
     
 private:
     void reset();
