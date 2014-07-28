@@ -170,27 +170,6 @@ void RobotController::executeCycle() {
     _packetController.setU16(HEALTH, _packetCount);
     _packetController.setU8(BATV, floor(analogRead(A0) / 16));
     _packetController.send();
-    
-    if (Serial.available() > 130) {
-        std::string valuesStr;
-        for (int i = 0; i < 132; i++) {
-            valuesStr += Serial.read();
-        }
-        
-        std::vector<double> valuesVect;
-        std::stringstream ss(valuesStr);
-        
-        double i;
-        
-        while (ss >> i) {
-            valuesVect.push_back(i);
-            if (ss.peek() == ',') {
-                ss.ignore();
-            }
-        }
-    
-        setConstants(valuesVect);
-    }
 }
 
 void RobotController::calibrate() {

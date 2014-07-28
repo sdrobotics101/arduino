@@ -279,6 +279,68 @@ void Robot::setOutputOffsetZ(double outputOffsetZ) {
     _outputOffsetZ = outputOffsetZ;
 }
 
+void Robot::setCoeffs(CoeffSet coeffs) {
+	_pidOutputX.setKP(coeffs.outputXKP);
+	_pidOutputX.setKI(coeffs.outputXKI);
+	_pidOutputX.setKD(coeffs.outputXKD);
+	_pidOutputX.setKF(coeffs.outputXKF);
+	
+	_pidOutputY.setKP(coeffs.outputYKP);
+	_pidOutputY.setKI(coeffs.outputYKI);
+	_pidOutputY.setKD(coeffs.outputYKD);
+	_pidOutputY.setKF(coeffs.outputYKF);
+	
+	_pidDepth.setKP(coeffs.depthKP);
+	_pidDepth.setKI(coeffs.depthKI);
+	_pidDepth.setKD(coeffs.depthKD);
+	_pidDepth.setKF(coeffs.depthKF);
+	
+	_pidAngle.setKP(coeffs.angleKP);
+	_pidAngle.setKI(coeffs.angleKI);
+	_pidAngle.setKD(coeffs.angleKD);
+	_pidAngle.setKF(coeffs.angleKF);
+	
+	setDispXYRatio(coeffs.dispXYRatio);
+	setVerticalCombinerRatio(coeffs.verticalCombinerRatio);
+	setHorizontalCombinerRatio(coeffs.horizontalCombinerRatio);
+	
+	setOutputScaleXY(coeffs.outputScaleXY);
+	setOutputScaleZ(coeffs.outputScaleZ);
+	setOutputOffsetZ(coeffs.outputOffsetZ);
+}
+
+void Robot::initializeCoeffSets() {
+	//set 0
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	
+}
+
 double Robot::getDispXYRatio() {
     return _dispXYRatio;
 }

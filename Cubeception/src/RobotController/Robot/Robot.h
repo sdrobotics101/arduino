@@ -73,6 +73,36 @@ enum MotorU2 {
     MZR1 = 15
 };
 
+struct CoeffSet {
+	double outputXKP;
+	double outputXKI;
+	double outputXKD;
+	double outputXKF;
+	
+	double outputYKP;
+	double outputYKI;
+	double outputYKD;
+	double outputYKF;
+	
+	double depthKP;
+	double depthKI;
+	double depthKD;
+	double depthKF;
+	
+	double angleKP;
+	double angleKI;
+	double angleKD;
+	double angleKF;
+	
+	double dispXYRatio;
+	double verticalCombinerRatio;
+	double horizontalCombinerRatio;
+	
+	double outputScaleXY;
+	double outputScaleZ;
+	double outputOffsetZ;
+};
+
 /**
  *  Reads sensor data, calculates motor outputs, sets actuators
  */
@@ -139,6 +169,9 @@ private:
     void setOutputScaleXY(double outputScaleXY);
     void setOutputScaleZ(double outputScaleZ);
     void setOutputOffsetZ(double outputOffsetZ);
+	
+	void setCoeffs(CoeffSet coeffs);
+	void initializeCoeffSets();
     
     double getDispXYRatio();
     double getVerticalCombinerRatio();
@@ -236,6 +269,9 @@ private:
     bool _temp;
     double _queueTime;
     unsigned long _timeSinceQueuing;
+	
+	//Coefficient sets
+	CoeffSet _coeffs[16];
     
     //Sensors and actuators
     MPU6050 _mpu9150;
