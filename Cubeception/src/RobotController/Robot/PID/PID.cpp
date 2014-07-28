@@ -65,3 +65,32 @@ void PID::reset() {
     _stateI = 0.0;
     _stateD = 0.0;
 }
+   
+void PID::setKP(double kp) {
+    _kp = kp;
+}
+void PID::setKI(double ki) {
+    _ki = ki;
+}
+void PID::setKD(double kd) {
+    _kd = kd;
+}
+void PID::setKF(double kf) {
+    _kf = kf;
+}
+
+double PID::getKP() {
+    return _kp;
+}
+
+double PID::getKI() {
+    return _ki;
+}
+
+double PID::getKD() {
+    return _kd;
+}
+
+double PID::getKF() {
+    return _kf;
+}

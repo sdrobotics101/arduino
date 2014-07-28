@@ -257,6 +257,52 @@ uint16_t getBatV() {
     return analogRead(A0);
 }
 
+void Robot::setDispXYRatio(double dispXYRatio) {
+    _dispXYRatio = dispXYRatio;
+}
+void Robot::setVerticalCombinerRatio(double verticalCombinerRatio) {
+    _verticalCombinerRatio = verticalCombinerRatio;
+}
+void Robot::setHorizontalCombinerRatio(double horizontalCombinerRatio) {
+    _horizontalCombinerRatio = horizontalCombinerRatio;
+}
+
+void Robot::setOutputScaleXY(double outputScaleXY) {
+    _outputScaleXY = outputScaleXY;
+}
+
+void Robot::setOutputScaleZ(double outputScaleZ) {
+    _outputScaleZ = outputScaleZ;
+}
+
+void Robot::setOutputOffsetZ(double outputOffsetZ) {
+    _outputOffsetZ = outputOffsetZ;
+}
+
+double Robot::getDispXYRatio() {
+    return _dispXYRatio;
+}
+
+double Robot::getVerticalCombinerRatio() {
+    return _verticalCombinerRatio;
+}
+
+double Robot::getHorizontalCombinerRatio() {
+    return _horizontalCombinerRatio;
+}
+
+double Robot::getOutputScaleXY() {
+    return _outputScaleXY;
+}
+
+double Robot::getOutputScaleZ() {
+    return _outputScaleZ;
+}
+
+double Robot::getOutputOffsetZ() {
+    return _outputOffsetZ;
+}
+
 /**
  *  Resets all the variables
  */
