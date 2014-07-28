@@ -48,6 +48,6 @@
 #define RX_SERIAL_PORT Serial3
 #define TX_SERIAL_PORT Serial3
 
-#define BAD_PACKET_THRESHOLD ((uint8_t)100)
+#define BAD_PACKET_TIMEOUT ((uint16_t)1000)
 
 #endif /* defined(____Cubeception__) */

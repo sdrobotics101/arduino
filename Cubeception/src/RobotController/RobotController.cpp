@@ -77,7 +77,7 @@ RobotController::RobotController(uint8_t mpuAddr,
                                  USARTClass &rxSerialPort,
                                  USARTClass &txSerialPort,
                                  
-                                 uint8_t badPacketThreshold) :
+                                 uint16_t badPacketTimeout) :
 
                                     _robot(mpuAddr,
                                            pwmU1Addr,
@@ -114,10 +114,12 @@ RobotController::RobotController(uint8_t mpuAddr,
                                     _packetController(rxSerialPort,
                                                       txSerialPort),
 
-                                    _badPacketThreshold(badPacketThreshold)
+                                    _badPacketTimeout(badPacketTimeout)
 {
-    _packetStatus   = NOT_ENOUGH_DATA;
-    _badPacketCount = 0;
+    _packetCount = 0;
+    
+    _startTime = 0;
+    _currentTime = 0;
 }
 
 /**
@@ -140,50 +142,33 @@ void RobotController::begin() {
  *  Executes a single cycle of the robot loop
  */
 void RobotController::executeCycle() {
-    _packetStatus = _packetController.listen();
-
-    switch (_packetStatus) {
-        case VALID_PACKET:
-            _robot.setMotion(_packetController.getS8(VELX),
-                             _packetController.getS8(VELY),
-                             _packetController.getS8(VELZ),
-                             _packetController.getS8(ROTZ),
-                             _packetController.getU8(TORPEDOCTL),
-                             _packetController.getU8(SERVOCTL),
-                             _packetController.getU8(LEDCTL),
-							 _packetController.getU16(MODE));
-        break;
-            
-        case INVALID_PACKET:
-            _badPacketCount += 3;
-            _robot.continueMotion();
-        break;
-            
-        case NO_HEADER_FOUND:
-            _badPacketCount += 2;
-            _robot.continueMotion();
-        break;
-            
-        case NOT_ENOUGH_DATA:
-            _badPacketCount += 1;
-            _robot.continueMotion();
-        break;
-            
-    }
-    
-    if (_badPacketThreshold > -1) {
-        if (_badPacketCount > _badPacketThreshold) {
-            _robot.stop();
-            _badPacketCount = 0;
+    _startTime = millis();
+    while (_packetController.listen() != VALID_PACKET) {
+        _currentTime = millis() - _startTime;
+        if (_badPacketTimeout > 0) {
+            if (_currentTime > _badPacketTimeout) {
+                stop();
+            }
         }
     }
+    
+    _packetCount++;
+    
+    _robot.setMotion(_packetController.getS8(VELX),
+                     _packetController.getS8(VELY),
+                     _packetController.getS8(VELZ),
+                     _packetController.getS8(ROTZ),
+                     _packetController.getU8(TORPEDOCTL),
+                     _packetController.getU8(SERVOCTL),
+                     _packetController.getU8(LEDCTL),
+    				 _packetController.getU16(MODE));
 	
     _packetController.setS16(MAGX, _robot.getMagX());
     _packetController.setS16(MAGY, _robot.getMagY());
     _packetController.setS16(MAGZ, _robot.getMagZ());
     _packetController.setU16(POSZ, _robot.getPosZ());
-    _packetController.setU16(HEALTH, 1);
-    _packetController.setU8(BATV, analogRead(A0) / 16);
+    _packetController.setU16(HEALTH, _packetCount);
+    _packetController.setU8(BATV, floor(analogRead(A0) / 16));
     _packetController.send();
 }
 

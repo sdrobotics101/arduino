@@ -37,7 +37,7 @@ RobotController robotController(MPU_ADDR,
                                 RX_SERIAL_PORT,
                                 TX_SERIAL_PORT,
                                 
-                                BAD_PACKET_THRESHOLD);
+                                BAD_PACKET_TIMEOUT);
                                 
 
 void setup() {
