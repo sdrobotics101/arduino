@@ -254,7 +254,7 @@ uint16_t Robot::getPosZ() {
 }
 
 uint16_t getBatV() {
-    return (uint16_t)analogRead(A0);
+    return analogRead(A0);
 }
 
 /**
@@ -269,7 +269,7 @@ void Robot::reset()
      _torpedoCtl    = 0;
      _servoCtl 		= 0;
 	 _ledCtl 		= 0;
-     _mode          = 1;
+     _mode          = 0xF1;
     
     _accOffsetX  = 625;   _accOffsetY  = -350;   _accOffsetZ  = 17240;
     _gyroOffsetX = -31;   _gyroOffsetY = -68;   _gyroOffsetZ = -260;

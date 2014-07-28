@@ -54,16 +54,17 @@ public:
                     USARTClass &rxSerialPort,
                     USARTClass &txSerialPort,
                     
-                    uint8_t badPacketThreshold);
+                    uint16_t badPacketTimeout);
     void begin();
     void executeCycle();
 	void calibrate();
 	void stop();
 private:
-    PacketStatus _packetStatus;
+    const uint16_t _badPacketTimeout;
+    uint16_t      _packetCount;
     
-    const uint8_t _badPacketThreshold;
-    uint8_t       _badPacketCount;
+    unsigned long _startTime;
+    unsigned long _currentTime;
     
     Robot _robot;
     PacketController _packetController;
