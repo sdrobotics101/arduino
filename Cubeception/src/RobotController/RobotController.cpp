@@ -180,38 +180,6 @@ void RobotController::stop() {
 	_robot.stop();
 }
 
-
-void RobotController::setConstants(std::vector<double> vect) {
-    _robot._pidOutputX.setKP(vect[0]);
-    _robot._pidOutputX.setKI(vect[1]);
-    _robot._pidOutputX.setKD(vect[2]);
-    _robot._pidOutputX.setKF(vect[3]);
-    
-    _robot._pidOutputY.setKP(vect[4]);
-    _robot._pidOutputY.setKI(vect[5]);
-    _robot._pidOutputY.setKD(vect[6]);
-    _robot._pidOutputY.setKF(vect[7]);
-    
-    _robot._pidDepth.setKP(vect[8]);
-    _robot._pidDepth.setKI(vect[9]);
-    _robot._pidDepth.setKD(vect[10]);
-    _robot._pidDepth.setKF(vect[11]);
-    
-    _robot._pidAngle.setKP(vect[12]);
-    _robot._pidAngle.setKI(vect[13]);
-    _robot._pidAngle.setKD(vect[14]);
-    _robot._pidAngle.setKF(vect[15]);
-    
-    _robot.setDispXYRatio(vect[16]);
-    _robot.setVerticalCombinerRatio(vect[17]);
-    _robot.setHorizontalCombinerRatio(vect[18]);
-    
-    _robot.setOutputScaleXY(vect[19]);
-    _robot.setOutputScaleZ(vect[20]);
-    _robot.setOutputOffsetZ(vect[21]);
-    
-}
-
 void RobotController::getConstants() {
     Serial.print(_robot._pidOutputX.getKP()); Serial.print(" ");
     Serial.print(_robot._pidOutputX.getKI()); Serial.print(" ");

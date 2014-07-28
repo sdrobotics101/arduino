@@ -64,8 +64,6 @@ public:
 	void calibrate();
 	void stop();
 private:
-    
-    void setConstants(std::vector<double> vect);
     void getConstants();
     
     const uint16_t _badPacketTimeout;
