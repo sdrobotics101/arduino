@@ -254,7 +254,7 @@ uint16_t Robot::getPosZ() {
 }
 
 uint16_t getBatV() {
-    return (uint16_t)analogRead(A0);
+    return analogRead(A0);
 }
 
 /**
