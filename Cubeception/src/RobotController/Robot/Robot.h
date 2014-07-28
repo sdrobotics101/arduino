@@ -77,6 +77,7 @@ enum MotorU2 {
  *  Reads sensor data, calculates motor outputs, sets actuators
  */
 class Robot {
+    friend class RobotController;
 public:
     Robot(uint8_t mpuAddr,
           uint8_t pwmU1Addr,
@@ -131,6 +132,22 @@ public:
     uint16_t getBatV();
     
 private:
+    void setDispXYRatio(double dispXYRatio);
+    void setVerticalCombinerRatio(double verticalCombinerRatio);
+    void setHorizontalCombinerRatio(double horizontalCombinerRatio);
+    
+    void setOutputScaleXY(double outputScaleXY);
+    void setOutputScaleZ(double outputScaleZ);
+    void setOutputOffsetZ(double outputOffsetZ);
+    
+    double getDispXYRatio();
+    double getVerticalCombinerRatio();
+    double getHorizontalCombinerRatio();
+    
+    double getOutputScaleXY();
+    double getOutputScaleZ();
+    double getOutputOffsetZ();
+    
     void reset();
     void updateDt();
     
@@ -206,14 +223,14 @@ private:
     double        _dt;
     
     //Loop constants
-    const double _dispXYRatio;
-    const double _verticalCombinerRatio;
-    const double _horizontalCombinerRatio;
+    double _dispXYRatio;
+    double _verticalCombinerRatio;
+    double _horizontalCombinerRatio;
     
     //Scale values
-    const double _outputScaleXY;
-    const double _outputScaleZ;
-    const double _outputOffsetZ;
+    double _outputScaleXY;
+    double _outputScaleZ;
+    double _outputOffsetZ;
     
     //For pressure sensor
     bool _temp;

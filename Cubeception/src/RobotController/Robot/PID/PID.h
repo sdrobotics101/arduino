@@ -23,11 +23,21 @@ public:
     double compute(double err);
     void reset();
     
+    void setKP(double kp);
+    void setKI(double ki);
+    void setKD(double kd);
+    void setKF(double kf);
+    
+    double getKP();
+    double getKI();
+    double getKD();
+    double getKF();
+    
 private:
-    const double _kp;
-    const double _ki;
-    const double _kd;
-    const double _kf;
+    double _kp;
+    double _ki;
+    double _kd;
+    double _kf;
     double _stateI;
     double _stateD;
 };

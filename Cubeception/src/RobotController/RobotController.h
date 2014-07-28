@@ -11,6 +11,10 @@
 
 #include "Arduino.h"
 
+#include <vector>
+#include <string>
+#include <sstream>
+
 #include "Robot/Robot.h"
 #include "PacketController/PacketController.h"
 
@@ -60,6 +64,9 @@ public:
 	void calibrate();
 	void stop();
 private:
+    
+    void setConstants(std::vector<double> vect);
+    
     const uint16_t _badPacketTimeout;
     uint16_t      _packetCount;
     
