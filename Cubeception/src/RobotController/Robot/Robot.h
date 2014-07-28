@@ -170,6 +170,7 @@ private:
     void setOutputScaleZ(double outputScaleZ);
     void setOutputOffsetZ(double outputOffsetZ);
 	
+	void changeConstants();
 	void setCoeffs(CoeffSet coeffs);
 	void initializeCoeffSets();
     

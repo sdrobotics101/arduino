@@ -104,6 +104,7 @@ Robot::Robot(uint8_t mpuAddr,
                 _outputOffsetZ(outputOffsetZ)
 {
     reset();
+	initializeCoeffSets();
 }
 
 /**
@@ -157,6 +158,7 @@ void Robot::setMotion(int8_t velX,
 	    reset();
 	}
     
+	changeConstants();
     queueMS5541C();
     updateMPU9150();
     updateDt();
@@ -174,6 +176,7 @@ void Robot::continueMotion() {
 	    reset();
 	}
     
+	changeConstants();
     queueMS5541C();
     updateMPU9150();
     updateDt();
@@ -279,6 +282,11 @@ void Robot::setOutputOffsetZ(double outputOffsetZ) {
     _outputOffsetZ = outputOffsetZ;
 }
 
+void Robot::changeConstants() {
+	uint8_t set = (_mode & 0xF00) >> 8;
+	setCoeffs(_coeffs[set]);
+}
+
 void Robot::setCoeffs(CoeffSet coeffs) {
 	_pidOutputX.setKP(coeffs.outputXKP);
 	_pidOutputX.setKI(coeffs.outputXKI);
@@ -310,7 +318,8 @@ void Robot::setCoeffs(CoeffSet coeffs) {
 }
 
 void Robot::initializeCoeffSets() {
-	//set 0
+	//set 0 
+	//{
 	_coeffs[0].outputXKP = 0;
 	_coeffs[0].outputXKI = 0;
 	_coeffs[0].outputXKD = 0;
@@ -338,7 +347,472 @@ void Robot::initializeCoeffSets() {
 	_coeffs[0].outputScaleXY = 0;
 	_coeffs[0].outputScaleZ = 0;
 	_coeffs[0].outputOffsetZ = 0;
+	//}
 	
+	//set 1 
+	//{
+	_coeffs[1].outputXKP = 0;
+	_coeffs[1].outputXKI = 0;
+	_coeffs[1].outputXKD = 0;
+	_coeffs[1].outputXKF = 0;
+
+	_coeffs[1].outputYKP = 0;
+	_coeffs[1].outputYKI = 0;
+	_coeffs[1].outputYKD = 0;
+	_coeffs[1].outputYKF = 0;
+	
+	_coeffs[1].depthKP = 0;
+	_coeffs[1].depthKI = 0;
+	_coeffs[1].depthKD = 0;
+	_coeffs[1].depthKF = 0;
+	
+	_coeffs[1].angleKP = 0;
+	_coeffs[1].angleKI = 0;
+	_coeffs[1].angleKD = 0;
+	_coeffs[1].angleKF = 0;
+	
+	_coeffs[1].dispXYRatio = 0;
+	_coeffs[1].verticalCombinerRatio = 0;
+	_coeffs[1].horizontalCombinerRatio = 0;
+	
+	_coeffs[1].outputScaleXY = 0;
+	_coeffs[1].outputScaleZ = 0;
+	_coeffs[1].outputOffsetZ = 0;
+	//}
+	
+	//set 2
+	//{
+	_coeffs[2].outputXKP = 0;
+	_coeffs[2].outputXKI = 0;
+	_coeffs[2].outputXKD = 0;
+	_coeffs[2].outputXKF = 0;
+
+	_coeffs[2].outputYKP = 0;
+	_coeffs[2].outputYKI = 0;
+	_coeffs[2].outputYKD = 0;
+	_coeffs[2].outputYKF = 0;
+	
+	_coeffs[2].depthKP = 0;
+	_coeffs[2].depthKI = 0;
+	_coeffs[2].depthKD = 0;
+	_coeffs[2].depthKF = 0;
+	
+	_coeffs[2].angleKP = 0;
+	_coeffs[2].angleKI = 0;
+	_coeffs[2].angleKD = 0;
+	_coeffs[2].angleKF = 0;
+	
+	_coeffs[2].dispXYRatio = 0;
+	_coeffs[2].verticalCombinerRatio = 0;
+	_coeffs[2].horizontalCombinerRatio = 0;
+	
+	_coeffs[2].outputScaleXY = 0;
+	_coeffs[2].outputScaleZ = 0;
+	_coeffs[2].outputOffsetZ = 0;
+	//}
+	
+	//set 3
+	//{
+	_coeffs[3].outputXKP = 0;
+	_coeffs[3].outputXKI = 0;
+	_coeffs[3].outputXKD = 0;
+	_coeffs[3].outputXKF = 0;
+
+	_coeffs[3].outputYKP = 0;
+	_coeffs[3].outputYKI = 0;
+	_coeffs[3].outputYKD = 0;
+	_coeffs[3].outputYKF = 0;
+	
+	_coeffs[3].depthKP = 0;
+	_coeffs[3].depthKI = 0;
+	_coeffs[3].depthKD = 0;
+	_coeffs[3].depthKF = 0;
+	
+	_coeffs[3].angleKP = 0;
+	_coeffs[3].angleKI = 0;
+	_coeffs[3].angleKD = 0;
+	_coeffs[3].angleKF = 0;
+	
+	_coeffs[3].dispXYRatio = 0;
+	_coeffs[3].verticalCombinerRatio = 0;
+	_coeffs[3].horizontalCombinerRatio = 0;
+	
+	_coeffs[3].outputScaleXY = 0;
+	_coeffs[3].outputScaleZ = 0;
+	_coeffs[3].outputOffsetZ = 0;
+	//}
+	
+	//set 4
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}
+	
+	//set 5
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}	
+	
+	//set 6
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}
+	
+	//set 7
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}
+	
+	//set 8
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}
+	
+	//set 9
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}
+
+	//set 10
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}
+	
+	//set 11
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}
+	
+	//set 12
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}
+	
+	//set 13
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}
+	
+	//set 14
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}
+	
+	//set 15
+	//{
+	_coeffs[0].outputXKP = 0;
+	_coeffs[0].outputXKI = 0;
+	_coeffs[0].outputXKD = 0;
+	_coeffs[0].outputXKF = 0;
+
+	_coeffs[0].outputYKP = 0;
+	_coeffs[0].outputYKI = 0;
+	_coeffs[0].outputYKD = 0;
+	_coeffs[0].outputYKF = 0;
+	
+	_coeffs[0].depthKP = 0;
+	_coeffs[0].depthKI = 0;
+	_coeffs[0].depthKD = 0;
+	_coeffs[0].depthKF = 0;
+	
+	_coeffs[0].angleKP = 0;
+	_coeffs[0].angleKI = 0;
+	_coeffs[0].angleKD = 0;
+	_coeffs[0].angleKF = 0;
+	
+	_coeffs[0].dispXYRatio = 0;
+	_coeffs[0].verticalCombinerRatio = 0;
+	_coeffs[0].horizontalCombinerRatio = 0;
+	
+	_coeffs[0].outputScaleXY = 0;
+	_coeffs[0].outputScaleZ = 0;
+	_coeffs[0].outputOffsetZ = 0;
+	//}
 }
 
 double Robot::getDispXYRatio() {
@@ -368,8 +842,7 @@ double Robot::getOutputOffsetZ() {
 /**
  *  Resets all the variables
  */
-void Robot::reset() 
-{
+void Robot::reset() {
      _velX      	= 0;
      _velY      	= 0;
      _velZ      	= 0;
