@@ -32,6 +32,7 @@
 #define MODE_CALIBRATION_ENABLE     0x0008
 #define MODE_NORMAL_ENABLE          0x0004
 #define MODE_LOG_LEVEL              0x0003
+#define MODE_COEFF_PRESET			0x0F00
 
 /**
  *  Motor mapping for U1 chip

@@ -283,7 +283,7 @@ void Robot::setOutputOffsetZ(double outputOffsetZ) {
 }
 
 void Robot::changeConstants() {
-	uint8_t set = (_mode & 0x0F00) >> 8;
+	uint8_t set = (_mode & MODE_COEFF_PRESET) >> 8;
 	setCoeffs(_coeffs[set]);
 	reset();
 }
