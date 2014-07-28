@@ -66,6 +66,7 @@ public:
 private:
     
     void setConstants(std::vector<double> vect);
+    void getConstants();
     
     const uint16_t _badPacketTimeout;
     uint16_t      _packetCount;

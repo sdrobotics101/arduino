@@ -233,6 +233,37 @@ void RobotController::setConstants(std::vector<double> vect) {
     
 }
 
+void RobotController::getConstants() {
+    Serial.print(_robot._pidOutputX.getKP()); Serial.print(" ");
+    Serial.print(_robot._pidOutputX.getKI()); Serial.print(" ");
+    Serial.print(_robot._pidOutputX.getKD()); Serial.print(" ");
+    Serial.print(_robot._pidOutputX.getKF()); Serial.print(" ");
+                                             
+    Serial.print(_robot._pidOutputY.getKP()); Serial.print(" ");
+    Serial.print(_robot._pidOutputY.getKI()); Serial.print(" ");
+    Serial.print(_robot._pidOutputY.getKD()); Serial.print(" ");
+    Serial.print(_robot._pidOutputY.getKF()); Serial.print(" ");
+                                             
+    Serial.print(_robot._pidDepth.getKP()); Serial.print(" ");
+    Serial.print(_robot._pidDepth.getKI()); Serial.print(" ");
+    Serial.print(_robot._pidDepth.getKD()); Serial.print(" ");
+    Serial.print(_robot._pidDepth.getKF()); Serial.print(" ");
+                                           
+    Serial.print(_robot._pidAngle.getKP()); Serial.print(" ");
+    Serial.print(_robot._pidAngle.getKI()); Serial.print(" ");
+    Serial.print(_robot._pidAngle.getKD()); Serial.print(" ");
+    Serial.print(_robot._pidAngle.getKF()); Serial.print(" ");
+                                           
+    Serial.print(_robot.getDispXYRatio()); Serial.print(" ");
+    Serial.print(_robot.getVerticalCombinerRatio()); Serial.print(" ");
+    Serial.print(_robot.getHorizontalCombinerRatio()); Serial.print(" ");
+                                                      
+    Serial.print(_robot.getOutputScaleXY()); Serial.print(" ");
+    Serial.print(_robot.getOutputScaleZ()); Serial.print(" ");
+    Serial.print(_robot.getOutputOffsetZ()); Serial.print(" ");
+    
+    Serial.println("");
+}                                           
 
 
 
