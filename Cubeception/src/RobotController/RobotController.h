@@ -54,6 +54,8 @@ public:
                     double outputScaleXY,
                     double outputScaleZ,  
                     double outputOffsetZ,
+					
+					uint16_t mode,
                     
                     USARTClass &rxSerialPort,
                     USARTClass &txSerialPort,

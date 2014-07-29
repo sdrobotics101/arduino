@@ -73,6 +73,8 @@ RobotController::RobotController(uint8_t mpuAddr,
                                  double outputScaleXY,
                                  double outputScaleZ,  
                                  double outputOffsetZ,
+								 
+								 uint16_t mode,
                                  
                                  USARTClass &rxSerialPort,
                                  USARTClass &txSerialPort,
@@ -109,7 +111,9 @@ RobotController::RobotController(uint8_t mpuAddr,
                                            
                                            outputScaleXY,
                                            outputScaleZ,
-                                           outputOffsetZ),
+                                           outputOffsetZ,
+										   
+										   mode),
 
                                     _packetController(rxSerialPort,
                                                       txSerialPort),

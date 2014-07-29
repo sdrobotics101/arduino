@@ -148,7 +148,9 @@ public:
           
           double outputScaleXY,
           double outputScaleZ,
-          double outputOffsetZ);
+          double outputOffsetZ,
+		  
+		  uint16_t mode);
 
     void begin();
     void setMotion(int8_t velX,
@@ -236,6 +238,11 @@ private:
     int16_t _gyroX, _gyroY, _gyroZ;
     int16_t _magX , _magY , _magZ ;
     int16_t _pressure;
+	
+	//Offset accelerations
+	int16_t _scaledAccX;
+	int16_t _scaledAccY;
+	int16_t _scaledAccZ;
 
     //Processed data for stabilization and depth control
     double _accAngleX , _accAngleY;

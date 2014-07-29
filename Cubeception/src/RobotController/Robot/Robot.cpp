@@ -69,7 +69,9 @@ Robot::Robot(uint8_t mpuAddr,
              
              double  outputScaleXY,
              double  outputScaleZ,
-             double  outputOffsetZ) :
+             double  outputOffsetZ,
+			 
+			 uint16_t mode) :
 
                 _mpu9150(mpuAddr),
                 _pwmU1(pwmU1Addr),
@@ -101,7 +103,9 @@ Robot::Robot(uint8_t mpuAddr,
 
                 _outputScaleXY(outputScaleXY),
                 _outputScaleZ (outputScaleZ ),
-                _outputOffsetZ(outputOffsetZ)
+                _outputOffsetZ(outputOffsetZ),
+				
+				_mode(mode)
 {
     reset();
     initializeCoeffSets();
@@ -158,6 +162,14 @@ void Robot::setMotion(int8_t velX,
         reset();
     }
 	
+	if (_mode & MODE_CALIBRATION_ENABLE) {
+		calibrate();
+	}
+	
+	if (_mode & MODE_KILL) {
+		stop();
+	}
+		
 	changeConstants();
 	
 	uint8_t sketch = (uint8_t)((_mode & MODE_SKETCH) >> 12);
@@ -186,9 +198,17 @@ void Robot::continueMotion() {
         reset();
     }
 	
+	if (_mode & MODE_CALIBRATION_ENABLE) {
+		calibrate();
+	}
+	
+	if (_mode & MODE_KILL) {
+		stop();
+	}
+	
 	changeConstants();
 	
-	uint8_t sketch = (_mode & MODE_SKETCH) >> 12;
+	uint8_t sketch = (uint8_t)((_mode & MODE_SKETCH) >> 12);
 	
 	switch (sketch) {
 		case NORMAL:
@@ -210,10 +230,10 @@ void Robot::continueMotion() {
  *  Brings all motors to a halt
  */
 void Robot::stop() {
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 16; i++) {
         _pwmU1.setPWM(i, 0, 0);
     }
-    for (int i = 8; i < 15; i++) {
+    for (int i = 8; i < 16; i++) {
         _pwmU2.setPWM(i, 0, 0);
     }
 }
@@ -564,10 +584,9 @@ void Robot::reset() {
      _velY              = 0;
      _velZ              = 0;
      _rotZ              = 0;
-     _torpedoCtl    = 0;
+     _torpedoCtl    	= 0;
      _servoCtl          = 0;
-         _ledCtl                = 0;
-     _mode          = 0xF1;
+     _ledCtl            = 0;
     
     _accOffsetX  = 625;   _accOffsetY  = -350;   _accOffsetZ  = 17240;
     _gyroOffsetX = -31;   _gyroOffsetY = -68;   _gyroOffsetZ = -260;
@@ -575,6 +594,10 @@ void Robot::reset() {
     _accX  = 0; _accY  = 0; _accZ  = 0;
     _gyroX = 0; _gyroY = 0; _gyroZ = 0;
     _pressure = 0;
+	
+	_scaledAccX = 0;
+	_scaledAccY = 0;
+	_scaledAccZ = 0;
     
     _accAngleX   = 0.0; _accAngleY   = 0.0;
     _gyroAngleX  = 0.0; _gyroAngleY  = 0.0;
@@ -638,6 +661,9 @@ void Robot::updateDt() {
  */
 void Robot::updateMPU9150() {
     _mpu9150.getMotion9(&_accX, &_accY, &_accZ, &_gyroX, &_gyroY, &_gyroZ, &_magX, &_magY, &_magZ);
+	_scaledAccX = _accX - _accOffsetX;
+	_scaledAccY = _accY - _accOffsetY;
+	_scaledAccZ = _accZ - _accOffsetZ;
 }
 
 /**
@@ -648,7 +674,7 @@ void Robot::updateMPU9150() {
 double Robot::getDispX() {
     double scaledGyroX = (double) (_gyroX - _gyroOffsetX) / 65.54;
 
-    _accAngleX   = atan2((double)_accY, sqrt(pow((double)_accX, 2) + pow((double)_accZ, 2)));
+    _accAngleX   = atan2((double)_scaledAccY, sqrt(pow((double)_scaledAccX, 2) + pow((double)_scaledAccZ, 2)));
     _gyroAngleX  = scaledGyroX * _dt * (PI/180);
     _combAngleX  = (_dispXYRatio  * (_gyroAngleX + _combAngleX)) + ((1 - _dispXYRatio) * _accAngleX);
 
@@ -667,7 +693,7 @@ double Robot::getDispX() {
 double Robot::getDispY() {
     double scaledGyroY = (double) (_gyroY - _gyroOffsetY) / 65.54;
 
-    _accAngleY   = atan2((double)_accX, sqrt(pow((double)_accY, 2) + pow((double)_accZ, 2)));
+    _accAngleY   = atan2((double)_scaledAccX, sqrt(pow((double)_scaledAccY, 2) + pow((double)_scaledAccZ, 2)));
     _gyroAngleY  = scaledGyroY * _dt * (PI/180);
     _combAngleY  = (_dispXYRatio  * (_gyroAngleY + _combAngleY)) + ((1 - _dispXYRatio) * _accAngleY);
     
@@ -696,6 +722,7 @@ void Robot::queueMS5541C() {
         _ms5541C.queueD2();
     } else {
         _ms5541C.queueD1();
+        _ms5541C.queueD1();
     }
     _queueTime = millis();
 }
@@ -712,12 +739,17 @@ void Robot::readMS5541C() {
     } else {
         _ms5541C.readD1();
         _pressure = _ms5541C.getPressure();
-        _depthZ = _pressure / 9810;
+        _depthZ = (_pressure - 1000);
 		
-		Serial.print("P: ");
-		Serial.print(_pressure); Serial.print(" ");
-		Serial.print(_depthZ); Serial.print(" ");
-		Serial.println("");
+		if ((_mode & MODE_LOG_LEVEL) > 0) {
+			Serial.print("P: ");
+			Serial.print(_pressure); Serial.print(" ");
+			Serial.print(_depthZ); Serial.print(" ");
+			if ((_mode & MODE_LOG_LEVEL) > 1) {
+				Serial.print(_ms5541C.getTemperature());
+			}
+			Serial.println("");
+		}
         
 		_temp = !_temp;
     }
@@ -727,6 +759,10 @@ void Robot::readMS5541C() {
  *  Stabilizes the robot according to sensor readings
  */
 void Robot::stabilize() {
+
+	if (_mode & MODE_KILL) {
+		return;
+	}
 
     _dispX = getDispX();
     _dispY = getDispY();
@@ -855,15 +891,18 @@ void Robot::stabilize() {
         }
         
         Serial.println("");
-    }
-    
-    
+    }    
 }
 
 /**
  *  Moves the robot according to values specified
  */
 void Robot::move() {
+
+	if (_mode & MODE_KILL) {
+		return;
+	}
+
     _gyroAngleZ = getDispZ();
     _combAngleZ = ((double)_rotZ * (PI/128)) - _gyroAngleZ;
     _rotR       = _combAngleZ/PI;
@@ -1111,7 +1150,7 @@ void Robot::motorTest() {
     Serial.println(_pwmU1.getMode1(), HEX);
     Serial.println(_pwmU1.getMode2(), HEX);
     
-    delay(5000);
+    delay(2000);
     _pwmU1.setPWM(i, 0, 0);
     delay(1000);
   }
@@ -1122,7 +1161,7 @@ void Robot::motorTest() {
     Serial.print("U2: "); Serial.println(i);
     Serial.println(_pwmU2.getMode1(), HEX);
     Serial.println(_pwmU2.getMode2(), HEX);
-    delay(5000);
+    delay(2000);
     _pwmU2.setPWM(i, 0, 0);
     delay(1000);
   }

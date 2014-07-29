@@ -44,10 +44,12 @@
 #define OUTPUT_SCALE_XY ((double)4096.0)
 #define OUTPUT_SCALE_Z ((double)4096.0)
 #define OUTPUT_OFFSET_Z ((double)0.0)
+
+#define DEFAULT_MODE 0xF1
                         
 #define RX_SERIAL_PORT Serial3
 #define TX_SERIAL_PORT Serial3
 
-#define BAD_PACKET_TIMEOUT ((uint16_t)1000)
+#define BAD_PACKET_TIMEOUT ((uint16_t)10000)
 
 #endif /* defined(____Cubeception__) */

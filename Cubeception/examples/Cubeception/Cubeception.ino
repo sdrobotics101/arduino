@@ -33,6 +33,8 @@ RobotController robotController(MPU_ADDR,
                                 OUTPUT_SCALE_XY,
                                 OUTPUT_SCALE_Z,
                                 OUTPUT_OFFSET_Z,
+								
+				DEFAULT_MODE,
                                 
                                 RX_SERIAL_PORT,
                                 TX_SERIAL_PORT,
