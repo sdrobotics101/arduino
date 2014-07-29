@@ -104,7 +104,7 @@ Robot::Robot(uint8_t mpuAddr,
                 _outputOffsetZ(outputOffsetZ)
 {
     reset();
-        initializeCoeffSets();
+    initializeCoeffSets();
 }
 
 /**
@@ -137,12 +137,12 @@ void Robot::begin() {
 }
 
 void Robot::setMotion(int8_t velX,
-                                          int8_t velY,
+                      int8_t velY,
                       int8_t velZ,
                       int8_t rotZ,
                       uint8_t torpedoCtl,
                       uint8_t servoCtl,
-                                      uint8_t ledCtl,
+                      uint8_t ledCtl,
                       uint16_t mode)
 {
     _velX = velX;
@@ -150,39 +150,60 @@ void Robot::setMotion(int8_t velX,
     _velZ = velZ;
     _rotZ = rotZ;
     _torpedoCtl = torpedoCtl;
-        _servoCtl = servoCtl;
-        _ledCtl = ledCtl;
+    _servoCtl = servoCtl;
+    _ledCtl = ledCtl;
     _mode = mode;
     
-        if (_mode & MODE_RESET) {
-            reset();
-        }
-    
-        changeConstants();
-    queueMS5541C();
-    updateMPU9150();
-    updateDt();
-    stabilize();
-    move();
-    readMS5541C();
-    
+    if (_mode & MODE_RESET) {
+        reset();
+    }
+	
+	changeConstants();
+	
+	Sketch sketch = (_mode & MODE_SKETCH) >> 12;
+	
+	switch (sketch) {
+		case NORMAL:
+			normalOperation();
+		break;
+		case MOTOR:
+			motorTest();
+		break;
+		case IMU:
+			imuTest();
+		break;
+		case PRESSURE:
+			pressureTest();
+		break;
+	}
 }
 
 /**
  *  Continues previously set motion
  */
 void Robot::continueMotion() {
-        if (_mode & MODE_RESET) {
-            reset();
-        }
-    
-        changeConstants();
-    queueMS5541C();
-    updateMPU9150();
-    updateDt();
-    stabilize();
-    move();
-    readMS5541C();
+    if (_mode & MODE_RESET) {
+        reset();
+    }
+	
+	changeConstants();
+	
+	Sketch sketch = (_mode & MODE_SKETCH) >> 12;
+	
+	switch (sketch) {
+		case NORMAL:
+			normalOperation();
+		break;
+		case MOTOR:
+			motorTest();
+		break;
+		case IMU:
+			imuTest();
+		break;
+		case PRESSURE:
+			pressureTest();
+		break;
+	}
 }
 
 /**
@@ -1065,6 +1086,76 @@ void Robot::move() {
 
     
 }
+
+void normalOperation() {
+	queueMS5541C();
+	updateMPU9150();
+	updateDt();
+	stabilize();
+	move();
+	readMS5541C();
+}
+
+void motorTest() {
+	stop();
+	for (int i = 15; i > -1; i--) {
+    
+    pwmU1.setPWM(i, 0, 2048);
+    
+    pulse();
+    
+    Serial.print("U1: "); Serial.println(i);
+    Serial.println(pwmU1.getMode1(), HEX);
+    Serial.println(pwmU1.getMode2(), HEX);
+    
+    delay(5000);
+    pwmU1.setPWM(i, 0, 0);
+    delay(1000);
+  }
+  for (int i = 15; i > 7; i--) {
+    
+    pwmU2.setPWM(i, 0, 2048);
+    
+    pulse();
+    
+    Serial.print("U2: "); Serial.println(i);
+    Serial.println(pwmU2.getMode1(), HEX);
+    Serial.println(pwmU2.getMode2(), HEX);
+    delay(5000);
+    pwmU2.setPWM(i, 0, 0);
+    delay(1000);
+  }
+}
+
+void imuTest() {
+	
+	stop();
+	updateMPU9150();
+
+	Serial.print(_accX); Serial.print(" ");
+	Serial.print(_accY); Serial.print(" ");
+	Serial.print(_accZ); Serial.print(" ");
+	Serial.print(_gyroX); Serial.print(" ");
+	Serial.print(_gyroY); Serial.print(" ");
+	Serial.print(_gyroZ); Serial.print(" ");
+	Serial.print(_magX); Serial.print(" ");
+	Serial.print(_magY); Serial.print(" ");
+	Serial.print(_magZ); Serial.print(" ");
+	Serial.println("");
+}
+
+void pressureTest() {
+	ms5541C.queueD2();
+	delay(35);
+	ms5541C.readD2();
+	ms5541C.queueD1();
+	delay(35);
+	ms5541C.readD1();
+ 
+	Serial.println(ms5541C.getTemperature());
+	Serial.println(ms5541C.getPressure());
+}
+
 
 /**
  *  Sets a motor on U1 to a desired value

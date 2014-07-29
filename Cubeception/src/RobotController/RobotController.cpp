@@ -170,6 +170,8 @@ void RobotController::executeCycle() {
     _packetController.setU16(HEALTH, _packetCount);
     _packetController.setU8(BATV, floor(analogRead(A0) / 16));
     _packetController.send();
+	
+	getConstants();
 }
 
 void RobotController::calibrate() {

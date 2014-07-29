@@ -33,6 +33,7 @@
 #define MODE_NORMAL_ENABLE          0x0004
 #define MODE_LOG_LEVEL              0x0003
 #define MODE_COEFF_PRESET			0x0F00
+#define MODE_SKETCH					0x3000
 
 /**
  *  Motor mapping for U1 chip
@@ -73,6 +74,13 @@ enum MotorU2 {
     MZR2 = 14,
     MZR1 = 15
 };
+
+enum Sketch {
+	NORMAL 		= 0,
+	MOTOR 		= 1,
+	IMU 		= 2,
+	PRESSURE 	= 3
+}
 
 struct CoeffSet {
 	double outputXKP;
@@ -196,6 +204,11 @@ private:
     
     void stabilize();
     void move();
+	
+	void normalOperation();
+	void motorTest();
+	void imuTest();
+	void pressureTest();
     
     void setMotorU1(MotorU1 motor, int16_t value);
     void setMotorU2(MotorU2 motor, int16_t value);
