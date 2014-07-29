@@ -160,7 +160,7 @@ void Robot::setMotion(int8_t velX,
 	
 	changeConstants();
 	
-	Sketch sketch = (_mode & MODE_SKETCH) >> 12;
+	uint8_t sketch = (uint8_t)((_mode & MODE_SKETCH) >> 12);
 	
 	switch (sketch) {
 		case NORMAL:
@@ -188,7 +188,7 @@ void Robot::continueMotion() {
 	
 	changeConstants();
 	
-	Sketch sketch = (_mode & MODE_SKETCH) >> 12;
+	uint8_t sketch = (_mode & MODE_SKETCH) >> 12;
 	
 	switch (sketch) {
 		case NORMAL:
@@ -304,9 +304,8 @@ void Robot::setOutputOffsetZ(double outputOffsetZ) {
 }
 
 void Robot::changeConstants() {
-        uint8_t set = (_mode & MODE_COEFF_PRESET) >> 8;
+        uint8_t set = (uint8_t)((_mode & MODE_COEFF_PRESET) >> 8);
         setCoeffs(_coeffs[set]);
-        reset();
 }
 
 void Robot::setCoeffs(CoeffSet coeffs) {
@@ -714,7 +713,13 @@ void Robot::readMS5541C() {
         _ms5541C.readD1();
         _pressure = _ms5541C.getPressure();
         _depthZ = _pressure / 9810;
-        _temp = !_temp;
+		
+		Serial.print("P: ");
+		Serial.print(_pressure); Serial.print(" ");
+		Serial.print(_depthZ); Serial.print(" ");
+		Serial.println("");
+        
+		_temp = !_temp;
     }
 }
 
@@ -809,7 +814,7 @@ void Robot::stabilize() {
     if ((_mode & MODE_LOG_LEVEL) > 0) {
         
         Serial.print("S: ");
-                Serial.print(_mode); Serial.print(" ");
+        Serial.print(_mode, HEX); Serial.print(" ");
         
         if ((_mode & MODE_LOG_LEVEL) > 2) {
             Serial.print(_accX         ); Serial.print(" ");
@@ -1034,7 +1039,7 @@ void Robot::move() {
     if ((_mode & MODE_LOG_LEVEL) > 0) {
 
         Serial.print("M: ");
-                Serial.print(_mode); Serial.print(" ");
+                Serial.print(_mode, HEX); Serial.print(" ");
                 
         if ((_mode & MODE_LOG_LEVEL) > 2) {
             Serial.print(_gyroZ);         Serial.print(" ");
@@ -1087,7 +1092,7 @@ void Robot::move() {
     
 }
 
-void normalOperation() {
+void Robot::normalOperation() {
 	queueMS5541C();
 	updateMPU9150();
 	updateDt();
@@ -1096,38 +1101,34 @@ void normalOperation() {
 	readMS5541C();
 }
 
-void motorTest() {
+void Robot::motorTest() {
 	stop();
 	for (int i = 15; i > -1; i--) {
     
-    pwmU1.setPWM(i, 0, 2048);
-    
-    pulse();
+    _pwmU1.setPWM(i, 0, 2048);
     
     Serial.print("U1: "); Serial.println(i);
-    Serial.println(pwmU1.getMode1(), HEX);
-    Serial.println(pwmU1.getMode2(), HEX);
+    Serial.println(_pwmU1.getMode1(), HEX);
+    Serial.println(_pwmU1.getMode2(), HEX);
     
     delay(5000);
-    pwmU1.setPWM(i, 0, 0);
+    _pwmU1.setPWM(i, 0, 0);
     delay(1000);
   }
   for (int i = 15; i > 7; i--) {
     
-    pwmU2.setPWM(i, 0, 2048);
-    
-    pulse();
+    _pwmU2.setPWM(i, 0, 2048);
     
     Serial.print("U2: "); Serial.println(i);
-    Serial.println(pwmU2.getMode1(), HEX);
-    Serial.println(pwmU2.getMode2(), HEX);
+    Serial.println(_pwmU2.getMode1(), HEX);
+    Serial.println(_pwmU2.getMode2(), HEX);
     delay(5000);
-    pwmU2.setPWM(i, 0, 0);
+    _pwmU2.setPWM(i, 0, 0);
     delay(1000);
   }
 }
 
-void imuTest() {
+void Robot::imuTest() {
 	
 	stop();
 	updateMPU9150();
@@ -1144,16 +1145,16 @@ void imuTest() {
 	Serial.println("");
 }
 
-void pressureTest() {
-	ms5541C.queueD2();
+void Robot::pressureTest() {
+	_ms5541C.queueD2();
 	delay(35);
-	ms5541C.readD2();
-	ms5541C.queueD1();
+	_ms5541C.readD2();
+	_ms5541C.queueD1();
 	delay(35);
-	ms5541C.readD1();
+	_ms5541C.readD1();
  
-	Serial.println(ms5541C.getTemperature());
-	Serial.println(ms5541C.getPressure());
+	Serial.println(_ms5541C.getTemperature());
+	Serial.println(_ms5541C.getPressure());
 }
 
 

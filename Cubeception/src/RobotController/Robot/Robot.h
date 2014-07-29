@@ -80,7 +80,7 @@ enum Sketch {
 	MOTOR 		= 1,
 	IMU 		= 2,
 	PRESSURE 	= 3
-}
+};
 
 struct CoeffSet {
 	double outputXKP;

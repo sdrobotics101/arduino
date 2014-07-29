@@ -147,7 +147,8 @@ void RobotController::executeCycle() {
         _currentTime = millis() - _startTime;
         if (_badPacketTimeout > 0) {
             if (_currentTime > _badPacketTimeout) {
-                stop();
+                Serial.println("STOPPED: NO PACKETS");
+				stop();
             }
         }
     }
@@ -170,8 +171,6 @@ void RobotController::executeCycle() {
     _packetController.setU16(HEALTH, _packetCount);
     _packetController.setU8(BATV, floor(analogRead(A0) / 16));
     _packetController.send();
-	
-	getConstants();
 }
 
 void RobotController::calibrate() {
@@ -183,6 +182,7 @@ void RobotController::stop() {
 }
 
 void RobotController::getConstants() {
+	Serial.print("Co: ");
     Serial.print(_robot._pidOutputX.getKP()); Serial.print(" ");
     Serial.print(_robot._pidOutputX.getKI()); Serial.print(" ");
     Serial.print(_robot._pidOutputX.getKD()); Serial.print(" ");
