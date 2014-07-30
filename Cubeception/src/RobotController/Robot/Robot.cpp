@@ -580,13 +580,13 @@ double Robot::getOutputOffsetZ() {
  *  Resets all the variables
  */
 void Robot::reset() {
-     _velX              = 0;
-     _velY              = 0;
-     _velZ              = 0;
-     _rotZ              = 0;
-     _torpedoCtl    	= 0;
-     _servoCtl          = 0;
-     _ledCtl            = 0;
+    _velX              = 0;
+    _velY              = 0;
+    _velZ              = 0;
+    _rotZ              = 0;
+    _torpedoCtl    	= 0;
+    _servoCtl          = 0;
+    _ledCtl            = 0;
     
     _accOffsetX  = 625;   _accOffsetY  = -350;   _accOffsetZ  = 17240;
     _gyroOffsetX = -31;   _gyroOffsetY = -68;   _gyroOffsetZ = -260;
@@ -635,15 +635,15 @@ void Robot::reset() {
 
     _realtime   = micros();
     _dt         = 0.0;
-    
-    _temp = true;
+
+	_temp = true;
     _queueTime = 0;
     _timeSinceQueuing = 0;
-
-        _pidOutputX.reset();
-        _pidOutputY.reset();
-        _pidDepth.reset();
-        _pidAngle.reset();
+	
+    _pidOutputX.reset();
+    _pidOutputY.reset();
+    _pidDepth.reset();
+    _pidAngle.reset();
 }
 
 /**
@@ -663,7 +663,7 @@ void Robot::updateMPU9150() {
     _mpu9150.getMotion9(&_accX, &_accY, &_accZ, &_gyroX, &_gyroY, &_gyroZ, &_magX, &_magY, &_magZ);
 	_scaledAccX = _accX - _accOffsetX;
 	_scaledAccY = _accY - _accOffsetY;
-	_scaledAccZ = _accZ - _accOffsetZ;
+	_scaledAccZ = _accZ;
 }
 
 /**
@@ -739,7 +739,7 @@ void Robot::readMS5541C() {
     } else {
         _ms5541C.readD1();
         _pressure = _ms5541C.getPressure();
-        _depthZ = (_pressure - 1000);
+        _depthZ = (((_pressure - 1000) * 100) / 98);
 		
 		if ((_mode & MODE_LOG_LEVEL) > 0) {
 			Serial.print("P: ");
@@ -1181,6 +1181,12 @@ void Robot::imuTest() {
 	Serial.print(_magX); Serial.print(" ");
 	Serial.print(_magY); Serial.print(" ");
 	Serial.print(_magZ); Serial.print(" ");
+	Serial.print(_scaledAccX); Serial.print(" ");
+	Serial.print(_scaledAccY); Serial.print(" ");
+	Serial.print(_scaledAccZ); Serial.print(" ");
+	Serial.print(_gyroX - _gyroOffsetX); Serial.print(" ");
+	Serial.print(_gyroY - _gyroOffsetY); Serial.print(" ");
+	Serial.print(_gyroZ - _gyroOffsetZ); Serial.print(" ");
 	Serial.println("");
 }
 
