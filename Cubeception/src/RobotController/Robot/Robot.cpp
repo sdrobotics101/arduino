@@ -116,7 +116,10 @@ Robot::Robot(uint8_t mpuAddr,
  */
 void Robot::begin() {
     Wire.begin();
-    Serial.println("Wire Initialized");
+    Serial.println("Wire0 Initialized");
+    
+	Wire1.begin();
+    Serial.println("Wire1 Initialized");
     
     SPI.begin();
     Serial.println("SPI Initialized");
@@ -419,10 +422,14 @@ void Robot::initializeCoeffSets() {
         _coeffs[ 3].outputScaleXY = 4096.0; _coeffs[ 3].outputScaleZ = 4096.0; _coeffs[ 3].outputOffsetZ = 0;
         //}
         
-        //set 4
+        //set 4 : stabilization       pid     : [10,  4,  2]/16
+		//      : depth               pid     : [16        ]/16
+		//      : rotation            pid     : [16,  0,  0]/16
+		//      : stabilization:depth ratio   : [0.4, 0.6]
+		//      : linear:rotation     ratio   : [0.8, 0.2]
         //{
-        _coeffs[ 4].outputXKP = 10.0/16; _coeffs[ 4].outputXKI =  5.0/16; _coeffs[ 4].outputXKD =  1.0/16; _coeffs[ 4].outputXKF =  0.0/16;
-        _coeffs[ 4].outputYKP = 10.0/16; _coeffs[ 4].outputYKI =  5.0/16; _coeffs[ 4].outputYKD =  1.0/16; _coeffs[ 4].outputYKF =  0.0/16;
+        _coeffs[ 4].outputXKP = 10.0/16; _coeffs[ 4].outputXKI =  4.0/16; _coeffs[ 4].outputXKD =  2.0/16; _coeffs[ 4].outputXKF =  0.0/16;
+        _coeffs[ 4].outputYKP = 10.0/16; _coeffs[ 4].outputYKI =  4.0/16; _coeffs[ 4].outputYKD =  2.0/16; _coeffs[ 4].outputYKF =  0.0/16;
         _coeffs[ 4].depthKP   = 16.0/16; _coeffs[ 4].depthKI   =  0.0/16; _coeffs[ 4].depthKD   =  0.0/16; _coeffs[ 4].depthKF   =  0.0/16;
         _coeffs[ 4].angleKP   = 16.0/16; _coeffs[ 4].angleKI   =  0.0/16; _coeffs[ 4].angleKD   =  0.0/16; _coeffs[ 4].angleKF   =  0.0/16;
         
@@ -430,10 +437,14 @@ void Robot::initializeCoeffSets() {
         _coeffs[ 4].outputScaleXY = 4096.0; _coeffs[ 4].outputScaleZ = 4096.0; _coeffs[ 4].outputOffsetZ = 0;
         //}
         
-        //set 5
+        //set 5 : stabilization       pid     : [16,  0,  0]/16
+		//      : depth               pid     : [16,  0,  0]/16
+		//      : rotation            pid     : [16,  0,  0]/16
+		//      : stabilization:depth ratio   : [0.4, 0.6]
+		//      : linear:rotation     ratio   : [0.8, 0.2]
         //{
-        _coeffs[ 5].outputXKP = 10.0/16; _coeffs[ 5].outputXKI =  5.0/16; _coeffs[ 5].outputXKD =  1.0/16; _coeffs[ 5].outputXKF =  0.0/16;
-        _coeffs[ 5].outputYKP = 10.0/16; _coeffs[ 5].outputYKI =  5.0/16; _coeffs[ 5].outputYKD =  1.0/16; _coeffs[ 5].outputYKF =  0.0/16;
+        _coeffs[ 5].outputXKP = 16.0/16; _coeffs[ 5].outputXKI =  0.0/16; _coeffs[ 5].outputXKD =  0.0/16; _coeffs[ 5].outputXKF =  0.0/16;
+        _coeffs[ 5].outputYKP = 16.0/16; _coeffs[ 5].outputYKI =  0.0/16; _coeffs[ 5].outputYKD =  0.0/16; _coeffs[ 5].outputYKF =  0.0/16;
         _coeffs[ 5].depthKP   = 16.0/16; _coeffs[ 5].depthKI   =  0.0/16; _coeffs[ 5].depthKD   =  0.0/16; _coeffs[ 5].depthKF   =  0.0/16;
         _coeffs[ 5].angleKP   = 16.0/16; _coeffs[ 5].angleKI   =  0.0/16; _coeffs[ 5].angleKD   =  0.0/16; _coeffs[ 5].angleKF   =  0.0/16;
         
@@ -707,7 +718,7 @@ double Robot::getDispY() {
 /**
  *  Calculates the angle along the Z rotation axis
  *
- *  @return The sine of the Z angle
+ *  @return The Z angle
  */
 double Robot::getDispZ() {
     double scaledGyroZ = (double) (_gyroZ - _gyroOffsetZ)/65.54;
