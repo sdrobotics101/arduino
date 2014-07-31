@@ -1156,6 +1156,15 @@ void Robot::normalOperation() {
 	stabilize();
 	move();
 	readMS5541C();
+	
+	if (_mode & MODE_LOG_LEVEL > 0) {
+		Serial.print("Q: ");
+		Serial.print(_magX); Serial.print(" ");
+		Serial.print(_magY); Serial.print(" ");
+		Serial.print(_magZ); Serial.print(" ");
+		Serial.println("");
+	}
+	
 }
 
 void Robot::motorTest() {
