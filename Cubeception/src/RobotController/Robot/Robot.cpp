@@ -362,10 +362,12 @@ void Robot::setCoeffs(CoeffSet coeffs) {
 }
 
 void Robot::initializeCoeffSets() {
-        //set 0 : stabilization       pid    : [10,  5,  1]/16
+
+        //set 0 : vertical axis tests
+	//      : stabilization       pid    : [10,  5,  1]/16
         //      : depth               pid    : [16        ]/16
         //      : rotation            pid    : [16,  0,  0]/16
-        //      : stabilization:depth ratio  : [0.4, 0.6]
+        //      : stabilization:depth ratio  : [0.1, 0.9]
         //      : linear:rotation     ratio  : [0.8, 0.2]
         //{
         _coeffs[ 0].outputXKP = 10.0/16; _coeffs[ 0].outputXKI =  5.0/16; _coeffs[ 0].outputXKD =  1.0/16; _coeffs[ 0].outputXKF =  0.0/16;
@@ -373,88 +375,90 @@ void Robot::initializeCoeffSets() {
         _coeffs[ 0].depthKP   = 16.0/16; _coeffs[ 0].depthKI   =  0.0/16; _coeffs[ 0].depthKD   =  0.0/16; _coeffs[ 0].depthKF   =  0.0/16;
         _coeffs[ 0].angleKP   = 16.0/16; _coeffs[ 0].angleKI   =  0.0/16; _coeffs[ 0].angleKD   =  0.0/16; _coeffs[ 0].angleKF   =  0.0/16;
         
-        _coeffs[ 0].dispXYRatio = 0.80; _coeffs[ 0].verticalCombinerRatio = 0.40; _coeffs[ 0].horizontalCombinerRatio = 0.80;
+        _coeffs[ 0].dispXYRatio = 0.80; _coeffs[ 0].verticalCombinerRatio = 0.10; _coeffs[ 0].horizontalCombinerRatio = 0.80;
         _coeffs[ 0].outputScaleXY = 4096.0; _coeffs[ 0].outputScaleZ = 4096.0; _coeffs[ 0].outputOffsetZ = 0;
-        //}
-        
-        //set 1 : stabilization       pid    : [10,  5,  1]/16
+
+        //set 1 : vertical axis tests
+	//      : stabilization       pid    : [10,  5,  1]/16
         //      : depth               pid    : [16        ]/16
-        //      : rotation            pid    : [10,  4,  2]/16
-        //      : stabilization:depth ratio  : [0.4, 0.6]
+        //      : rotation            pid    : [16,  0,  0]/16
+        //      : stabilization:depth ratio  : [0.2, 0.8]
         //      : linear:rotation     ratio  : [0.8, 0.2]
         //{
         _coeffs[ 1].outputXKP = 10.0/16; _coeffs[ 1].outputXKI =  5.0/16; _coeffs[ 1].outputXKD =  1.0/16; _coeffs[ 1].outputXKF =  0.0/16;
         _coeffs[ 1].outputYKP = 10.0/16; _coeffs[ 1].outputYKI =  5.0/16; _coeffs[ 1].outputYKD =  1.0/16; _coeffs[ 1].outputYKF =  0.0/16;
         _coeffs[ 1].depthKP   = 16.0/16; _coeffs[ 1].depthKI   =  0.0/16; _coeffs[ 1].depthKD   =  0.0/16; _coeffs[ 1].depthKF   =  0.0/16;
-        _coeffs[ 1].angleKP   = 10.0/16; _coeffs[ 1].angleKI   =  4.0/16; _coeffs[ 1].angleKD   =  2.0/16; _coeffs[ 1].angleKF   =  0.0/16;
+        _coeffs[ 1].angleKP   = 16.0/16; _coeffs[ 1].angleKI   =  0.0/16; _coeffs[ 1].angleKD   =  0.0/16; _coeffs[ 1].angleKF   =  0.0/16;
         
-        _coeffs[ 1].dispXYRatio = 0.80; _coeffs[ 1].verticalCombinerRatio = 0.40; _coeffs[ 1].horizontalCombinerRatio = 0.80;
+        _coeffs[ 1].dispXYRatio = 0.80; _coeffs[ 1].verticalCombinerRatio = 0.20; _coeffs[ 1].horizontalCombinerRatio = 0.80;
         _coeffs[ 1].outputScaleXY = 4096.0; _coeffs[ 1].outputScaleZ = 4096.0; _coeffs[ 1].outputOffsetZ = 0;
-        //}
-        
-        //set 2 : stabilization       pid    : [10,  5,  1]/16
+
+        //set 2 : vertical axis tests
+	//      : stabilization       pid    : [10,  5,  1]/16
         //      : depth               pid    : [16        ]/16
-        //      : rotation            pid    : [10,  5,  1]/16
-        //      : stabilization:depth ratio  : [0.4, 0.6]
+        //      : rotation            pid    : [16,  0,  0]/16
+        //      : stabilization:depth ratio  : [0.3, 0.7]
         //      : linear:rotation     ratio  : [0.8, 0.2]
         //{
         _coeffs[ 2].outputXKP = 10.0/16; _coeffs[ 2].outputXKI =  5.0/16; _coeffs[ 2].outputXKD =  1.0/16; _coeffs[ 2].outputXKF =  0.0/16;
         _coeffs[ 2].outputYKP = 10.0/16; _coeffs[ 2].outputYKI =  5.0/16; _coeffs[ 2].outputYKD =  1.0/16; _coeffs[ 2].outputYKF =  0.0/16;
         _coeffs[ 2].depthKP   = 16.0/16; _coeffs[ 2].depthKI   =  0.0/16; _coeffs[ 2].depthKD   =  0.0/16; _coeffs[ 2].depthKF   =  0.0/16;
-        _coeffs[ 2].angleKP   = 10.0/16; _coeffs[ 2].angleKI   =  5.0/16; _coeffs[ 2].angleKD   =  1.0/16; _coeffs[ 2].angleKF   =  0.0/16;
+        _coeffs[ 2].angleKP   = 16.0/16; _coeffs[ 2].angleKI   =  0.0/16; _coeffs[ 2].angleKD   =  0.0/16; _coeffs[ 2].angleKF   =  0.0/16;
         
-        _coeffs[ 2].dispXYRatio = 0.80; _coeffs[ 2].verticalCombinerRatio = 0.40; _coeffs[ 2].horizontalCombinerRatio = 0.80;
+        _coeffs[ 2].dispXYRatio = 0.80; _coeffs[ 2].verticalCombinerRatio = 0.30; _coeffs[ 2].horizontalCombinerRatio = 0.80;
         _coeffs[ 2].outputScaleXY = 4096.0; _coeffs[ 2].outputScaleZ = 4096.0; _coeffs[ 2].outputOffsetZ = 0;
-        //}
-        
-        //set 3 : stabilization       pid    : [10,  5,  1]/16
+
+        //set 3 : vertical axis tests
+	//      : stabilization       pid    : [10,  5,  1]/16
         //      : depth               pid    : [16        ]/16
-        //      : rotation            pid    : [12,  3,  1]/16
+        //      : rotation            pid    : [16,  0,  0]/16
         //      : stabilization:depth ratio  : [0.4, 0.6]
         //      : linear:rotation     ratio  : [0.8, 0.2]
         //{
         _coeffs[ 3].outputXKP = 10.0/16; _coeffs[ 3].outputXKI =  5.0/16; _coeffs[ 3].outputXKD =  1.0/16; _coeffs[ 3].outputXKF =  0.0/16;
         _coeffs[ 3].outputYKP = 10.0/16; _coeffs[ 3].outputYKI =  5.0/16; _coeffs[ 3].outputYKD =  1.0/16; _coeffs[ 3].outputYKF =  0.0/16;
         _coeffs[ 3].depthKP   = 16.0/16; _coeffs[ 3].depthKI   =  0.0/16; _coeffs[ 3].depthKD   =  0.0/16; _coeffs[ 3].depthKF   =  0.0/16;
-        _coeffs[ 3].angleKP   = 12.0/16; _coeffs[ 3].angleKI   =  3.0/16; _coeffs[ 3].angleKD   =  1.0/16; _coeffs[ 3].angleKF   =  0.0/16;
+        _coeffs[ 3].angleKP   = 16.0/16; _coeffs[ 3].angleKI   =  0.0/16; _coeffs[ 3].angleKD   =  0.0/16; _coeffs[ 3].angleKF   =  0.0/16;
         
         _coeffs[ 3].dispXYRatio = 0.80; _coeffs[ 3].verticalCombinerRatio = 0.40; _coeffs[ 3].horizontalCombinerRatio = 0.80;
         _coeffs[ 3].outputScaleXY = 4096.0; _coeffs[ 3].outputScaleZ = 4096.0; _coeffs[ 3].outputOffsetZ = 0;
-        //}
-        
-        //set 4 : stabilization       pid     : [10,  4,  2]/16
-		//      : depth               pid     : [16        ]/16
-		//      : rotation            pid     : [16,  0,  0]/16
-		//      : stabilization:depth ratio   : [0.4, 0.6]
-		//      : linear:rotation     ratio   : [0.8, 0.2]
+
+        //set 4 : rotation tests (proportional)
+	//      : stabilization       pid    : [10,  5,  1]/16
+        //      : depth               pid    : [16        ]/16
+        //      : rotation            pid    : [16,  0,  0]/16
+        //      : stabilization:depth ratio  : [0.1, 0.9]
+        //      : linear:rotation     ratio  : [0.6, 0.4]
         //{
-        _coeffs[ 4].outputXKP = 10.0/16; _coeffs[ 4].outputXKI =  4.0/16; _coeffs[ 4].outputXKD =  2.0/16; _coeffs[ 4].outputXKF =  0.0/16;
-        _coeffs[ 4].outputYKP = 10.0/16; _coeffs[ 4].outputYKI =  4.0/16; _coeffs[ 4].outputYKD =  2.0/16; _coeffs[ 4].outputYKF =  0.0/16;
+        _coeffs[ 4].outputXKP = 10.0/16; _coeffs[ 4].outputXKI =  5.0/16; _coeffs[ 4].outputXKD =  1.0/16; _coeffs[ 4].outputXKF =  0.0/16;
+        _coeffs[ 4].outputYKP = 10.0/16; _coeffs[ 4].outputYKI =  5.0/16; _coeffs[ 4].outputYKD =  1.0/16; _coeffs[ 4].outputYKF =  0.0/16;
         _coeffs[ 4].depthKP   = 16.0/16; _coeffs[ 4].depthKI   =  0.0/16; _coeffs[ 4].depthKD   =  0.0/16; _coeffs[ 4].depthKF   =  0.0/16;
         _coeffs[ 4].angleKP   = 16.0/16; _coeffs[ 4].angleKI   =  0.0/16; _coeffs[ 4].angleKD   =  0.0/16; _coeffs[ 4].angleKF   =  0.0/16;
         
-        _coeffs[ 4].dispXYRatio = 0.80; _coeffs[ 4].verticalCombinerRatio = 0.40; _coeffs[ 4].horizontalCombinerRatio = 0.80;
+        _coeffs[ 4].dispXYRatio = 0.80; _coeffs[ 4].verticalCombinerRatio = 0.10; _coeffs[ 4].horizontalCombinerRatio = 0.60;
         _coeffs[ 4].outputScaleXY = 4096.0; _coeffs[ 4].outputScaleZ = 4096.0; _coeffs[ 4].outputOffsetZ = 0;
-        //}
-        
-        //set 5 : stabilization       pid     : [16,  0,  0]/16
-		//      : depth               pid     : [16,  0,  0]/16
-		//      : rotation            pid     : [16,  0,  0]/16
-		//      : stabilization:depth ratio   : [0.4, 0.6]
-		//      : linear:rotation     ratio   : [0.8, 0.2]
+
+        //set 5 : rotation tests (proportional)
+	//      : stabilization       pid    : [10,  5,  1]/16
+        //      : depth               pid    : [16        ]/16
+        //      : rotation            pid    : [16,  0,  0]/16
+        //      : stabilization:depth ratio  : [0.1, 0.9]
+        //      : linear:rotation     ratio  : [0.65, 0.35]
         //{
-        _coeffs[ 5].outputXKP = 16.0/16; _coeffs[ 5].outputXKI =  0.0/16; _coeffs[ 5].outputXKD =  0.0/16; _coeffs[ 5].outputXKF =  0.0/16;
-        _coeffs[ 5].outputYKP = 16.0/16; _coeffs[ 5].outputYKI =  0.0/16; _coeffs[ 5].outputYKD =  0.0/16; _coeffs[ 5].outputYKF =  0.0/16;
+        _coeffs[ 5].outputXKP = 10.0/16; _coeffs[ 5].outputXKI =  5.0/16; _coeffs[ 5].outputXKD =  1.0/16; _coeffs[ 5].outputXKF =  0.0/16;
+        _coeffs[ 5].outputYKP = 10.0/16; _coeffs[ 5].outputYKI =  5.0/16; _coeffs[ 5].outputYKD =  1.0/16; _coeffs[ 5].outputYKF =  0.0/16;
         _coeffs[ 5].depthKP   = 16.0/16; _coeffs[ 5].depthKI   =  0.0/16; _coeffs[ 5].depthKD   =  0.0/16; _coeffs[ 5].depthKF   =  0.0/16;
         _coeffs[ 5].angleKP   = 16.0/16; _coeffs[ 5].angleKI   =  0.0/16; _coeffs[ 5].angleKD   =  0.0/16; _coeffs[ 5].angleKF   =  0.0/16;
         
-        _coeffs[ 5].dispXYRatio = 0.80; _coeffs[ 5].verticalCombinerRatio = 0.40; _coeffs[ 5].horizontalCombinerRatio = 0.80;
+        _coeffs[ 5].dispXYRatio = 0.80; _coeffs[ 5].verticalCombinerRatio = 0.10; _coeffs[ 5].horizontalCombinerRatio = 0.65;
         _coeffs[ 5].outputScaleXY = 4096.0; _coeffs[ 5].outputScaleZ = 4096.0; _coeffs[ 5].outputOffsetZ = 0;
-        //}     
-        
-        //set 6
-		// stabilization:depth .1 : .9
-		// linear:rotation .7 : .3
+
+        //set 6 : rotation tests (proportional)
+	//      : stabilization       pid    : [10,  5,  1]/16
+        //      : depth               pid    : [16        ]/16
+        //      : rotation            pid    : [16,  0,  0]/16
+        //      : stabilization:depth ratio  : [0.1, 0.9]
+        //      : linear:rotation     ratio  : [0.70, 0.30]
         //{
         _coeffs[ 6].outputXKP = 10.0/16; _coeffs[ 6].outputXKI =  5.0/16; _coeffs[ 6].outputXKD =  1.0/16; _coeffs[ 6].outputXKF =  0.0/16;
         _coeffs[ 6].outputYKP = 10.0/16; _coeffs[ 6].outputYKI =  5.0/16; _coeffs[ 6].outputYKD =  1.0/16; _coeffs[ 6].outputYKF =  0.0/16;
@@ -463,21 +467,22 @@ void Robot::initializeCoeffSets() {
         
         _coeffs[ 6].dispXYRatio = 0.80; _coeffs[ 6].verticalCombinerRatio = 0.10; _coeffs[ 6].horizontalCombinerRatio = 0.70;
         _coeffs[ 6].outputScaleXY = 4096.0; _coeffs[ 6].outputScaleZ = 4096.0; _coeffs[ 6].outputOffsetZ = 0;
-        //}
-        
-        //set 7
-		// stabilization:depth .1 : .9
-		// linear:rotation .6 : .4
+
+        //set 7 : rotation tests (proportional)
+	//      : stabilization       pid    : [10,  5,  1]/16
+        //      : depth               pid    : [16        ]/16
+        //      : rotation            pid    : [16,  0,  0]/16
+        //      : stabilization:depth ratio  : [0.1, 0.9]
+        //      : linear:rotation     ratio  : [0.75, 0.25]
         //{
         _coeffs[ 7].outputXKP = 10.0/16; _coeffs[ 7].outputXKI =  5.0/16; _coeffs[ 7].outputXKD =  1.0/16; _coeffs[ 7].outputXKF =  0.0/16;
         _coeffs[ 7].outputYKP = 10.0/16; _coeffs[ 7].outputYKI =  5.0/16; _coeffs[ 7].outputYKD =  1.0/16; _coeffs[ 7].outputYKF =  0.0/16;
         _coeffs[ 7].depthKP   = 16.0/16; _coeffs[ 7].depthKI   =  0.0/16; _coeffs[ 7].depthKD   =  0.0/16; _coeffs[ 7].depthKF   =  0.0/16;
         _coeffs[ 7].angleKP   = 16.0/16; _coeffs[ 7].angleKI   =  0.0/16; _coeffs[ 7].angleKD   =  0.0/16; _coeffs[ 7].angleKF   =  0.0/16;
         
-        _coeffs[ 7].dispXYRatio = 0.80; _coeffs[ 7].verticalCombinerRatio = 0.10; _coeffs[ 7].horizontalCombinerRatio = 0.60;
+        _coeffs[ 7].dispXYRatio = 0.80; _coeffs[ 7].verticalCombinerRatio = 0.10; _coeffs[ 7].horizontalCombinerRatio = 0.75;
         _coeffs[ 7].outputScaleXY = 4096.0; _coeffs[ 7].outputScaleZ = 4096.0; _coeffs[ 7].outputOffsetZ = 0;
-        //}
-        
+
         //set 8
         //{
         _coeffs[ 8].outputXKP = 10.0/16; _coeffs[ 8].outputXKI =  5.0/16; _coeffs[ 8].outputXKD =  1.0/16; _coeffs[ 8].outputXKF =  0.0/16;
