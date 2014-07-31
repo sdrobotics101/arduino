@@ -453,24 +453,28 @@ void Robot::initializeCoeffSets() {
         //}     
         
         //set 6
+		// stabilization:depth .1 : .9
+		// linear:rotation .7 : .3
         //{
         _coeffs[ 6].outputXKP = 10.0/16; _coeffs[ 6].outputXKI =  5.0/16; _coeffs[ 6].outputXKD =  1.0/16; _coeffs[ 6].outputXKF =  0.0/16;
         _coeffs[ 6].outputYKP = 10.0/16; _coeffs[ 6].outputYKI =  5.0/16; _coeffs[ 6].outputYKD =  1.0/16; _coeffs[ 6].outputYKF =  0.0/16;
         _coeffs[ 6].depthKP   = 16.0/16; _coeffs[ 6].depthKI   =  0.0/16; _coeffs[ 6].depthKD   =  0.0/16; _coeffs[ 6].depthKF   =  0.0/16;
         _coeffs[ 6].angleKP   = 16.0/16; _coeffs[ 6].angleKI   =  0.0/16; _coeffs[ 6].angleKD   =  0.0/16; _coeffs[ 6].angleKF   =  0.0/16;
         
-        _coeffs[ 6].dispXYRatio = 0.80; _coeffs[ 6].verticalCombinerRatio = 0.40; _coeffs[ 6].horizontalCombinerRatio = 0.80;
+        _coeffs[ 6].dispXYRatio = 0.80; _coeffs[ 6].verticalCombinerRatio = 0.10; _coeffs[ 6].horizontalCombinerRatio = 0.70;
         _coeffs[ 6].outputScaleXY = 4096.0; _coeffs[ 6].outputScaleZ = 4096.0; _coeffs[ 6].outputOffsetZ = 0;
         //}
         
         //set 7
+		// stabilization:depth .1 : .9
+		// linear:rotation .6 : .4
         //{
         _coeffs[ 7].outputXKP = 10.0/16; _coeffs[ 7].outputXKI =  5.0/16; _coeffs[ 7].outputXKD =  1.0/16; _coeffs[ 7].outputXKF =  0.0/16;
         _coeffs[ 7].outputYKP = 10.0/16; _coeffs[ 7].outputYKI =  5.0/16; _coeffs[ 7].outputYKD =  1.0/16; _coeffs[ 7].outputYKF =  0.0/16;
         _coeffs[ 7].depthKP   = 16.0/16; _coeffs[ 7].depthKI   =  0.0/16; _coeffs[ 7].depthKD   =  0.0/16; _coeffs[ 7].depthKF   =  0.0/16;
         _coeffs[ 7].angleKP   = 16.0/16; _coeffs[ 7].angleKI   =  0.0/16; _coeffs[ 7].angleKD   =  0.0/16; _coeffs[ 7].angleKF   =  0.0/16;
         
-        _coeffs[ 7].dispXYRatio = 0.80; _coeffs[ 7].verticalCombinerRatio = 0.40; _coeffs[ 7].horizontalCombinerRatio = 0.80;
+        _coeffs[ 7].dispXYRatio = 0.80; _coeffs[ 7].verticalCombinerRatio = 0.10; _coeffs[ 7].horizontalCombinerRatio = 0.60;
         _coeffs[ 7].outputScaleXY = 4096.0; _coeffs[ 7].outputScaleZ = 4096.0; _coeffs[ 7].outputOffsetZ = 0;
         //}
         
@@ -786,19 +790,17 @@ void Robot::stabilize() {
     if ((_mode & MODE_NORMAL_ENABLE)==0) {
         hackX -= _filtX;
         hackY -= _filtY;
+		hackZ -= _dispZ;
     }
-    hackZ -= _dispZ;    // ROHAN : KEEP THIS HERE TILL WE GET THE PRESSURE SENSOR WORKING
-                        //         OTHERWISE STABILIZER LOOP WILL GO UNSTABLE. ONCE WE
-                        //         HAVE THE SENSOR, THIS CAN GO BACK WITH THE OTHER HACKS
-
+        
     if (_mode & MODE_STABILIZER_DISABLE) {
         hackX = 0.0;
-                hackY = 0.0;
+        hackY = 0.0;
     }
 
-        if (_mode & MODE_DEPTH_DISABLE) {
-                hackZ = 0.0;
-        }
+    if (_mode & MODE_DEPTH_DISABLE) {
+        hackZ = 0.0;
+    }
 
     _filtX = _pidOutputX.compute(hackX);
     _filtY = _pidOutputY.compute(hackY);
@@ -925,9 +927,9 @@ void Robot::move() {
         hackZ -= _filtR;
     }
     
-        if (_mode & MODE_ROTATION_DISABLE) {
-                hackZ = 0.0;
-        }
+    if (_mode & MODE_ROTATION_DISABLE) {
+        hackZ = 0.0;
+    }
 
     _filtR = _pidAngle.compute(hackZ);
 
