@@ -599,8 +599,8 @@ void Robot::reset() {
     _servoCtl          = 0;
     _ledCtl            = 0;
     
-    _accOffsetX  = 625;   _accOffsetY  = -350;   _accOffsetZ  = 17240;
-    _gyroOffsetX = -31;   _gyroOffsetY = -68;   _gyroOffsetZ = -260;
+    _accOffsetX  = 1543;   _accOffsetY  = -1370;   _accOffsetZ  = 16857;
+    _gyroOffsetX = -40;   _gyroOffsetY = -39;   _gyroOffsetZ = -253;
     
     _accX  = 0; _accY  = 0; _accZ  = 0;
     _gyroX = 0; _gyroY = 0; _gyroZ = 0;
